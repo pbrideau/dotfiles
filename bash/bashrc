@@ -1,0 +1,102 @@
+declare -a TMUX_HOSTS
+source $HOME/.dotfiles/bash/other/*
+
+################################################################################
+# Start tmux by default, if there is no override
+if [[ "$TERM" =~ .*:.* ]]; then
+  MY_ENV_OVERRIDE=${TERM%:*}
+  TERM=${TERM##*:}
+fi
+export MY_ENV_OVERRIDE
+
+if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
+  if  [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
+    if [[ "${TMUX_HOSTS[@]}" =~ "$HOSTNAME" ]]; then
+      if [ "$(tmux list-sessions | grep attached | wc -l)" -lt "$(tmux list-sessions | wc -l)" ]; then
+        tmux attach-session
+        exit
+      else
+        tmux new-session
+        exit
+      fi
+    fi
+  fi
+fi
+
+################################################################################
+# When using tmux:
+if [ -n "$TMUX" ]; then
+  settitle() {
+      printf "\033k$1\033\\"
+  }
+
+  ssh() {
+      settitle "$*"
+      command ssh "$@"
+      settitle "bash"
+  }
+
+  #MOTD:
+  for word in $(tmux list-sessions); do
+    if [[ "$word" =~ [0-9]:$ ]]; then
+      echo
+    fi
+    echo -n " $word"
+  done
+  echo; echo
+fi
+
+################################################################################
+# BASIC CONFIGS
+export PATH=$HOME/.local/bin:$HOME/.rvm/bin:$PATH
+
+# are we an interactive shell?
+if [ "$PS1" ]; then
+  shopt -s histappend     # Turn on parallel history
+  history -a
+  shopt -s checkwinsize   # Turn on checkwinsize
+  PS1="\[\033[01;33m\][\[\033[01;32m\]\h\[\033[0m\] \[\033[01;34m\]\W\[\033[01;33m\]]\[\033[0m\]\\$ "
+fi
+
+################################################################################
+# GIT
+if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
+  GIT_PROMPT_ONLY_IN_REPO=1
+  GIT_PROMPT_FETCH_REMOTE_STATUS=1
+  GIT_PROMPT_IGNORE_SUBMODULES=0
+  GIT_PROMPT_SHOW_UPSTREAM=1
+  GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
+  GIT_PROMPT_START="\[\033[01;33m\][\[\033[01;32m\]\h\[\033[0m\] \[\033[01;34m\]\W\[\033[01;33m\]]\[\033[0m\]"
+  GIT_PROMPT_END=" $ "
+
+  source $HOME/git/bash-git-prompt/gitprompt.sh
+fi
+
+alias ga="git add"
+alias gc="git commit"
+alias gco="git checkout"
+alias gst="git status"
+alias glh="git log --date=short --format='%C(yellow)%h %Cblue%ad %Cgreen%<|(40)%an%Creset %s ' --follow"
+alias glo="git log --graph --date=short --format='%C(yellow)%h %Cblue%ad%C(auto)%d%C(yellow) %Creset%s'"
+alias gloa="git log --graph --date=short --format='%C(yellow)%h %Cblue%ad%C(auto)%d%C(yellow) %Creset%s' --all"
+#alias glo="git log --oneline --decorate --tags --graph "
+#alias gloa="git log --oneline --decorate --tags --graph --all"
+
+################################################################################
+# CHEAT
+export CHEAT_CONFIG_PATH="~/.dotfiles/cheat/conf.yml"
+
+################################################################################
+# ALIASES
+alias tmux='TERM=xterm-256color tmux'
+alias vi='vim -p'
+
+################################################################################
+# RVM
+if [ -s "$HOME/.rvm/scripts/rvm" ]; then
+  source "$HOME/.rvm/scripts/rvm" 
+  # Load RVM into a shell session *as a function*
+fi
+
+
+# vim: ff=sh ts=2 sw=2

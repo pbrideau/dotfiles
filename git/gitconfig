@@ -1,0 +1,12 @@
+[user]
+  name = Patrick Brideau
+  email = pbrideau@users.noreply.github.com
+[color]
+  ui = true
+[push]
+  default = simple
+[core]
+  excludesfile = ~/.gitignore
+  editor = vim
+[init]
+  templateDir = ~/.dotfiles/git/template

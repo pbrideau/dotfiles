@@ -1,0 +1,38 @@
+
+################################################################################
+# TMUX
+TMUX_HOSTS+=(
+  'cpl1-web-mgnt'
+  'cpl1-infr-sec2'
+)
+
+################################################################################
+# SDC
+
+if [ -f /data/rootscripts/sdc ]; then
+  source ~/git/sdc-bash-completion/sdc.sh
+
+  alias sdc='sudo -u asuser -i /data/rootscripts/sdc'
+  alias dns='sudo su - asuser -c /data/apps/s01/prod/gestiondns/current/scripts/sync.pl'
+  alias sdc-sec='sudo -u asuser -i /data/rootscripts/sdc-sec'
+
+  #donner accès à un nouveau développeur
+  function sdc-sec-newguy {
+    sdc-sec user add $1
+    sdc-sec group useradd global_permissions $1
+    getent passwd  $1
+    sdc-sec user permlist $1
+  }
+fi
+
+################################################################################
+# ALIASES
+
+alias aut3="ssh cpl1-infr-aut3"
+
+if [ -e /usr/bin/ansible ]; then
+  alias ansible='sudo -u auto-it ansible'
+  alias ansible-playbook='sudo -u auto-it ansible-playbook'
+fi
+
+# vim: ff=sh ts=2 sw=2

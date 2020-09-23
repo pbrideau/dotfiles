@@ -1,0 +1,226 @@
+
+
+" Don't try to be vi compatible
+set nocompatible
+
+" Helps force plugins to load correctly when it is turned back on below
+filetype off
+
+" TODO: Load plugins here (pathogen or vundle)
+"execute pathogen#infect()
+call plug#begin('~/.vim/plugged')
+"Plug 'pearofducks/ansible-vim'
+Plug 'preservim/nerdtree'
+Plug 'majutsushi/tagbar'
+Plug 'edkolev/tmuxline.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'xolox/vim-easytags'
+Plug 'xolox/vim-misc'
+Plug 'tpope/vim-fugitive'
+Plug 'WolfgangMehner/bash-support'
+call plug#end()
+
+"set rtp+=~/.vim/bundle/Vundle.vim
+"call vundle#begin()
+"Plugin 'VundleVim/Vundle.vim'
+"Plugin 'pearofducks/ansible-vim'
+"Plugin 'preservim/nerdtree'
+"Plugin 'majutsushi/tagbar'
+"Plugin 'edkolev/tmuxline.vim'
+"Plugin 'vim-airline/vim-airline'
+"Plugin 'xolox/vim-easytags'
+"Plugin 'xolox/vim-misc'
+"Plugin 'tpope/vim-fugitive'
+"call vundle#end()
+
+" Turn on syntax highlighting
+syntax on
+
+" For plugins to load correctly
+filetype plugin indent on
+
+" TODO: Pick a leader key
+let mapleader = ";"
+
+" Security
+set modelines=0
+
+" Show line numbers
+set number
+
+" Show file stats
+set ruler
+
+" Blink cursor on error instead of beeping (grr)
+"set visualbell
+
+" Encoding
+set encoding=utf-8
+
+" Whitespace
+set nowrap
+set textwidth=79
+set formatoptions=tcqrn1
+set tabstop=8
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set noshiftround
+
+" Cursor motion
+set scrolloff=3
+set backspace=indent,eol,start
+set matchpairs+=<:> " use % to jump between pairs
+runtime! macros/matchit.vim
+
+" Allow hidden buffers
+set hidden
+
+" Rendering
+set ttyfast
+
+" Status bar
+set laststatus=2
+set statusline=%f%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]%=[POS=%04l,%04v][%p%%]\ [LEN=%L]
+
+" Last line
+set showmode
+set showcmd
+
+" Searching
+"nnoremap / /\v
+"vnoremap / /\v
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set showmatch
+map <leader><space> :let @/=''<cr> " clear search
+
+" Remap help key.
+inoremap <F1> <ESC>:set invfullscreen<CR>a
+nnoremap <F1> :set invfullscreen<CR>
+vnoremap <F1> :set invfullscreen<CR>
+
+" Textmate holdouts
+
+" Formatting
+map <leader>q gqip
+
+" Visualize tabs and newlines
+set listchars=tab:\|-,eol:¶,trail:-,nbsp:%
+set list
+set number
+set virtualedit=all
+set wildmode=list:longest
+set wildmenu
+
+" Color scheme (terminal)
+colors molokai
+let g:rehash256 = 1
+set t_Co=256
+
+
+" My maps
+map ZA :NERDTreeToggle<CR>
+map ZX :TagbarToggle<CR>
+nmap > >>
+nmap < <<
+
+"Open "GoFile in new tab
+nnoremap gf <C-W>gf
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+autocmd! bufwritepost .vimrc source %
+
+"Use TAB instead of spaces in these files
+au BufNewFile,BufRead tags set softtabstop=8 tabstop=8 shiftwidth=8 expandtab&
+
+
+"""""""""""""""""""""""""""""""""""""""""""""
+"Ansible
+"set up <C-Space> for omni-completion
+"inoremap <Nul> <C-x><C-o>
+"let g:rocannon_open_action = 'tabnew'  " alternatives: tabnew, edit
+
+
+"augroup filetypedetect
+"    au BufRead,BufNewFile *.yml set filetype=ansible
+"augroup END
+
+
+
+let g:easytags_suppress_ctags_warning = 1
+let g:easytags_cmd = '/home/ext11363/bin/ctags'
+
+
+let g:ctrlp_buftag_types = {
+    \ 'yaml' : '--languages=ansible --ansible-types=t',
+    \ }
+
+
+"""""""
+" TAGBAR
+let g:tagbar_type_ansible = {
+    \ 'ctagstype' : 'ansible',
+    \ 'kinds' : [
+    \ 't:tasks',
+    \ 'h:hosts',
+    \ 'r:roles',
+    \ 'l:listen',
+    \ ],
+    \ 'sort' : 0
+    \ }
+
+let g:tagbar_type_sh = {  
+    \ 'kinds':[
+    \ 'f:functions',
+    \ 'c:constants'
+    \ ]
+    \}
+
+""""""""
+" vim-ansible
+augroup ansible_vim_fthosts
+  autocmd!
+  autocmd BufNewFile,BufRead hosts setfiletype yaml.ansible
+augroup END
+let g:ansible_unindent_after_newline = 1
+let g:ansible_attribute_highlight = "ob"
+let g:ansible_name_highlight = 'b'
+"let g:ansible_extra_keywords_highlight = 1
+
+let g:ansible_goto_role_paths = './roles,../_common/roles'
+function! FindAnsibleRoleUnderCursor()
+  if exists("g:ansible_goto_role_paths")
+    let l:role_paths = g:ansible_goto_role_paths
+  else
+    let l:role_paths = "./roles"
+  endif
+  let l:tasks_main = expand("<cfile>") . "/tasks/main.yml"
+  let l:found_role_path = findfile(l:tasks_main, l:role_paths)
+  if l:found_role_path == ""
+    echo l:tasks_main . " not found"
+  else
+    execute "tabedit " . fnameescape(l:found_role_path)
+  endif
+endfunction
+
+au BufRead,BufNewFile */ansible/*.yml nnoremap gr :call FindAnsibleRoleUnderCursor()<CR>
+au BufRead,BufNewFile */ansible/*.yml vnoremap gr :call FindAnsibleRoleUnderCursor()<CR>
+
+
+""""""""
+" vim-airline
+" Disable all extensions as they incur a big slowdown
+let g:airline_extensions = []
+""""""""
+
+""""""""
+" bash-support
+
+

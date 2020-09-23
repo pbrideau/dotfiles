@@ -1,0 +1,76 @@
+################################################################################
+# CONFIGS
+
+# Modifier les configs
+sdc settings:edit /*[-Sappid=XXXXX]*/
+sdc settings:edit [-Sappplication=XXXXX] [-Sphase=XXXXX] [-Ssilo]
+
+# Show passwords
+sdc settings:edit -Sappid=XXXXX -Sshow_passwords=true
+
+################################################################################
+# MAINTENANCE
+
+# Trouver les apps qui roulent sur un noeud
+sdc info:server -Shostname=XXXXX
+
+#Mettre un noeud en maintenance
+Ajouter saal.pall.XXXXX.haproxy.backends=
+sdc-devl haproxy:server:disable -Sappid=XXXXX -Sserver_index=1
+
+################################################################################ 
+# OVERLAYS
+
+# Lister les overlays
+sdc settigs:overlays:list
+
+# Editer un overlay
+sdc settings:overlays:edit -Soverlay_name=XXXXX
+ENTR_DEMANDE-#####_DATE
+
+# Déployer avec un overlay
+sdc deploy -Sappid=XXXXX -Soverlay_name=XXXXX
+
+# Mettre à jour un overlay
+sdc deploy:overlays:update -Sappid=XXXXX
+
+# Merger un overlay
+sdc settings:overlays:merge -Smerge_src=XXXXX
+
+# Revert un overlay (voir Historique)
+sdc settings:revert -Strans=XXXXX
+
+################################################################################
+# PHASE
+
+# Créer une phase
+sdc deploy:setup -Sappid=XXXXX
+
+################################################################################
+# Recherche
+
+# Clé SDC
+sdc -Sfilter=XXXXX settings:edit
+
+
+################################################################################
+# Historique
+
+# Historique de déploiement
+sdc sdc:history -Slimit=100 -Sdeploy-only
+
+# Chercher dans l'historique
+sdc settings:history -Sfilter_key=XXXXX -Slimit=100
+
+################################################################################
+# MODIFICATION sdc-config
+commit on master of bitbucket/sdc-config
+sdc deploy -Sappid=s01-devl-sdc-config
+sdc-devl deploy -Sappid=XXXXX -Sfileurls=http://XXXXX -Sfilenames=XXX.war
+
+################################################################################
+# Configs https:
+sall.pall.XXXXX.proxyapp.app_type=proxyapp
+sall.pall.XXXXX.proxyapp.vhosts=http,https
+sall.pall.XXXXX.proxyapp.ssl.enabled=true
+
