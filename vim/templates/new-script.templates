@@ -1,5 +1,5 @@
 == Skeleton.script-set == nomenu, below ==
-# new-script.templates - 2020-09-23
+# new-script.templates - 2020-09-24
 
 set -e             # Stop execution if there is an error
 set -o nounset     # Treat unset variable as an error
@@ -125,10 +125,10 @@ while true; do
     -q | --quiet)
       LOG_LEVEL=0
       ;;
-    -a | --aaaa)
+    -f | --foo)
       VAR_A='foobar'
       ;;
-    -b | --bbbb)
+    -b | --bar)
       shift
       VAR_B=$1
       ;;
