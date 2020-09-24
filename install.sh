@@ -16,3 +16,5 @@ ln -s $HOME/.dotfiles/vim/vimrc $HOME/.vimrc
 ln -s $HOME/.dotfiles/vim/template $HOME/.vim/template
 vim +PlugInstall +qall
 
+# TMUX
+ln -s $HOME/.dotfiles/tmux.conf $HOME/.tmux.conf
