@@ -23,6 +23,24 @@ if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
   fi
 fi
 
+
+################################################################################
+# Source profile.d if not login shell
+if ! shopt -q login_shell ; then 
+    umask 002
+    SHELL=/bin/bash
+    for i in /etc/profile.d/*.sh; do
+        if [ -r "$i" ]; then
+            if [ "$PS1" ]; then
+                . "$i"
+            else
+                . "$i" >/dev/null
+            fi
+        fi
+    done
+    unset i
+fi
+
 ################################################################################
 # When using tmux:
 if [ -n "$TMUX" ]; then
