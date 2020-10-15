@@ -2,7 +2,7 @@
 # CONFIGS
 
 # Modifier les configs
-sdc settings:edit /*[-Sappid=XXXXX]*/
+sdc settings:edit [-Sappid=XXXXX]
 sdc settings:edit [-Sappplication=XXXXX] [-Sphase=XXXXX] [-Ssilo]
 
 # Show passwords
