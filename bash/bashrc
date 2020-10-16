@@ -83,19 +83,56 @@ if [ "$PS1" ]; then
   shopt -s histappend     # Turn on parallel history
   history -a
   shopt -s checkwinsize   # Turn on checkwinsize
-  PS1="\[\033[01;33m\][\[\033[01;32m\]\h\[\033[0m\] \[\033[01;34m\]\W\[\033[01;33m\]]\[\033[0m\]\\$ "
 fi
+
+################################################################################
+# IS REBOOT REQUIRED?
+case "$(awk -F= '/^NAME/{print $2}' /etc/os-release)" in
+  '"Red Hat Enterprise Linux Server"')
+    if [ -x /usr/bin/needs-restarting ]; then
+      if /usr/bin/needs-restarting --reboothint >> /dev/null; then
+        REBOOT=""
+      else
+        REBOOT="(reboot) "
+      fi
+    fi
+    ;;
+  '"Debian GNU/Linux"')
+    if [ -e /var/run/reboot-required -o -e /var/run/reboot-required.pkgs ]; then
+      REBOOT="(reboot) "
+    else
+      REBOOT=""
+    fi
+    ;;
+  *)
+    REBOOT="(Unknown OS) "
+    ;;
+esac
+
+################################################################################
+# IS THERE PACKAGES TO UPDATES?
+if [ -e $HOME/.update_count ]; then
+  let UPDATE_CONTENT=$(cat $HOME/.update_count)
+  if [ $UPDATE_CONTENT -eq 0 ]; then
+    UPDATE_COUNT=""
+  else
+    UPDATE_COUNT="($UPDATE_CONTENT) "
+  fi
+fi
+# Crontabs:
+# Debian: nice -n 19 aptitude search "~U" | wc -l > $HOME/.update_count
+# RedHat: nice -n 19 yum check-update | sed -n "/Obsoleting/q;p" | wc -l | awk '{print $1-3}' > $HOME/.update_count
 
 ################################################################################
 # GIT
 if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
-  GIT_PROMPT_ONLY_IN_REPO=1
+  GIT_PROMPT_ONLY_IN_REPO=0
   GIT_PROMPT_FETCH_REMOTE_STATUS=1
   GIT_PROMPT_IGNORE_SUBMODULES=0
   GIT_PROMPT_SHOW_UPSTREAM=1
   GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
-  GIT_PROMPT_START="\[\033[01;33m\][\[\033[01;32m\]\h\[\033[0m\] \[\033[01;34m\]\W\[\033[01;33m\]]\[\033[0m\]"
-  GIT_PROMPT_END=" $ "
+  GIT_PROMPT_START="\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;33m\][\[\033[01;32m\]\h\[\033[0m\] \[\033[01;34m\]\w\[\033[01;33m\]]\[\033[0m\]"
+  GIT_PROMPT_END="\n\$ "
 
   source $HOME/git/bash-git-prompt/gitprompt.sh
 fi
