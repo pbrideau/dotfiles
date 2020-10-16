@@ -18,6 +18,11 @@ Plug 'xolox/vim-easytags'
 Plug 'xolox/vim-misc'
 Plug 'tpope/vim-fugitive'
 Plug 'WolfgangMehner/bash-support'
+
+Plug 'vim-scripts/ShowMarks'
+Plug 'vim-scripts/AutoComplPop'
+Plug 'tpope/vim-ragtag'
+Plug 'chrisbra/matchit'
 call plug#end()
 
 "set rtp+=~/.vim/bundle/Vundle.vim
@@ -97,16 +102,6 @@ set smartcase
 set showmatch
 map <leader><space> :let @/=''<cr> " clear search
 
-" Remap help key.
-inoremap <F1> <ESC>:set invfullscreen<CR>a
-nnoremap <F1> :set invfullscreen<CR>
-vnoremap <F1> :set invfullscreen<CR>
-
-" Textmate holdouts
-
-" Formatting
-map <leader>q gqip
-
 " Visualize tabs and newlines
 set listchars=tab:\|-,eol:¶,trail:-,nbsp:%
 set list
@@ -116,10 +111,9 @@ set wildmode=list:longest
 set wildmenu
 
 " Color scheme (terminal)
-colors molokai
+colors my-molokai
 let g:rehash256 = 1
 set t_Co=256
-
 
 " My maps
 map ZA :NERDTreeToggle<CR>
@@ -140,6 +134,33 @@ autocmd! bufwritepost .vimrc source %
 "Use TAB instead of spaces in these files
 au BufNewFile,BufRead tags set softtabstop=8 tabstop=8 shiftwidth=8 expandtab&
 
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" DISPLAY IF LENGTH >80
+highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+"match OverLength /\%81v.*/
+
+"my mapping to paste(^p) lines(l) and headers(h)
+au FileType js,c,cpp map map <C-p>l o<ESC>80i/<ESC>
+au FileType js,c,cpp map <C-p>h :set paste<CR>o/<ESC>79A*<ESC>A<CR> * <CR> <ESC>78A*<ESC>A/<ESC>:set nopaste<CR>kA
+
+au FileType html,htm map <C-p>l :set paste<CR>o<!-- <ESC>72A-<ESC>A--><ESC>:set nopaste<CR>
+
+au FileType sh map <C-p>l <ESC>o<ESC>80i#<ESC>
+au FileType sh map <C-p>h :set paste<CR>o<ESC>80i#<ESC>A<CR># <CR><ESC>80i#<ESC>:set nopaste<CR>kA
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" CUSTOM CONFIGURATION FOR FILETYPE
+au BufRead *.zsh-theme set filetype=sh
+au BufRead *.pp set filetype=puppet
+
+au FileType xml,xsd  setlocal foldmethod=syntax softtabstop=2 shiftwidth=2 foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
+au FileType puppet  setlocal foldmethod=syntax softtabstop=2 shiftwidth=2 foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
+"au BufNewFile,BufRead * :HiMatchOff
+"au BufNewFile,BufRead *.xsd,*.xml :HiMatchOn
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+let xml_jump_string="`"
+
+au CursorHold,CursorHoldI * checktime
 
 """""""""""""""""""""""""""""""""""""""""""""
 "Ansible
@@ -224,3 +245,27 @@ let g:airline_extensions = []
 " bash-support
 
 
+" Transparent editing of gpg encrypted files.
+" By Wouter Hanegraaff
+augroup encrypted
+    au!
+    " First make sure nothing is written to ~/.viminfo while editing
+    " an encrypted file.
+    autocmd BufReadPre,FileReadPre *.gpg set viminfo=
+    " We don't want a swap file, as it writes unencrypted data to disk
+    autocmd BufReadPre,FileReadPre *.gpg set noswapfile
+    " Switch to binary mode to read the encrypted file
+    autocmd BufReadPre,FileReadPre *.gpg set bin
+    autocmd BufReadPre,FileReadPre *.gpg let ch_save = &ch|set ch=2
+    autocmd BufReadPost,FileReadPost *.gpg '[,']!gpg --decrypt 2> /dev/null
+    " Switch to normal mode for editing
+    autocmd BufReadPost,FileReadPost *.gpg set nobin
+    autocmd BufReadPost,FileReadPost *.gpg let &ch = ch_save|unlet ch_save
+    autocmd BufReadPost,FileReadPost *.gpg execute ":doautocmd BufReadPost " . expand("%:r")
+
+    " Convert all text to encrypted text before writing
+    autocmd BufWritePre,FileWritePre *.gpg '[,']!gpg --default-recipient-self -ae 2>/dev/null
+    " Undo the encryption so we are back in the normal text, directly
+    " after the file has been written.
+    autocmd BufWritePost,FileWritePost *.gpg u
+augroup END
