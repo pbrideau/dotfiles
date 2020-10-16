@@ -2,7 +2,11 @@ declare -a TMUX_HOSTS
 source $HOME/.dotfiles/bash/other/*
 
 ################################################################################
-# Start tmux by default, if there is no override
+# Automatically start tmux when loging on server in $TMUX_HOSTS
+# To add server to this list: TMUX_HOSTS+=('example.com')
+# Force no tmux with this hack:
+# TERM="no_tmux:$TERM" ssh host
+
 if [[ "$TERM" =~ .*:.* ]]; then
   MY_ENV_OVERRIDE=${TERM%:*}
   TERM=${TERM##*:}
@@ -22,6 +26,7 @@ if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
     fi
   fi
 fi
+unset MY_ENV_OVERRIDE
 
 
 ################################################################################
@@ -83,6 +88,20 @@ if [ "$PS1" ]; then
   shopt -s histappend     # Turn on parallel history
   history -a
   shopt -s checkwinsize   # Turn on checkwinsize
+  HISTCONTROL=ignoreboth
+  HISTSIZE=1000
+  HISTFILESIZE=2000
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
 fi
 
 ################################################################################
@@ -131,7 +150,7 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
   GIT_PROMPT_IGNORE_SUBMODULES=0
   GIT_PROMPT_SHOW_UPSTREAM=1
   GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
-  GIT_PROMPT_START="\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;33m\][\[\033[01;32m\]\h\[\033[0m\] \[\033[01;34m\]\w\[\033[01;33m\]]\[\033[0m\]"
+  GIT_PROMPT_START="\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]"
   GIT_PROMPT_END="\n\$ "
 
   source $HOME/git/bash-git-prompt/gitprompt.sh
@@ -154,7 +173,27 @@ export CHEAT_CONFIG_PATH="~/.dotfiles/cheat/conf.yml"
 ################################################################################
 # ALIASES
 alias tmux='TERM=xterm-256color tmux'
-alias vi='vim -p'
+alias genpass="tr -cd '[:alnum:]' < /dev/urandom | fold -w43 | head -n1"
+
+if [ -x /usr/bin/gvim ]; then
+  alias vi="vim --servername VIM --remote-tab-silent"
+else
+  alias vi='vim -p'
+fi
+
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+alias ll='ls -l'
+alias la='ls -A'
+alias l='ls -CF'
 
 ################################################################################
 # RVM
