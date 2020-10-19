@@ -23,6 +23,7 @@ Plug 'vim-scripts/ShowMarks'
 Plug 'vim-scripts/AutoComplPop'
 Plug 'tpope/vim-ragtag'
 Plug 'chrisbra/matchit'
+Plug 'hsitz/VimOrganizer'
 call plug#end()
 
 "set rtp+=~/.vim/bundle/Vundle.vim
