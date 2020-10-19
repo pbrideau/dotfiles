@@ -182,7 +182,7 @@ alias gloa="git log --graph --date=short --format='%C(yellow)%h %Cblue%ad%C(auto
 #alias glo="git log --oneline --decorate --tags --graph "
 #alias gloa="git log --oneline --decorate --tags --graph --all"
 
-GIT_CEILING_DIRECTORY=$HOME
+export GIT_CEILING_DIRECTORIES=$HOME
 
 ################################################################################
 # CHEAT
