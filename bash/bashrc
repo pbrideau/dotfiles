@@ -96,8 +96,10 @@ if [ "$PS1" ]; then
   HISTFILESIZE=10000
 
   export PROMPT_COMMAND="history -a; history -c; history -r;$PROMPT_COMMAND"
-  tac "$HISTFILE" | awk '!x[$0]++' > /tmp/tmpfile && tac /tmp/tmpfile > "$HISTFILE"
-  rm /tmp/tmpfile
+  if [ -e $HISTFILE ]; then
+    tac "$HISTFILE" | awk '!x[$0]++' > /tmp/tmpfile && tac /tmp/tmpfile > "$HISTFILE"
+    rm /tmp/tmpfile
+  fi
 fi
 
 # enable programmable completion features (you don't need to enable
