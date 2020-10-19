@@ -88,9 +88,16 @@ if [ "$PS1" ]; then
   shopt -s histappend     # Turn on parallel history
   history -a
   shopt -s checkwinsize   # Turn on checkwinsize
-  HISTCONTROL=ignoreboth
-  HISTSIZE=1000
-  HISTFILESIZE=2000
+  shopt -s cdspell        # Correct minor error in cd command
+  shopt -s cmdhist        # Save multiple-line on the same line
+  HISTFILE="${HOME}/.bash_history_dir/$(hostname)"
+  HISTCONTROL=ignoreboth:erasedups
+  HISTSIZE=10000
+  HISTFILESIZE=10000
+
+  export PROMPT_COMMAND="history -a; history -c; history -r;$PROMPT_COMMAND"
+  tac "$HISTFILE" | awk '!x[$0]++' > /tmp/tmpfile && tac /tmp/tmpfile > "$HISTFILE"
+  rm /tmp/tmpfile
 fi
 
 # enable programmable completion features (you don't need to enable

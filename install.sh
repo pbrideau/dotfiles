@@ -8,6 +8,7 @@ ln -s $HOME/.dotfiles/git/gitconfig $HOME/.gitconfig
 ln -s $HOME/.dotfiles/git/gitignore $HOME/.gitignore
 
 # BASH
+mkdir $HOME/.bash_history_dir
 ln -s $HOME/.dotfiles/bashrc $HOME/.bashrc
 
 # VIM
