@@ -113,17 +113,24 @@ fi
 
 ################################################################################
 # IS REBOOT REQUIRED?
-case "$(awk -F= '/^NAME/{print $2}' /etc/os-release)" in
-  '"Red Hat Enterprise Linux Server"')
-    if [ -x /usr/bin/needs-restarting ]; then
-      if /usr/bin/needs-restarting --reboothint >> /dev/null; then
-        REBOOT=""
-      else
-        REBOOT="(reboot) "
-      fi
+if [ -e /etc/os-release ]; then
+  OS="$(awk -F= '/^NAME/{print $2}' /etc/os-release)"
+else
+  OS="$(cat /etc/*-release | sort -u)"
+fi
+
+case "$OS" in
+  *'Red Hat'*)
+    # needs-restarting differ from version to version, check the kernel
+    LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1)
+    CURRENT_KERNEL=$(uname -r)
+    if [ "$LAST_KERNEL" = "$CURRENT_KERNEL" ]; then
+      REBOOT=""
+    else
+      REBOOT="(reboot) "
     fi
     ;;
-  '"Debian GNU/Linux"')
+  *'Debian'*)
     if [ -e /var/run/reboot-required -o -e /var/run/reboot-required.pkgs ]; then
       REBOOT="(reboot) "
     else
