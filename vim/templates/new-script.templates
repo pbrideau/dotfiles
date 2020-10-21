@@ -1,5 +1,5 @@
 == Skeleton.script-set == nomenu, below ==
-# new-script.templates - 2020-09-24
+# new-script.templates - 2020-10-21
 
 set -e             # Stop execution if there is an error
 set -o nounset     # Treat unset variable as an error
@@ -18,22 +18,22 @@ fi
 # USAGE
 function usage()
 {
-  echo Usage: $(basename $0) [options] command
+  echo "Usage: $(basename $0) [options] command"
   echo
-  echo Examples:
-  echo   $(basename $0) -b foobar run
+  echo "Examples:"
+  echo "  $(basename $0) -b foobar run"
   echo
-  echo Options:
-  echo    -h, --help                Show this message
-  echo    -d, --debug               Show debug log
-  echo    -v, --verbose             Show verbose log (multiple -v is --debug)
-  echo    -q, --quiet               Show only error logs (default warn)
+  echo "Options:"
+  echo "   -h, --help                Show this message"
+  echo "   -d, --debug               Show debug log"
+  echo "   -v, --verbose             Show verbose log (multiple -v is --debug)"
+  echo "   -q, --quiet               Show only error logs (default warn)"
   echo
-  echo    -f, --foo                 Do foo
-  echo    -b, --bar=BAZ             Do bar with BAZ
+  echo "   -f, --foo                 Do foo"
+  echo "   -b, --bar=BAZ             Do bar with BAZ"
   echo
-  echo Commands:
-  echo    run                       Run the program
+  echo "Commands:"
+  echo "   run                       Run the program"
 }
 
 ################################################################################
