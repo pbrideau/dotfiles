@@ -18,10 +18,12 @@ if [ -f /data/rootscripts/sdc ]; then
 
   #donner accès à un nouveau développeur
   function sdc-sec-newguy {
-    sdc-sec user add $1
-    sdc-sec group useradd global_permissions $1
+    SDC_SEC='sudo -u asuser -i /data/rootscripts/sdc-sec'
+    $SDC_SEC user add $1
+    $SDC_SEC group useradd global_permissions $1
     getent passwd  $1
-    sdc-sec user permlist $1
+    $SDC_SEC user permlist $1
+    unset SDC_SEC
   }
 fi
 
