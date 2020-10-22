@@ -78,8 +78,44 @@ if [ -n "$TMUX" ]; then
 fi
 
 ################################################################################
+# Set variables by OS
+if [ -e /etc/os-release ]; then
+  OS="$(awk -F= '/^NAME/{print $2}' /etc/os-release)"
+else
+  OS="$(cat /etc/*-release | sort -u)"
+fi
+
+case "$OS" in
+  *'Red Hat'*)
+    # needs-restarting differ from version to version, check the kernel
+    LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1)
+    CURRENT_KERNEL=$(uname -r)
+    if [ "$LAST_KERNEL" = "$CURRENT_KERNEL" ]; then
+      REBOOT=""
+    else
+      REBOOT="(reboot) "
+    fi
+    ;;
+  *'Debian'*)
+    if [ -e /var/run/reboot-required -o -e /var/run/reboot-required.pkgs ]; then
+      REBOOT="(reboot) "
+    else
+      REBOOT=""
+    fi
+    ;;
+  *'Solaris'*)
+     REBOOT=""
+     NEW_PATH+=( '/usr/xpg4/bin' )
+    ;;
+  *)
+    REBOOT="(Unknown OS) "
+    ;;
+esac
+
+
+################################################################################
 # BASIC CONFIGS
-NEW_PATH=(
+NEW_PATH+=(
   '~/.local/bin'
   '~/.rvm/bin'
 )
@@ -122,37 +158,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
-################################################################################
-# IS REBOOT REQUIRED?
-if [ -e /etc/os-release ]; then
-  OS="$(awk -F= '/^NAME/{print $2}' /etc/os-release)"
-else
-  OS="$(cat /etc/*-release | sort -u)"
-fi
-
-case "$OS" in
-  *'Red Hat'*)
-    # needs-restarting differ from version to version, check the kernel
-    LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1)
-    CURRENT_KERNEL=$(uname -r)
-    if [ "$LAST_KERNEL" = "$CURRENT_KERNEL" ]; then
-      REBOOT=""
-    else
-      REBOOT="(reboot) "
-    fi
-    ;;
-  *'Debian'*)
-    if [ -e /var/run/reboot-required -o -e /var/run/reboot-required.pkgs ]; then
-      REBOOT="(reboot) "
-    else
-      REBOOT=""
-    fi
-    ;;
-  *)
-    REBOOT="(Unknown OS) "
-    ;;
-esac
 
 ################################################################################
 # IS THERE PACKAGES TO UPDATES?
@@ -214,9 +219,11 @@ fi
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
+    if grep --color "a" <<<"a" &>/dev/null; then
+      alias grep='grep --color=auto'
+      alias fgrep='fgrep --color=auto'
+      alias egrep='egrep --color=auto'
+    fi
 fi
 
 alias ll='ls -l'
