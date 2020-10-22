@@ -17,7 +17,8 @@ if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
   if  [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
     if [[ "${TMUX_HOSTS[@]}" =~ "$HOSTNAME" ]]; then
       if [ "$(tmux list-sessions | grep attached | wc -l)" -lt "$(tmux list-sessions | wc -l)" ]; then
-        tmux attach-session
+        SESSION_TO_ATTACH="$(tmux list-sessions | grep -v attached | head -1 | cut -d ':' -f 1)"
+        tmux attach-session -t $SESSION_TO_ATTACH
         exit
       else
         tmux new-session
