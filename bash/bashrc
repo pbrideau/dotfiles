@@ -231,6 +231,8 @@ alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
 
+alias nocomment='grep --color=no "^[^ #;]"'
+
 ################################################################################
 # RVM
 if [ -s "$HOME/.rvm/scripts/rvm" ]; then
