@@ -186,6 +186,8 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
   GIT_PROMPT_END="\n\$ "
 
   source $HOME/git/bash-git-prompt/gitprompt.sh
+else
+  PS1="\n\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]\n\$ "
 fi
 
 alias ga="git add"
