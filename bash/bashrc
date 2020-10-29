@@ -135,7 +135,7 @@ if [ "$PS1" ]; then
   shopt -s checkwinsize   # Turn on checkwinsize
   shopt -s cdspell        # Correct minor error in cd command
   shopt -s cmdhist        # Save multiple-line on the same line
-  HISTFILE="${HOME}/.bash_history_dir/$(hostname -s)"
+  HISTFILE="${HOME}/.bash_history_dir/${HOSTNAME%%.*}"
   HISTCONTROL=ignoreboth:erasedups
   HISTSIZE=10000
   HISTFILESIZE=10000
