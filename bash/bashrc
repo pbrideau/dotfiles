@@ -139,6 +139,7 @@ if [ "$PS1" ]; then
   HISTCONTROL=ignoreboth:erasedups
   HISTSIZE=10000
   HISTFILESIZE=10000
+  unset HISTTIMEFORMAT
 
   export PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
   if [ -e $HISTFILE ]; then
