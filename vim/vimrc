@@ -1,5 +1,3 @@
-
-
 " Don't try to be vi compatible
 set nocompatible
 
@@ -9,7 +7,7 @@ filetype off
 " TODO: Load plugins here (pathogen or vundle)
 "execute pathogen#infect()
 call plug#begin('~/.vim/plugged')
-"Plug 'pearofducks/ansible-vim'
+Plug 'pearofducks/ansible-vim'
 Plug 'preservim/nerdtree'
 Plug 'majutsushi/tagbar'
 Plug 'edkolev/tmuxline.vim'
