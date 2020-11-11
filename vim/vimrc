@@ -17,7 +17,7 @@ Plug 'xolox/vim-misc'
 Plug 'tpope/vim-fugitive'
 Plug 'WolfgangMehner/bash-support'
 
-Plug 'vim-scripts/ShowMarks'
+Plug 'gergap/ShowMarks'
 Plug 'vim-scripts/AutoComplPop'
 Plug 'tpope/vim-ragtag'
 Plug 'chrisbra/matchit'
