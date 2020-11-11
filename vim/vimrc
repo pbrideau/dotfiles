@@ -50,7 +50,7 @@ set encoding=utf-8
 
 " Whitespace
 set nowrap
-set textwidth=79
+set textwidth=0
 set formatoptions=tcqrn1
 set tabstop=8
 set shiftwidth=2
@@ -89,7 +89,7 @@ set showmatch
 map <leader><space> :let @/=''<cr> " clear search
 
 " Visualize tabs and newlines
-set listchars=tab:\|-,eol:¶,trail:-,nbsp:%
+set listchars=tab:~-,eol:¶,trail:-,nbsp:%
 set list
 set number
 set virtualedit=all
@@ -119,6 +119,7 @@ autocmd! bufwritepost .vimrc source %
 
 "Use TAB instead of spaces in these files
 au BufNewFile,BufRead tags set softtabstop=8 tabstop=8 shiftwidth=8 expandtab&
+au BufNewFile,BufRead *.sh set softtabstop=2 tabstop=2 shiftwidth=2 expandtab&
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " DISPLAY IF LENGTH >80
