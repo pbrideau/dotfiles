@@ -207,7 +207,7 @@ alias gloa="git log --graph --date=short --format='%C(yellow)%h %Cblue%ad%C(auto
 #alias glo="git log --oneline --decorate --tags --graph "
 #alias gloa="git log --oneline --decorate --tags --graph --all"
 
-export GIT_CEILING_DIRECTORIES=$HOME
+export GIT_CEILING_DIRECTORIES="$HOME:/home"
 
 ################################################################################
 # CHEAT
@@ -241,6 +241,9 @@ alias la='ls -A'
 alias l='ls -CF'
 
 alias nocomment='grep --color=no "^[^ #;]"'
+
+alias ..='cd ..'
+alias ...='cd ../..'
 
 ################################################################################
 # RVM
