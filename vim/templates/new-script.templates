@@ -1,10 +1,14 @@
 == Skeleton.script-set == nomenu, below ==
 # new-script.templates - 2020-10-21
 
-set -e             # Stop execution if there is an error
 set -o nounset     # Treat unset variable as an error
-set -o pipefail    # pass the error to the rightmost element when pipe
 shopt -s extglob   # Extended pattern matching
+
+################################################################################
+# Why doesn't set -e (or set -o errexit, or trap ERR) do what I expected?
+# http://mywiki.wooledge.org/BashFAQ/105
+#set -e             # Stop execution if there is an error
+#set -o pipefail    # pass the error to the rightmost element when pipe
 
 ################################################################################
 # Dependency
