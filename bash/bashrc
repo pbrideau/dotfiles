@@ -177,8 +177,11 @@ fi
 
 ################################################################################
 # PROMPT
+if [ -z "$ICON_COLOR" ]; then
+  ICON_COLOR="\033[01;32m"
+fi
 
-PS1="\n\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]\n\$ "
+PS1="\n\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h\[${ICON_COLOR}\] >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]\n\$ "
 
 ################################################################################
 # GIT
@@ -188,7 +191,7 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
   GIT_PROMPT_IGNORE_SUBMODULES=0
   GIT_PROMPT_SHOW_UPSTREAM=1
   GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
-  GIT_PROMPT_START="\n\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]"
+  GIT_PROMPT_START="\n\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h\[${ICON_COLOR}\] >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]"
   GIT_PROMPT_END="\n\$ "
 
   source $HOME/git/bash-git-prompt/gitprompt.sh

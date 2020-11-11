@@ -37,4 +37,13 @@ if [ -e /usr/bin/ansible ]; then
   alias ansible-playbook='sudo -u auto-it ansible-playbook'
 fi
 
+################################################################################
+# HOSTNAME_COLOR
+# Test if the servername has a "P" for PROD
+if [[ "${HOSTNAME%%.*}" =~ ^[a-zA-Z0-9]{4}-[^-]+-[^-]+$ ]]; then
+  if [ "${HOSTNAME:1:1}" = 'p' ]; then
+    ICON_COLOR="\033[01;31m"
+  fi
+fi
+
 # vim: ff=sh ts=2 sw=2
