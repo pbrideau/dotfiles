@@ -24,19 +24,6 @@ Plug 'chrisbra/matchit'
 Plug 'hsitz/VimOrganizer'
 call plug#end()
 
-"set rtp+=~/.vim/bundle/Vundle.vim
-"call vundle#begin()
-"Plugin 'VundleVim/Vundle.vim'
-"Plugin 'pearofducks/ansible-vim'
-"Plugin 'preservim/nerdtree'
-"Plugin 'majutsushi/tagbar'
-"Plugin 'edkolev/tmuxline.vim'
-"Plugin 'vim-airline/vim-airline'
-"Plugin 'xolox/vim-easytags'
-"Plugin 'xolox/vim-misc'
-"Plugin 'tpope/vim-fugitive'
-"call vundle#end()
-
 " Turn on syntax highlighting
 syntax on
 
