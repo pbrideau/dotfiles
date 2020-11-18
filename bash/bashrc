@@ -15,8 +15,8 @@ export MY_ENV_OVERRIDE
 
 if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
   if  [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
-    if [[ "${TMUX_HOSTS[@]}" =~ "$HOSTNAME" ]]; then
-      if [ "$(tmux list-sessions | grep attached | wc -l)" -lt "$(tmux list-sessions | wc -l)" ]; then
+    if [[ "${TMUX_HOSTS[*]}" =~ "$HOSTNAME" ]]; then
+      if [ "$(tmux list-sessions | grep -c attached )" -lt "$(tmux list-sessions | wc -l)" ]; then
         SESSION_TO_ATTACH="$(tmux list-sessions | grep -v attached | head -1 | cut -d ':' -f 1)"
         tmux attach-session -t "$SESSION_TO_ATTACH"
         exit
@@ -117,8 +117,7 @@ esac
 ################################################################################
 # BASIC CONFIGS
 NEW_PATH+=(
-  '~/.local/bin'
-  '~/.rvm/bin'
+  "$HOME/.local/bin"
 )
 for x in "${NEW_PATH[@]}"; do
   case ":$PATH:" in
@@ -127,6 +126,14 @@ for x in "${NEW_PATH[@]}"; do
   esac
 done
 unset NEW_PATH
+
+function refresh_history
+{
+	history -n
+	history -w
+	history -c
+	history -r
+}
 
 # are we an interactive shell?
 if [ "$PS1" ]; then
@@ -141,7 +148,7 @@ if [ "$PS1" ]; then
   HISTFILESIZE=10000
   unset HISTTIMEFORMAT
 
-  export PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
+  export PROMPT_COMMAND="refresh_history; $PROMPT_COMMAND"
   if [ -e $HISTFILE ]; then
     TEMP_FILE=$(mktemp --tmpdir=$HOME/.bash_history_dir)
     tac "$HISTFILE" | awk '!x[$0]++' > $TEMP_FILE && tac $TEMP_FILE > "$HISTFILE"
