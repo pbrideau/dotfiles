@@ -12,7 +12,7 @@ Plug 'preservim/nerdtree'
 Plug 'majutsushi/tagbar'
 Plug 'edkolev/tmuxline.vim'
 Plug 'vim-airline/vim-airline'
-Plug 'xolox/vim-easytags'
+"Plug 'xolox/vim-easytags'
 Plug 'xolox/vim-misc'
 Plug 'tpope/vim-fugitive'
 Plug 'WolfgangMehner/bash-support'
@@ -22,6 +22,7 @@ Plug 'vim-scripts/AutoComplPop'
 Plug 'tpope/vim-ragtag'
 Plug 'chrisbra/matchit'
 Plug 'hsitz/VimOrganizer'
+Plug 'vim-syntastic/syntastic'
 call plug#end()
 
 " Turn on syntax highlighting
@@ -119,7 +120,6 @@ autocmd! bufwritepost .vimrc source %
 
 "Use TAB instead of spaces in these files
 au BufNewFile,BufRead tags set softtabstop=8 tabstop=8 shiftwidth=8 expandtab&
-au BufNewFile,BufRead *.sh set softtabstop=2 tabstop=2 shiftwidth=2 expandtab&
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " DISPLAY IF LENGTH >80
@@ -142,6 +142,8 @@ au BufRead *.pp set filetype=puppet
 
 au FileType xml,xsd  setlocal foldmethod=syntax softtabstop=2 shiftwidth=2 foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
 au FileType puppet  setlocal foldmethod=syntax softtabstop=2 shiftwidth=2 foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
+au FileType sh  setlocal foldmethod=syntax softtabstop=2 tabstop=2 shiftwidth=2 expandtab& foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
+"au BufNewFile,BufRead *.sh set softtabstop=2 tabstop=2 shiftwidth=2 expandtab&
 "au BufNewFile,BufRead * :HiMatchOff
 "au BufNewFile,BufRead *.xsd,*.xml :HiMatchOn
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
@@ -231,6 +233,19 @@ let g:airline_extensions = []
 """"""""
 " bash-support
 
+""""""""
+" syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_sh_checkers = [ 'shellcheck' ]
+let g:syntastic_sh_bashate_args = '-i E002,E003,E020'
 
 " Transparent editing of gpg encrypted files.
 " By Wouter Hanegraaff

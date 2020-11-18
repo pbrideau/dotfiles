@@ -17,6 +17,7 @@ ln -s $HOME/.dotfiles/vim/vimrc $HOME/.vimrc
 ln -s $HOME/.dotfiles/vim/template $HOME/.vim/template
 ln -s $HOME/.dotfiles/vim/colors $HOME/.vim/colors
 vim +PlugInstall +qall
+echo "please install manually shellcheck software"
 
 # TMUX
 ln -s $HOME/.dotfiles/tmux.conf $HOME/.tmux.conf
