@@ -1,5 +1,5 @@
 == Skeleton.script-set == nomenu, below ==
-# new-script.templates - 2020-11-10
+# new-script.templates - 2020-11-18
 
 set -o nounset     # Treat unset variable as an error
 shopt -s extglob   # Extended pattern matching
@@ -11,21 +11,27 @@ shopt -s extglob   # Extended pattern matching
 #set -o pipefail    # pass the error to the rightmost element when pipe
 
 ################################################################################
-# Dependency
+# Return codes
+# Limit user-defined exit codes to the range 64-113
+# See /usr/include/sysexits.h for common examples
+EX_USAGE=64
+EX_NOTFOUND=127
 
+################################################################################
+# Dependency
 if ! command -v getopt &>/dev/null; then
 	echo "This script require getopt, please install it"
-	exit 1
+	exit $EX_NOTFOUND
 fi
 
 ################################################################################
 # USAGE
-function usage()
+function usage
 {
-	echo "Usage: $(basename $0) [options] command"
+	echo "Usage: $BASENAME [options] command"
 	echo
 	echo "Examples:"
-	echo "  $(basename $0) -b foobar run"
+	echo "  $BASENAME -b foobar run"
 	echo
 	echo "Options:"
 	echo "   -h, --help                Show this message"
@@ -42,9 +48,9 @@ function usage()
 
 ################################################################################
 # MAIN
-function main()
+function main
 {
-	.log 3 "========== function main()"
+	.log 3 "========== function ${FUNCNAME[0]}"
 
 	.log 0 "This show an error"
 	.log 1 "This show a warning"
@@ -52,35 +58,43 @@ function main()
 	.log 3 "This show a debug, VAR_B:$VAR_B"
 }
 
-function validate_inputs()
+function validate_inputs
 {
-	.log 3 "========== function validate_inputs()"
+	.log 3 "========== function ${FUNCNAME[0]}"
 }
 
 ################################################################################
-# LOG FUNCTION
+# INTERNAL FUNCTION
 declare -A LOG_LEVELS=(
 	[0]="error"
 	[1]="warn "
 	[2]="info "
 	[3]="debug"
 )
-function .log ()
+function .log
 {
+	# Usage:
+	#   .log N "MESSAGE"
+	#   Where N is [0-3]
+	#   .log 0 "This is an error log"
 	local level=${1}
 	local color=""
 	shift
-	if [ $COLORIZED_LOG = true ]; then
+	if [ "$COLORIZED_LOG" = true ]; then
 		case $level in
-			0) color="\033[31m";; # RED
-			1) color="\033[33m";; # YELLOW
-			2) color="\033[32m";; # GREEN
-			3) color="\033[34m";; # BLUE
+			0)
+				color="\033[31m" ;; # RED
+			1)
+				color="\033[33m" ;; # YELLOW
+			2)
+				color="\033[32m" ;; # GREEN
+			3)
+				color="\033[34m" ;; # BLUE
 		esac
 	fi
 
-	if [ ${LOG_LEVEL} -ge ${level} ]; then
-		if [ ${level} -eq 0 ]; then
+	if [ "$LOG_LEVEL" -ge "$level" ]; then
+		if [ "$level" -eq 0 ]; then
 			echo -e "[${color}${LOG_LEVELS[$level]}\033[0m]" "$@" 1>&2
 		else
 			echo -e "[${color}${LOG_LEVELS[$level]}\033[0m]" "$@"
@@ -88,10 +102,67 @@ function .log ()
 	fi
 }
 
+function .prompt_user_abort
+{
+	# Usage:
+	#   .prompt_user_abort
+	#       or
+	#   .prompt_user_abort "QUESTION"
+	.log 3 "========== function ${FUNCNAME[0]}"
+	local question="Are you sure?"
+	local response
+	if [ $# -gt 0 ]; then
+		question=$1
+	fi
+	question="${question} [y/N] "
+	read -r -p "$question" response
+	case "$response" in
+		[yY][eE][sS]|[yY])
+			;;
+		*)
+			.log 0 "Aborting..."
+			exit 1
+			;;
+	esac
+}
+
+function .spinner
+{
+	# To start a sleeper while task is in background
+	# Usage:
+	#   sleep 10 &
+	#   .sleeper $! job_name
+	.log 3 "========== function ${FUNCNAME[0]}"
+	local job=$1
+	local process_name
+	if [ $# -gt 1 ]; then
+		process_name=$2
+	else
+		process_name=$(ps -q "$job" -o comm=)
+	fi
+	local spinstr='\|/-'
+	local start_time=$SECONDS
+	local temp
+
+	.log 3 "background job pid: $job"
+	while ps -q "$job" &>/dev/null; do
+		if [ "$LOG_LEVEL" -ne 0 ]; then
+			temp="${spinstr#?}"
+			printf "\r[\033[33mwarn \033[0m] running: %s (%ds) %c" "$process_name" "$((SECONDS-start_time))" "${spinstr}"
+			spinstr=${temp}${spinstr%"$temp"}
+		fi
+		sleep 1
+	done
+	if [ "$LOG_LEVEL" -ne 0 ]; then
+		echo
+	fi
+}
+
 ################################################################################
 # ARGS PARSE
 declare -i LOG_LEVEL=1
 COLORIZED_LOG=true
+BASENAME=$(basename "$0")
 
 VAR_A='default_value'
 VAR_B='default_value'
@@ -112,8 +183,14 @@ IFS=''
 SHORT_OPTIONS="${!OPTIONS[*]}"
 unset IFS
 
-opt=$(getopt -o $SHORT_OPTIONS --long $LONG_OPTIONS -- "$@")
+opt=$(getopt -o "$SHORT_OPTIONS" --long "$LONG_OPTIONS" -- "$@")
+rc=$?
+if [ "$rc" -ne 0 ]; then
+	.log 0 "Getopt error"
+	exit $EX_USAGE
+fi
 eval set -- "$opt"
+unset opt rc
 while true; do
 	case "$1" in
 		-h | --help)
@@ -142,7 +219,7 @@ while true; do
 			;;
 		*)
 			.log 0 "No such parameter: '$1'"
-			exit 1
+			exit $EX_USAGE
 			;;
 	esac
 	shift
@@ -159,12 +236,12 @@ if [ $# -gt 0 ]; then
 		*)
 			.log 0 "No such command: $1"
 			.log 0 "See --help for more details"
-			exit 1
+			exit $EX_USAGE
 			;;
 	esac
 else
 	.log 0 "No command given, see --help"
-	exit 1
+	exit $EX_USAGE
 fi
 
 == ENDTEMPLATE ==
