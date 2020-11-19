@@ -248,7 +248,7 @@ if [ $# -gt 0 ]; then
 		*)
 			.log 0 "No such command: $1"
 			.log 0 "See --help for more details"
-			exit "EX_USAGE"
+			exit "$EX_USAGE"
 			;;
 	esac
 else
