@@ -21,7 +21,7 @@ EX_NOTFOUND=127
 # Dependency
 if ! command -v getopt &>/dev/null; then
 	echo "This script require getopt, please install it"
-	exit $EX_NOTFOUND
+	exit "$EX_NOTFOUND"
 fi
 
 ################################################################################
@@ -187,7 +187,7 @@ opt=$(getopt -o "$SHORT_OPTIONS" --long "$LONG_OPTIONS" -- "$@")
 rc=$?
 if [ "$rc" -ne 0 ]; then
 	.log 0 "Getopt error"
-	exit $EX_USAGE
+	exit "$EX_USAGE"
 fi
 eval set -- "$opt"
 unset opt rc
@@ -219,7 +219,7 @@ while true; do
 			;;
 		*)
 			.log 0 "No such parameter: '$1'"
-			exit $EX_USAGE
+			exit "$EX_USAGE"
 			;;
 	esac
 	shift
@@ -236,12 +236,12 @@ if [ $# -gt 0 ]; then
 		*)
 			.log 0 "No such command: $1"
 			.log 0 "See --help for more details"
-			exit $EX_USAGE
+			exit "EX_USAGE"
 			;;
 	esac
 else
 	.log 0 "No command given, see --help"
-	exit $EX_USAGE
+	exit "$EX_USAGE"
 fi
 
 == ENDTEMPLATE ==
