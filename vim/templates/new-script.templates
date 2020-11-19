@@ -19,8 +19,8 @@ fi
 # Return codes
 # Limit user-defined exit codes to the range 64-113
 # See /usr/include/sysexits.h for common examples
-EX_USAGE=64
-EX_NOTFOUND=127
+export EX_USAGE=64
+export EX_NOTFOUND=127
 
 ################################################################################
 # Dependency
