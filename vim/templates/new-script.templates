@@ -71,6 +71,12 @@ declare -A LOG_LEVELS=(
 	[2]="info "
 	[3]="debug"
 )
+ncolors=$(tput colors)
+if [ -n "$ncolors"  ] && [ "$ncolors" -ge 8 ]; then
+	COLORIZED_LOG=true
+else
+	COLORIZED_LOG=false
+fi
 function .log
 {
 	# Usage:
@@ -93,6 +99,7 @@ function .log
 		esac
 	fi
 
+	# shellcheck disable=SC2153 # No misspelling
 	if [ "$LOG_LEVEL" -ge "$level" ]; then
 		if [ "$level" -eq 0 ]; then
 			echo -e "[${color}${LOG_LEVELS[$level]}\033[0m]" "$@" 1>&2
@@ -161,7 +168,6 @@ function .spinner
 ################################################################################
 # ARGS PARSE
 declare -i LOG_LEVEL=1
-COLORIZED_LOG=true
 BASENAME=$(basename "$0")
 
 VAR_A='default_value'
