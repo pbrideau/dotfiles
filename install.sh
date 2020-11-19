@@ -14,7 +14,7 @@ ln -s $HOME/.dotfiles/bashrc $HOME/.bashrc
 # VIM
 curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ln -s $HOME/.dotfiles/vim/vimrc $HOME/.vimrc
-ln -s $HOME/.dotfiles/vim/template $HOME/.vim/template
+ln -s $HOME/.dotfiles/vim/templates $HOME/.vim/templates
 ln -s $HOME/.dotfiles/vim/colors $HOME/.vim/colors
 vim +PlugInstall +qall
 echo "please install manually shellcheck software"
