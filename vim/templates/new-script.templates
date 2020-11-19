@@ -10,6 +10,11 @@ shopt -s extglob   # Extended pattern matching
 #set -e             # Stop execution if there is an error
 #set -o pipefail    # pass the error to the rightmost element when pipe
 
+if [ -f ./common.sh ]; then
+	# shellcheck disable=SC1091
+	source ./common.sh
+fi
+
 ################################################################################
 # Return codes
 # Limit user-defined exit codes to the range 64-113
