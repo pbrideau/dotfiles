@@ -1,5 +1,5 @@
 == Skeleton.script-set == nomenu, below ==
-# new-script.templates - 2020-11-18
+# new-script.templates - 2020-11-19
 
 set -o nounset     # Treat unset variable as an error
 shopt -s extglob   # Extended pattern matching
@@ -10,9 +10,9 @@ shopt -s extglob   # Extended pattern matching
 #set -e             # Stop execution if there is an error
 #set -o pipefail    # pass the error to the rightmost element when pipe
 
-if [ -f ./common.sh ]; then
+if [ -f common.sh ]; then
 	# shellcheck disable=SC1091
-	source ./common.sh
+	source common.sh
 fi
 
 ################################################################################
@@ -43,6 +43,8 @@ function usage
 	echo "   -d, --debug               Show debug log"
 	echo "   -v, --verbose             Show verbose log (multiple -v is --debug)"
 	echo "   -q, --quiet               Show only error logs (default warn)"
+	echo "   --no-colors               Disable colored output"
+	echo "   --parseable               Make output easier to parse"
 	echo
 	echo "   -f, --foo                 Do foo"
 	echo "   -b, --bar=BAZ             Do bar with BAZ"
@@ -56,34 +58,35 @@ function usage
 function main
 {
 	.log 3 "========== function ${FUNCNAME[0]}"
+	.prompt_user_abort "Do you want to continue?"
+	sleep 5 &
+	.spinner $! sleeping
 
-	.log 0 "This show an error"
-	.log 1 "This show a warning"
-	.log 2 "This show an info, VAR_A:$VAR_A"
-	.log 3 "This show a debug, VAR_B:$VAR_B"
+	.log 3 "This show a debug to stdout, when --debug"
+	.log 2 "This show an info to stdout, when --verbose"
+	.log 1 "This show a warning to stdout"
+	.log 0 "This show an error to stderr"
 }
 
 function validate_inputs
 {
 	.log 3 "========== function ${FUNCNAME[0]}"
+	.log 3 "var_a: $VAR_A"
+	.log 3 "var_b: $VAR_B"
 }
 
 ################################################################################
 # INTERNAL FUNCTION
+declare -i LOG_LEVEL=1
 declare -A LOG_LEVELS=(
 	[0]="error"
 	[1]="warn "
 	[2]="info "
 	[3]="debug"
 )
-ncolors=$(tput colors)
-if [ -n "$ncolors"  ] && [ "$ncolors" -ge 8 ]; then
-	COLORIZED_LOG=true
-else
-	COLORIZED_LOG=false
-fi
 function .log
 {
+	# Log to stdout or stderr
 	# Usage:
 	#   .log N "MESSAGE"
 	#   Where N is [0-3]
@@ -91,31 +94,30 @@ function .log
 	local level=${1}
 	local color=""
 	shift
-	if [ "$COLORIZED_LOG" = true ]; then
-		case $level in
-			0)
-				color="\033[31m" ;; # RED
-			1)
-				color="\033[33m" ;; # YELLOW
-			2)
-				color="\033[32m" ;; # GREEN
-			3)
-				color="\033[34m" ;; # BLUE
-		esac
-	fi
+	case $level in
+		0)
+			color="$txtred";;
+		1)
+			color="$txtylw";;
+		2)
+			color="$txtgrn";;
+		3)
+			color="$txtblu";;
+	esac
 
-	# shellcheck disable=SC2153 # No misspelling
+	# shellcheck disable=SC2153 # No misspelling here
 	if [ "$LOG_LEVEL" -ge "$level" ]; then
 		if [ "$level" -eq 0 ]; then
-			echo -e "[${color}${LOG_LEVELS[$level]}\033[0m]" "$@" 1>&2
+			echo -e "[${color}${LOG_LEVELS[$level]}${txtrst}]" "$@" 1>&2
 		else
-			echo -e "[${color}${LOG_LEVELS[$level]}\033[0m]" "$@"
+			echo -e "[${color}${LOG_LEVELS[$level]}${txtrst}]" "$@"
 		fi
 	fi
 }
 
 function .prompt_user_abort
 {
+	# Ask user if he want to continue
 	# Usage:
 	#   .prompt_user_abort
 	#       or
@@ -140,7 +142,7 @@ function .prompt_user_abort
 
 function .spinner
 {
-	# To start a sleeper while task is in background
+	# Start a notification while task is running in background
 	# Usage:
 	#   sleep 10 &
 	#   .sleeper $! job_name
@@ -157,11 +159,18 @@ function .spinner
 	local temp
 
 	.log 3 "background job pid: $job"
+	if [ "$PARSEABLE" = true ]; then
+		.log 1 "running: $process_name"
+	fi
 	while ps -q "$job" &>/dev/null; do
 		if [ "$LOG_LEVEL" -ne 0 ]; then
-			temp="${spinstr#?}"
-			printf "\r[\033[33mwarn \033[0m] running: %s (%ds) %c" "$process_name" "$((SECONDS-start_time))" "${spinstr}"
-			spinstr=${temp}${spinstr%"$temp"}
+			if [ "$PARSEABLE" = true ]; then
+				echo -n '.'
+			else
+				temp="${spinstr#?}"
+				printf "${txtcr}[${txtylw}warn ${txtrst}] running: %s (%ds) %c" "$process_name" "$((SECONDS-start_time))" "${spinstr}"
+				spinstr=${temp}${spinstr%"$temp"}
+			fi
 		fi
 		sleep 1
 	done
@@ -170,11 +179,53 @@ function .spinner
 	fi
 }
 
+function .set_colors
+{
+	txtund=$(tput sgr 0 1)          # Underline
+	txtbld=$(tput bold)             # Bold
+	txtrst=$(tput sgr0)             # Reset
+	txtcr=$(tput cr)                # Carriage return (start of line)
+	txtblk=; txtred=; txtgrn=; txtylw=; txtblu=; txtpur=; txtcyn=; txtwht=;
+	bldblk=${txtbld};
+	bldred=${txtbld};
+	bldgrn=${txtbld};
+	bldylw=${txtbld};
+	bldblu=${txtbld};
+	bldpur=${txtbld};
+	bldcyn=${txtbld};
+	bldwht=${txtbld};
+	if [ "$COLORS" = true ]; then
+		ncolors=$(tput colors)
+		if [ -n "$ncolors"  ] && [ "$ncolors" -ge 8 ]; then
+			txtblk=$(tput setaf 0)
+			txtred=$(tput setaf 1)
+			txtgrn=$(tput setaf 2)
+			txtylw=$(tput setaf 3)
+			txtblu=$(tput setaf 4)
+			txtpur=$(tput setaf 5)
+			txtcyn=$(tput setaf 6)
+			txtwht=$(tput setaf 7)
+			bldblk=${txtbld}${txtblk}
+			bldred=${txtbld}${txtred}
+			bldgrn=${txtbld}${txtgrn}
+			bldylw=${txtbld}${txtylw}
+			bldblu=${txtbld}${txtblu}
+			bldpur=${txtbld}${txtpur}
+			bldcyn=${txtbld}${txtcyn}
+			bldwht=${txtbld}${txtwht}
+		fi
+	fi
+	export txtund txtbld txtrst txtcr
+	export txtblk txtred txtgrn txtylw txtblu txtpur txtcyn txtwht
+	export bldblk bldred bldgrn bldylw bldblu bldpur bldcyn bldwht
+}
+
 ################################################################################
 # ARGS PARSE
-declare -i LOG_LEVEL=1
 BASENAME=$(basename "$0")
-#COLORIZED_LOG=false     # Disable log colors
+export COLORS=true
+export PARSEABLE=false
+#export LOG_LEVEL=1             # Set default log level
 
 VAR_A='default_value'
 VAR_B='default_value'
@@ -188,9 +239,13 @@ declare -A OPTIONS=(
 	['f']='foo'
 	['b:']='bar:'
 )
+declare -a OPTIONS_NOSHORT=(
+	'no-colors'
+	'parseable'
+)
 
 IFS=','
-LONG_OPTIONS="${OPTIONS[*]}"
+LONG_OPTIONS="${OPTIONS[*]},${OPTIONS_NOSHORT[*]}"
 IFS=''
 SHORT_OPTIONS="${!OPTIONS[*]}"
 unset IFS
@@ -198,7 +253,6 @@ unset IFS
 opt=$(getopt -o "$SHORT_OPTIONS" --long "$LONG_OPTIONS" -- "$@")
 rc=$?
 if [ "$rc" -ne 0 ]; then
-	.log 0 "Getopt error"
 	exit "$EX_USAGE"
 fi
 eval set -- "$opt"
@@ -218,6 +272,13 @@ while true; do
 		-q | --quiet)
 			LOG_LEVEL=0
 			;;
+		--no-colors)
+			COLORS=false
+			;;
+		--parseable)
+			COLORS=false
+			PARSEABLE=true
+			;;
 		-f | --foo)
 			VAR_A='foobar'
 			;;
@@ -230,7 +291,7 @@ while true; do
 			break
 			;;
 		*)
-			.log 0 "No such parameter: '$1'"
+			echo "No such parameter: '$1'"
 			exit "$EX_USAGE"
 			;;
 	esac
@@ -239,6 +300,7 @@ done
 
 ################################################################################
 # Start functions
+.set_colors
 if [ $# -gt 0 ]; then
 	validate_inputs
 	case "$1" in
@@ -255,5 +317,4 @@ else
 	.log 0 "No command given, see --help"
 	exit "$EX_USAGE"
 fi
-
 == ENDTEMPLATE ==
