@@ -245,6 +245,7 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 let g:syntastic_sh_checkers = [ 'shellcheck' ]
+let g:syntastic_sh_shellcheck_args = '-x'
 let g:syntastic_sh_bashate_args = '-i E002,E003,E020'
 
 " Transparent editing of gpg encrypted files.
