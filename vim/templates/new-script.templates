@@ -57,26 +57,27 @@ function usage
 # MAIN
 function main
 {
-	.log 3 "========== function ${FUNCNAME[0]}"
-	.prompt_user_abort "Do you want to continue?"
+	log 3 "========== function ${FUNCNAME[0]}"
+	log 3 "config_file: $CONFIG_FILE"
+	prompt_user_abort "Do you want to continue?"
 	sleep 5 &
-	.spinner $! sleeping
+	spinner $! sleeping
 
-	.log 3 "This show a debug to stdout, when --debug"
-	.log 2 "This show an info to stdout, when --verbose"
-	.log 1 "This show a warning to stdout"
-	.log 0 "This show an error to stderr"
+	log 3 "This show a debug to stdout, when --debug"
+	log 2 "This show an info to stdout, when --verbose"
+	log 1 "This show a warning to stdout"
+	log 0 "This show an error to stderr"
 }
 
 function validate_inputs
 {
-	.log 3 "========== function ${FUNCNAME[0]}"
-	.log 3 "var_a: $VAR_A"
-	.log 3 "var_b: $VAR_B"
+	log 3 "========== function ${FUNCNAME[0]}"
+	log 3 "var_a: $VAR_A"
+	log 3 "var_b: $VAR_B"
 }
 
 ################################################################################
-# INTERNAL FUNCTION
+# INTERNAL FUNCTION (might want to put in common.sh)
 declare -i LOG_LEVEL=1
 declare -A LOG_LEVELS=(
 	[0]="error"
@@ -84,13 +85,13 @@ declare -A LOG_LEVELS=(
 	[2]="info "
 	[3]="debug"
 )
-function .log
+function log
 {
 	# Log to stdout or stderr
 	# Usage:
-	#   .log N "MESSAGE"
+	#   log N "MESSAGE"
 	#   Where N is [0-3]
-	#   .log 0 "This is an error log"
+	#   log 0 "This is an error log"
 	local level=${1}
 	local color=""
 	shift
@@ -115,38 +116,40 @@ function .log
 	fi
 }
 
-function .prompt_user_abort
+function prompt_user_abort
 {
 	# Ask user if he want to continue
 	# Usage:
-	#   .prompt_user_abort
+	#   prompt_user_abort
 	#       or
-	#   .prompt_user_abort "QUESTION"
-	.log 3 "========== function ${FUNCNAME[0]}"
+	#   prompt_user_abort "QUESTION"
+	log 3 "========== function ${FUNCNAME[0]}"
 	local question="Are you sure?"
 	local response
 	if [ $# -gt 0 ]; then
 		question=$1
 	fi
 	question="${question} [y/N] "
-	read -r -p "$question" response
-	case "$response" in
-		[yY][eE][sS]|[yY])
-			;;
-		*)
-			.log 0 "Aborting..."
-			exit 1
-			;;
-	esac
+	if [ "$ALWAYS_YES" = false ]; then
+		read -r -p "$question" response
+		case "$response" in
+			[yY][eE][sS]|[yY])
+				;;
+			*)
+				log 0 "Aborting..."
+				exit 1
+				;;
+		esac
+	fi
 }
 
-function .spinner
+function spinner
 {
 	# Start a notification while task is running in background
 	# Usage:
 	#   sleep 10 &
 	#   .sleeper $! job_name
-	.log 3 "========== function ${FUNCNAME[0]}"
+	log 3 "========== function ${FUNCNAME[0]}"
 	local job=$1
 	local process_name
 	if [ $# -gt 1 ]; then
@@ -158,9 +161,9 @@ function .spinner
 	local start_time=$SECONDS
 	local temp
 
-	.log 3 "background job pid: $job"
+	log 3 "background job pid: $job"
 	if [ "$PARSEABLE" = true ]; then
-		.log 1 "running: $process_name"
+		log 1 "running: $process_name"
 	fi
 	while ps -q "$job" &>/dev/null; do
 		if [ "$LOG_LEVEL" -ne 0 ]; then
@@ -179,7 +182,7 @@ function .spinner
 	fi
 }
 
-function .set_colors
+function set_colors
 {
 	txtund=$(tput sgr 0 1)          # Underline
 	txtbld=$(tput bold)             # Bold
@@ -300,21 +303,22 @@ done
 
 ################################################################################
 # Start functions
-.set_colors
+set_colors
 if [ $# -gt 0 ]; then
+	log 3 "pid: $$"
 	validate_inputs
 	case "$1" in
 		run)
 			main
 			;;
 		*)
-			.log 0 "No such command: $1"
-			.log 0 "See --help for more details"
+			log 0 "No such command: $1"
+			log 0 "See --help for more details"
 			exit "$EX_USAGE"
 			;;
 	esac
 else
-	.log 0 "No command given, see --help"
+	log 0 "No command given, see --help"
 	exit "$EX_USAGE"
 fi
 == ENDTEMPLATE ==
