@@ -193,21 +193,31 @@ function spinner
 	fi
 }
 
-function set_colors
-{
+if tty -s; then
 	txtund=$(tput sgr 0 1)          # Underline
 	txtbld=$(tput bold)             # Bold
 	txtrst=$(tput sgr0)             # Reset
 	txtcr=$(tput cr)                # Carriage return (start of line)
-	txtblk=; txtred=; txtgrn=; txtylw=; txtblu=; txtpur=; txtcyn=; txtwht=;
-	bldblk=${txtbld};
-	bldred=${txtbld};
-	bldgrn=${txtbld};
-	bldylw=${txtbld};
-	bldblu=${txtbld};
-	bldpur=${txtbld};
-	bldcyn=${txtbld};
-	bldwht=${txtbld};
+else
+	txtund=; txtbld=; txtrst=; txtcr=;
+fi
+txtblk=; txtred=; txtgrn=; txtylw=; txtblu=; txtpur=; txtcyn=; txtwht=;
+bldblk=${txtbld};
+bldred=${txtbld};
+bldgrn=${txtbld};
+bldylw=${txtbld};
+bldblu=${txtbld};
+bldpur=${txtbld};
+bldcyn=${txtbld};
+bldwht=${txtbld};
+function set_colors
+{
+	# Make sure we run as interractive shell, disable colors otherwise
+	if ! tty -s; then
+		PARSEABLE=true
+		COLORS=false
+	fi
+
 	if [ "$COLORS" = true ]; then
 		ncolors=$(tput colors)
 		if [ -n "$ncolors"  ] && [ "$ncolors" -ge 8 ]; then
