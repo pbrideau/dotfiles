@@ -43,6 +43,10 @@ function usage
 	echo "   -v, --verbose             Show verbose log (multiple -v is --debug)"
 	echo "   -q, --quiet               Show only error logs (default warn)"
 	echo "   -y, --yes                 Answer YES to every questions asked"
+	echo "   -c, --config FILE         Use FILE as config, default:"
+	echo "                               1  ./${BASENAME%%.*}.conf"
+	echo "                               2  ~/.${BASENAME%%.*}.conf"
+	echo "                               3  /etc/${BASENAME%%.*}.conf"
 	echo "   --no-colors               Disable colored output"
 	echo "   --parseable               Make output easier to parse"
 	echo
@@ -244,7 +248,21 @@ function set_colors
 	export bldblk bldred bldgrn bldylw bldblu bldpur bldcyn bldwht
 }
 
-
+# shellcheck disable=SC2120
+function load_config
+{
+	for f in "${CONFIG_FILES[@]}"; do
+		if [ -r "$f" ]; then
+			while read -r line; do
+				if [[ ! "$line" =~ ^# ]]; then
+					eval set -- "--${line}"
+					load_arg "$@"
+				fi
+			done < "$f"
+			break
+		fi
+	done
+}
 
 # Reserved return codes
 export EX_OK=0           # No error
@@ -292,6 +310,7 @@ export EX_SIGSYS=159     # Bad system call (SVr4)
 ################################################################################
 # ARGS PARSE
 BASENAME=$(basename "$0")
+CONFIG_FILES=("./${BASENAME%%.*}.conf" "${HOME}/.${BASENAME%%.*}.conf" "/etc/${BASENAME%%.*}.conf")
 export COLORS=true
 export PARSEABLE=false
 export ALWAYS_YES=false
@@ -306,6 +325,7 @@ declare -A OPTIONS=(
 	['v']='verbose'
 	['q']='quiet'
 	['y']='yes'
+	['c:']='config:'
 
 	['f']='foo'
 	['b:']='bar:'
@@ -355,6 +375,9 @@ function load_arg
 				COLORS=false
 				PARSEABLE=true
 				;;
+			-c | --config)
+				CONFIG_FILES=( "$1" )
+				;;
 			-f | --foo)
 				VAR_A='foobar'
 				;;
@@ -379,6 +402,9 @@ function load_arg
 declare -a END_LOAD_ARG
 load_arg "$@"
 eval set -- "${END_LOAD_ARG[@]}"
+
+# shellcheck disable=SC2119
+load_config
 
 ################################################################################
 # Start functions
