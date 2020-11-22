@@ -43,6 +43,7 @@ function usage
 	echo "   -d, --debug               Show debug log"
 	echo "   -v, --verbose             Show verbose log (multiple -v is --debug)"
 	echo "   -q, --quiet               Show only error logs (default warn)"
+	echo "   -y, --yes                 Answer YES to every questions asked"
 	echo "   --no-colors               Disable colored output"
 	echo "   --parseable               Make output easier to parse"
 	echo
@@ -236,6 +237,7 @@ function set_colors
 BASENAME=$(basename "$0")
 export COLORS=true
 export PARSEABLE=false
+ALWAYS_YES=false
 #export LOG_LEVEL=1             # Set default log level
 
 VAR_A='default_value'
@@ -246,6 +248,7 @@ declare -A OPTIONS=(
 	['d']='debug'
 	['v']='verbose'
 	['q']='quiet'
+	['y']='yes'
 
 	['f']='foo'
 	['b:']='bar:'
@@ -282,6 +285,9 @@ while true; do
 			;;
 		-q | --quiet)
 			LOG_LEVEL=0
+			;;
+		-y | --yes)
+			ALWAYS_YES=true
 			;;
 		--no-colors)
 			COLORS=false
