@@ -58,6 +58,7 @@ function usage
 	echo
 	echo "Return codes:"
 	echo "  64   EX_USAGE              Command line usage error"
+	echo "  125  EX_FAIL               Command itself fail"
 	echo "  127  EX_NOTFOUND           File not found"
 }
 
@@ -310,7 +311,7 @@ export EX_SIGSYS=159     # Bad system call (SVr4)
 ################################################################################
 # ARGS PARSE
 BASENAME=$(basename "$0")
-CONFIG_FILES=("./${BASENAME%%.*}.conf" "${HOME}/.${BASENAME%%.*}.conf" "/etc/${BASENAME%%.*}.conf")
+export CONFIG_FILES=("./${BASENAME%%.*}.conf" "${HOME}/.${BASENAME%%.*}.conf" "/etc/${BASENAME%%.*}.conf")
 export COLORS=true
 export PARSEABLE=false
 export ALWAYS_YES=false
@@ -319,30 +320,30 @@ export ALWAYS_YES=false
 VAR_A='default_value'
 VAR_B='default_value'
 
-declare -A OPTIONS=(
-	['h']='help'
-	['d']='debug'
-	['v']='verbose'
-	['q']='quiet'
-	['y']='yes'
-	['c:']='config:'
-
-	['f']='foo'
-	['b:']='bar:'
-)
-declare -a OPTIONS_NOSHORT=(
-	'no-colors'
-	'parseable'
-)
-
-IFS=','
-LONG_OPTIONS="${OPTIONS[*]},${OPTIONS_NOSHORT[*]}"
-IFS=''
-SHORT_OPTIONS="${!OPTIONS[*]}"
-unset IFS
-
 function load_arg
 {
+	declare -A OPTIONS=(
+		['h']='help'
+		['d']='debug'
+		['v']='verbose'
+		['q']='quiet'
+		['y']='yes'
+		['c:']='config:'
+
+		['f']='foo'
+		['b:']='bar:'
+	)
+	declare -a OPTIONS_NOSHORT=(
+		'no-colors'
+		'parseable'
+	)
+
+	IFS=','
+	LONG_OPTIONS="${OPTIONS[*]},${OPTIONS_NOSHORT[*]}"
+	IFS=''
+	SHORT_OPTIONS="${!OPTIONS[*]}"
+	unset IFS
+
 	opt=$(getopt -o "$SHORT_OPTIONS" --long "$LONG_OPTIONS" -- "$@")
 	rc=$?
 	if [ "$rc" -ne 0 ]; then
@@ -391,7 +392,7 @@ function load_arg
 				;;
 			*)
 				log 0 "No such parameter: '$1'"
-				exit "$EX_USAGE"
+				exit "$EX_FAIL"
 				;;
 		esac
 		shift
