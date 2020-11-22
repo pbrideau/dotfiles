@@ -284,7 +284,7 @@ export EX_SIGSYS=159     # Bad system call (SVr4)
 BASENAME=$(basename "$0")
 export COLORS=true
 export PARSEABLE=false
-ALWAYS_YES=false
+export ALWAYS_YES=false
 #export LOG_LEVEL=1             # Set default log level
 
 VAR_A='default_value'
