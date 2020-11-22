@@ -76,6 +76,14 @@ function validate_inputs
 	log 3 "var_b: $VAR_B"
 }
 
+trap sigusr1 SIGUSR1
+function sigusr1
+{
+	# Trigger this with kill -s USR1 <pid>
+	echo
+	log 3 "Signal SIGUSR1 received"
+}
+
 ################################################################################
 # INTERNAL FUNCTION (might want to put in common.sh)
 declare -i LOG_LEVEL=1
