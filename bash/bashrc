@@ -2,7 +2,7 @@
 # shellcheck disable=SC1090
 declare -a TMUX_HOSTS
 if [ -d "$HOME/.bashrc_dir" ]; then
-	source "$HOME/.bashrc_dir/*"
+	source "${HOME}/.bashrc_dir/"*
 fi
 
 ################################################################################
