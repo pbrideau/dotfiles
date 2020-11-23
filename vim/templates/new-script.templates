@@ -253,14 +253,24 @@ function set_colors
 # shellcheck disable=SC2120
 function load_config
 {
+	declare -i linenum=1
 	for f in "${CONFIG_FILES[@]}"; do
 		if [ -r "$f" ]; then
+			local regex="^#"
 			while read -r line; do
-				if [[ ! "$line" =~ ^# ]]; then
+				if [[ ! "$line" =~ $regex ]]; then
 					eval set -- "--${line}"
 					load_arg "$@"
+					if [ "${#END_LOAD_ARG[@]}" -gt 0 ]; then
+						log 0 "Could not parse config file ($f) correctly"
+						log 0 "Error on line ${linenum}:"
+						log 0 "> $line"
+						exit "$EX_USAGE"
+					fi
 				fi
+				(( linenum++ ))
 			done < "$f"
+			# Load only the first config we can find, not every config files
 			break
 		fi
 	done
