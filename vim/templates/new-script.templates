@@ -403,7 +403,12 @@ function load_arg
 
 declare -a END_LOAD_ARG
 load_arg "$@"
-eval set -- "${END_LOAD_ARG[@]}"
+eval set --
+if [ "${#END_LOAD_ARG[@]}" -gt 0 ]; then
+	for arg in "${END_LOAD_ARG[@]}"; do
+		eval set -- "$@" "'$arg'"
+	done
+fi
 
 # shellcheck disable=SC2119
 load_config
