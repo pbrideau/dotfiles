@@ -9,6 +9,7 @@ ln -s "$HOME/.dotfiles/git/gitignore" "$HOME/.gitignore"
 
 # BASH
 mkdir -p "$HOME/.bash_history_dir"
+mkdir -p "$HOME/.bashrc_dir"
 ln -s "$HOME/.dotfiles/bashrc" "$HOME/.bashrc"
 
 # VIM
