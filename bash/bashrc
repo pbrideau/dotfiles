@@ -1,3 +1,5 @@
+#!/bin/bash
+# shellcheck disable=SC1090
 declare -a TMUX_HOSTS
 source $HOME/.dotfiles/bash/other/*
 
@@ -8,24 +10,24 @@ source $HOME/.dotfiles/bash/other/*
 # TERM="no_tmux:$TERM" ssh host
 
 if [[ "$TERM" =~ .*:.* ]]; then
-  MY_ENV_OVERRIDE=${TERM%:*}
-  TERM=${TERM##*:}
+	MY_ENV_OVERRIDE=${TERM%:*}
+	TERM=${TERM##*:}
 fi
 export MY_ENV_OVERRIDE
 
 if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
-  if  [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
-    if [[ "${TMUX_HOSTS[*]}" =~ "$HOSTNAME" ]]; then
-      if [ "$(tmux list-sessions | grep -c attached )" -lt "$(tmux list-sessions | wc -l)" ]; then
-        SESSION_TO_ATTACH="$(tmux list-sessions | grep -v attached | head -1 | cut -d ':' -f 1)"
-        tmux attach-session -t "$SESSION_TO_ATTACH"
-        exit
-      else
-        tmux new-session
-        exit
-      fi
-    fi
-  fi
+	if  [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
+		if [[ "${TMUX_HOSTS[*]}" =~ $HOSTNAME ]]; then
+			if [ "$(tmux list-sessions | grep -c attached )" -lt "$(tmux list-sessions | wc -l)" ]; then
+				SESSION_TO_ATTACH="$(tmux list-sessions | grep -v attached | head -1 | cut -d ':' -f 1)"
+				tmux attach-session -t "$SESSION_TO_ATTACH"
+				exit
+			else
+				tmux new-session
+				exit
+			fi
+		fi
+	fi
 fi
 unset MY_ENV_OVERRIDE
 unset SESSION_TO_ATTACH
@@ -34,96 +36,96 @@ unset SESSION_TO_ATTACH
 ################################################################################
 # Source profile.d if not login shell
 if ! shopt -q login_shell ; then 
-    umask 002
-    SHELL=/bin/bash
-    for i in /etc/profile.d/*.sh; do
-        if [ -r "$i" ]; then
-            if [ "$PS1" ]; then
-                . "$i"
-            else
-                . "$i" >/dev/null
-            fi
-        fi
-    done
-    unset i
+	umask 002
+	SHELL=/bin/bash
+	for i in /etc/profile.d/*.sh; do
+		if [ -r "$i" ]; then
+			if [ "$PS1" ]; then
+				. "$i"
+			else
+				. "$i" >/dev/null
+			fi
+		fi
+	done
+	unset i
 fi
 
 ################################################################################
 # When using tmux:
 if [ -n "$TMUX" ]; then
-  settitle() {
-      printf "\033k$1\033\\"
-  }
+	settitle() {
+		printf "\033k%s\033\\" "$1"
+	}
 
-  ssh() {
-      settitle "$*"
-      command ssh "$@"
-      settitle "bash"
-  }
+	ssh() {
+		settitle "$*"
+		command ssh "$@"
+		settitle "bash"
+	}
 
-  #MOTD:
-  #tested on tmux >= 1.5
-  CURRENT_SESSION_NAME="$(tmux list-panes -a | grep "$TMUX_PANE" | cut -d : -f 1 ):"
-  for word in $(tmux list-sessions); do
-    if [[ "$word" =~ [a-z0-9]+:$ ]]; then
-      if [ "$word" = "$CURRENT_SESSION_NAME" ]; then
-        echo -e "\033[1m"
-      else
-        echo -e "\033[0m"
-      fi
-    fi
-    echo -n " $word"
-  done
-  echo; echo
-  unset CURRENT_SESSION_NAME
+	#MOTD:
+	#tested on tmux >= 1.5
+	CURRENT_SESSION_NAME="$(tmux list-panes -a | grep "$TMUX_PANE" | cut -d : -f 1 ):"
+	for word in $(tmux list-sessions); do
+		if [[ "$word" =~ [a-z0-9]+:$ ]]; then
+			if [ "$word" = "$CURRENT_SESSION_NAME" ]; then
+				echo -e "\033[1m"
+			else
+				echo -e "\033[0m"
+			fi
+		fi
+		echo -n " $word"
+	done
+	echo; echo
+	unset CURRENT_SESSION_NAME
 fi
 
 ################################################################################
 # Set variables by OS
 if [ -e /etc/os-release ]; then
-  OS="$(awk -F= '/^NAME/{print $2}' /etc/os-release)"
+	OS="$(awk -F= '/^NAME/{print $2}' /etc/os-release)"
 else
-  OS="$(cat /etc/*-release | sort -u)"
+	OS="$(cat /etc/*-release | sort -u)"
 fi
 
 case "$OS" in
-  *'Red Hat'*)
-    # needs-restarting differ from version to version, check the kernel
-    LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1)
-    CURRENT_KERNEL=$(uname -r)
-    if [ "$LAST_KERNEL" = "$CURRENT_KERNEL" ]; then
-      REBOOT=""
-    else
-      REBOOT="(reboot) "
-    fi
-    ;;
-  *'Debian'*)
-    if [ -e /var/run/reboot-required -o -e /var/run/reboot-required.pkgs ]; then
-      REBOOT="(reboot) "
-    else
-      REBOOT=""
-    fi
-    ;;
-  *'Solaris'*)
-     REBOOT=""
-     NEW_PATH+=( '/usr/xpg4/bin' )
-    ;;
-  *)
-    REBOOT="(Unknown OS) "
-    ;;
+	*'Red Hat'*)
+		# needs-restarting differ from version to version, check the kernel
+		LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1)
+		CURRENT_KERNEL=$(uname -r)
+		if [ "$LAST_KERNEL" = "$CURRENT_KERNEL" ]; then
+			REBOOT=""
+		else
+			REBOOT="(reboot) "
+		fi
+		;;
+	*'Debian'*)
+		if [ -e /var/run/reboot-required ] || [ -e /var/run/reboot-required.pkgs ]; then
+			REBOOT="(reboot) "
+		else
+			REBOOT=""
+		fi
+		;;
+	*'Solaris'*)
+		REBOOT=""
+		NEW_PATH+=( '/usr/xpg4/bin' )
+		;;
+	*)
+		REBOOT="(Unknown OS) "
+		;;
 esac
 
 
 ################################################################################
 # BASIC CONFIGS
 NEW_PATH+=(
-  "$HOME/.local/bin"
+"$HOME/.local/bin"
 )
 for x in "${NEW_PATH[@]}"; do
-  case ":$PATH:" in
-    *":$x:"*) :;; # already there
-    *) PATH="$x:$PATH";;
-  esac
+	case ":$PATH:" in
+		*":$x:"*) :;; # already there
+	*) PATH="$x:$PATH";;
+esac
 done
 unset NEW_PATH
 
@@ -137,46 +139,47 @@ function refresh_history
 
 # are we an interactive shell?
 if [ "$PS1" ]; then
-  shopt -s histappend     # Turn on parallel history
-  history -a
-  shopt -s checkwinsize   # Turn on checkwinsize
-  shopt -s cdspell        # Correct minor error in cd command
-  shopt -s cmdhist        # Save multiple-line on the same line
-  HISTFILE="${HOME}/.bash_history_dir/${HOSTNAME%%.*}"
-  HISTCONTROL=ignoreboth:erasedups
-  HISTSIZE=10000
-  HISTFILESIZE=10000
-  unset HISTTIMEFORMAT
+	shopt -s histappend     # Turn on parallel history
+	history -a
+	shopt -s checkwinsize   # Turn on checkwinsize
+	shopt -s cdspell        # Correct minor error in cd command
+	shopt -s cmdhist        # Save multiple-line on the same line
+	HISTFILE="${HOME}/.bash_history_dir/${HOSTNAME%%.*}"
+	HISTCONTROL=ignoreboth:erasedups
+	HISTSIZE=10000
+	HISTFILESIZE=10000
+	unset HISTTIMEFORMAT
 
-  export PROMPT_COMMAND="refresh_history; $PROMPT_COMMAND"
-  if [ -e $HISTFILE ]; then
-    TEMP_FILE=$(mktemp --tmpdir=$HOME/.bash_history_dir)
-    tac "$HISTFILE" | awk '!x[$0]++' > $TEMP_FILE && tac $TEMP_FILE > "$HISTFILE"
-    rm $TEMP_FILE
-    unset TEMP_FILE
-  fi
+	export PROMPT_COMMAND="refresh_history; $PROMPT_COMMAND"
+	if [ -e "$HISTFILE" ]; then
+		TEMP_FILE=$(mktemp --tmpdir="$HOME/.bash_history_dir")
+		tac "$HISTFILE" | awk '!x[$0]++' > "$TEMP_FILE" && tac "$TEMP_FILE" > "$HISTFILE"
+		rm "$TEMP_FILE"
+		unset TEMP_FILE
+	fi
 fi
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
+# shellcheck disable=SC1091
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+	if [ -f /usr/share/bash-completion/bash_completion ]; then
+		. /usr/share/bash-completion/bash_completion
+	elif [ -f /etc/bash_completion ]; then
+		. /etc/bash_completion
+	fi
 fi
 
 ################################################################################
 # IS THERE PACKAGES TO UPDATES?
-if [ -e $HOME/.update_count ]; then
-  let UPDATE_CONTENT=$(cat $HOME/.update_count)
-  if [ $UPDATE_CONTENT -eq 0 ]; then
-    UPDATE_COUNT=""
-  else
-    UPDATE_COUNT="($UPDATE_CONTENT) "
-  fi
+if [ -e "$HOME/.update_count" ]; then
+	UPDATE_CONTENT=$(cat "$HOME/.update_count")
+	if [ "$UPDATE_CONTENT" -eq 0 ]; then
+		UPDATE_COUNT=""
+	else
+		UPDATE_COUNT="($UPDATE_CONTENT) "
+	fi
 fi
 # Crontabs:
 # Debian: nice -n 19 aptitude search "~U" | wc -l > $HOME/.update_count
@@ -185,7 +188,7 @@ fi
 ################################################################################
 # PROMPT
 if [ -z "$ICON_COLOR" ]; then
-  ICON_COLOR="\033[01;32m"
+	ICON_COLOR="\033[01;32m"
 fi
 
 PS1="\n\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h\[${ICON_COLOR}\] >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]\n\$ "
@@ -193,15 +196,15 @@ PS1="\n\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h\[${I
 ################################################################################
 # GIT
 if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
-  GIT_PROMPT_ONLY_IN_REPO=1
-  GIT_PROMPT_FETCH_REMOTE_STATUS=1
-  GIT_PROMPT_IGNORE_SUBMODULES=0
-  GIT_PROMPT_SHOW_UPSTREAM=1
-  GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
-  GIT_PROMPT_START="\n\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h\[${ICON_COLOR}\] >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]"
-  GIT_PROMPT_END="\n\$ "
+	export GIT_PROMPT_ONLY_IN_REPO=1
+	export GIT_PROMPT_FETCH_REMOTE_STATUS=1
+	export GIT_PROMPT_IGNORE_SUBMODULES=0
+	export GIT_PROMPT_SHOW_UPSTREAM=1
+	export GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
+	export GIT_PROMPT_START="\n\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h\[${ICON_COLOR}\] >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]"
+	export GIT_PROMPT_END="\n\$ "
 
-  source $HOME/git/bash-git-prompt/gitprompt.sh
+	source "$HOME/git/bash-git-prompt/gitprompt.sh"
 fi
 
 alias ga="git add"
@@ -218,7 +221,7 @@ export GIT_CEILING_DIRECTORIES="$HOME:/home"
 
 ################################################################################
 # CHEAT
-export CHEAT_CONFIG_PATH="~/.dotfiles/cheat/conf.yml"
+export CHEAT_CONFIG_PATH="$HOME/.dotfiles/cheat/conf.yml"
 
 ################################################################################
 # ALIASES
@@ -226,21 +229,21 @@ alias tmux='TERM=xterm-256color tmux'
 alias genpass="tr -cd '[:alnum:]' < /dev/urandom | fold -w43 | head -n1"
 
 if [ -x /usr/bin/gvim ]; then
-  alias vi="vim --servername VIM --remote-tab-silent"
+	alias vi="vim --servername VIM --remote-tab-silent"
 else
-  alias vi='vim -p'
+	alias vi='vim -p'
 fi
 
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    if grep --color "a" <<<"a" &>/dev/null; then
-      alias grep='grep --color=auto'
-      alias fgrep='fgrep --color=auto'
-      alias egrep='egrep --color=auto'
-    fi
+	test -r ~/.dircolors && ( eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)" )
+	alias ls='ls --color=auto'
+	if grep --color "a" <<<"a" &>/dev/null; then
+		alias grep='grep --color=auto'
+		alias fgrep='fgrep --color=auto'
+		alias egrep='egrep --color=auto'
+	fi
 fi
 
 alias ll='ls -latr'
@@ -255,8 +258,8 @@ alias ...='cd ../..'
 ################################################################################
 # RVM
 if [ -s "$HOME/.rvm/scripts/rvm" ]; then
-  source "$HOME/.rvm/scripts/rvm" 
-  # Load RVM into a shell session *as a function*
+	source "$HOME/.rvm/scripts/rvm" 
+	# Load RVM into a shell session *as a function*
 fi
 
 
