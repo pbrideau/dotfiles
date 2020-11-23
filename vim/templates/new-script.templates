@@ -224,6 +224,7 @@ function set_colors
 	fi
 
 	if [ "$COLORS" = true ]; then
+		local ncolors
 		ncolors=$(tput colors)
 		if [ -n "$ncolors"  ] && [ "$ncolors" -ge 8 ]; then
 			txtblk=$(tput setaf 0)
