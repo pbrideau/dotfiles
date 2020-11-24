@@ -167,6 +167,7 @@ function load_arg
 				PARSEABLE=true
 				;;
 			-c | --config)
+				shift
 				CONFIG_FILES=( "$1" )
 				;;
 			-f | --foo)
