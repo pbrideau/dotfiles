@@ -4,21 +4,23 @@
 # GIT
 mkdir -p "$HOME/git"
 git clone https://github.com/magicmonty/bash-git-prompt.git "$HOME/git/"
-ln -s "$HOME/.dotfiles/git/gitconfig" "$HOME/.gitconfig"
-ln -s "$HOME/.dotfiles/git/gitignore" "$HOME/.gitignore"
+ln -s ".dotfiles/git/gitconfig" "$HOME/.gitconfig"
+ln -s ".dotfiles/git/gitignore" "$HOME/.gitignore"
 
 # BASH
-mkdir -p "$HOME/.bash_history_dir"
-mkdir -p "$HOME/.bashrc_dir"
-ln -s "$HOME/.dotfiles/bashrc" "$HOME/.bashrc"
+ln -s .dotfiles/bash/bashrc .bashrc
+mkdir -p .bash_history_dir
+mkdir -p .bashrc_dir
+mkdir -p scripts
+ln -s ../.dotfiles/bash/common.sh "$HOME/scripts/common.sh"
 
 # VIM
 curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-ln -s "$HOME/.dotfiles/vim/vimrc" "$HOME/.vimrc"
-ln -s "$HOME/.dotfiles/vim/templates" "$HOME/.vim/templates"
-ln -s "$HOME/.dotfiles/vim/colors" "$HOME/.vim/colors"
+ln -s ".dotfiles/vim/vimrc" "$HOME/.vimrc"
+ln -s "../.dotfiles/vim/templates" "$HOME/.vim/templates"
+ln -s "../.dotfiles/vim/colors" "$HOME/.vim/colors"
 vim +PlugInstall +qall
 echo "please install manually shellcheck software"
 
 # TMUX
-ln -s "$HOME/.dotfiles/tmux.conf" "$HOME/.tmux.conf"
+ln -s ".dotfiles/tmux.conf" "$HOME/.tmux.conf"
