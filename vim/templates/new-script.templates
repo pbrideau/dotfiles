@@ -100,12 +100,12 @@ function sigusr1
 
 ################################################################################
 # ARGS PARSE
+set_colors true
 BASENAME=$(basename "$0")
 export CONFIG_FILES=("./${BASENAME%%.*}.conf" "${HOME}/.${BASENAME%%.*}.conf" "/etc/${BASENAME%%.*}.conf")
-export COLORS=true
 export PARSEABLE=false
 export ALWAYS_YES=false
-#export LOG_LEVEL=1             # Set default log level
+declare -gi LOG_LEVEL=1
 
 VAR_A='default_value'
 VAR_B='default_value'
@@ -160,10 +160,10 @@ function load_arg
 				ALWAYS_YES=true
 				;;
 			--no-colors)
-				COLORS=false
+				set_colors false
 				;;
 			--parseable)
-				COLORS=false
+				set_colors false
 				PARSEABLE=true
 				;;
 			-c | --config)
@@ -200,12 +200,10 @@ if [ "${#END_LOAD_ARG[@]}" -gt 0 ]; then
 	done
 fi
 
-# shellcheck disable=SC2119
-load_config
+load_config "${CONFIG_FILES[@]}"
 
 ################################################################################
 # Start functions
-set_colors
 if [ $# -eq 1 ]; then
 	log 3 "pid: $$"
 	validate_inputs
