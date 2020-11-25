@@ -1,20 +1,26 @@
 #!/bin/bash -
 
-declare -i LOG_LEVEL=1
-declare -A LOG_LEVELS=(
-[0]="error"
-[1]="warn "
-[2]="info "
-[3]="debug"
-)
+#---  FUNCTION  ----------------------------------------------------------------
+#          NAME:  log
+#   DESCRIPTION:  Output message to stdout or stderr
+#       GLOBALS:  LOG_LEVEL
+#    PARAMETERS:  1) int:    Which level of log to display (0-3)
+#                 2) string: what to display
+#        OUTPUT:  message to stdout or stderr
+#       RETURNS:
+#-------------------------------------------------------------------------------
 function log
 {
-	# Log to stdout or stderr
-	# Usage:
-	#   log N "MESSAGE"
-	#   Where N is [0-3]
-	#   log 0 "This is an error log"
-	local level=${1}
+	declare -A available_levels=(
+		[0]="error"
+		[1]="warn "
+		[2]="info "
+		[3]="debug"
+	)
+	if [ "${LOG_LEVEL:-x}" = "x" ]; then
+		declare -i LOG_LEVEL=1
+	fi
+	declare -i level=${1}
 	local color=""
 	shift
 	case $level in
@@ -28,23 +34,26 @@ function log
 			color="$txtblu";;
 	esac
 
-	# shellcheck disable=SC2153 # No misspelling here
 	if [ "$LOG_LEVEL" -ge "$level" ]; then
 		if [ "$level" -eq 0 ]; then
-			echo -e "[${color}${LOG_LEVELS[$level]}${txtrst}]" "$@" 1>&2
+			echo -e "[${color}${available_levels[$level]}${txtrst}]" "$@" 1>&2
 		else
-			echo -e "[${color}${LOG_LEVELS[$level]}${txtrst}]" "$@"
+			echo -e "[${color}${available_levels[$level]}${txtrst}]" "$@"
 		fi
 	fi
 }
 
+#---  FUNCTION  ----------------------------------------------------------------
+#          NAME:  prompt_user_abort
+#   DESCRIPTION:  Ask user if he wants to continue, stop script otherwise
+#       GLOBALS:  ALWAYS_YES
+#    PARAMETERS:  1) string: Question to as user, optional
+#        OUTPUT:  May output logs
+#                 Question
+#       RETURNS:
+#-------------------------------------------------------------------------------
 function prompt_user_abort
 {
-	# Ask user if he want to continue
-	# Usage:
-	#   prompt_user_abort
-	#       or
-	#   prompt_user_abort "QUESTION"
 	log 3 "========== function ${FUNCNAME[0]}"
 	local question="Are you sure?"
 	local response
@@ -59,18 +68,26 @@ function prompt_user_abort
 				;;
 			*)
 				log 0 "Aborting..."
-				exit 1
+				exit "$EX_ERROR"
 				;;
 		esac
 	fi
 }
 
+#---  FUNCTION  ----------------------------------------------------------------
+#          NAME:  spinner
+#   DESCRIPTION:  Display a spinner while a function is running in background
+#       GLOBALS:  PARSEABLE
+#                 LOG_LEVEL
+#    PARAMETERS:  1) pid of process to listen to
+#                 2) Name of the process to display (optional)
+#        OUTPUT:  spinner
+#       RETURNS:
+#         USAGE:  sleep 10 &
+#                 sleeper $! job_name
+#-------------------------------------------------------------------------------
 function spinner
 {
-	# Start a notification while task is running in background
-	# Usage:
-	#   sleep 10 &
-	#   .sleeper $! job_name
 	log 3 "========== function ${FUNCNAME[0]}"
 	local job=$1
 	local process_name
@@ -104,85 +121,89 @@ function spinner
 	fi
 }
 
-if tty -s; then
-	txtund=$(tput smul)             # Underline
-	txtbld=$(tput bold)             # Bold
-	txtrst=$(tput sgr0)             # Reset
-	txtcr=$(tput cr)                # Carriage return (start of line)
-else
-	txtund=; txtbld=; txtrst=; txtcr=;
-fi
-txtblk=; txtred=; txtgrn=; txtylw=; txtblu=; txtpur=; txtcyn=; txtwht=;
-bakblk=; bakred=; bakgrn=; bakylw=; bakblu=; bakpur=; bakcyn=; bakwht=;
-bldblk=${txtbld};
-bldred=${txtbld};
-bldgrn=${txtbld};
-bldylw=${txtbld};
-bldblu=${txtbld};
-bldpur=${txtbld};
-bldcyn=${txtbld};
-bldwht=${txtbld};
-undblk=${txtund};
-undred=${txtund};
-undgrn=${txtund};
-undylw=${txtund};
-undblu=${txtund};
-undpur=${txtund};
-undcyn=${txtund};
-undwht=${txtund};
+#---  FUNCTION  ----------------------------------------------------------------
+#          NAME:  set_colors
+#   DESCRIPTION:  Set colors variables to be used later
+#       GLOBALS:  Set a lot of global variables
+#    PARAMETERS:  1) bool: do we set colors or not
+#        OUTPUT:  May output logs
+#       RETURNS:
+#-------------------------------------------------------------------------------
 function set_colors
 {
-	# Make sure we run as interractive shell, disable colors otherwise
-	if ! tty -s; then
-		PARSEABLE=true
-		COLORS=false
-		return
-	fi
+	local colors=$1
+	function no_colors
+	{
+		txtblk=; txtred=; txtgrn=; txtylw=; txtblu=; txtpur=; txtcyn=; txtwht=;
+		bakblk=; bakred=; bakgrn=; bakylw=; bakblu=; bakpur=; bakcyn=; bakwht=;
+		set_bldund
+	}
+
+	function yes_colors
+	{
+		txtblk=$(tput setaf 0)
+		txtred=$(tput setaf 1)
+		txtgrn=$(tput setaf 2)
+		txtylw=$(tput setaf 3)
+		txtblu=$(tput setaf 4)
+		txtpur=$(tput setaf 5)
+		txtcyn=$(tput setaf 6)
+		txtwht=$(tput setaf 7)
+		bakblk=$(tput setab 0)
+		bakred=$(tput setab 1)
+		bakgrn=$(tput setab 2)
+		bakylw=$(tput setab 3)
+		bakblu=$(tput setab 4)
+		bakpur=$(tput setab 5)
+		bakcyn=$(tput setab 6)
+		bakwht=$(tput setab 7)
+		set_bldund
+	}
+
+	function set_bldund
+	{
+		bldblk=${txtbld}${txtblk}
+		bldred=${txtbld}${txtred}
+		bldgrn=${txtbld}${txtgrn}
+		bldylw=${txtbld}${txtylw}
+		bldblu=${txtbld}${txtblu}
+		bldpur=${txtbld}${txtpur}
+		bldcyn=${txtbld}${txtcyn}
+		bldwht=${txtbld}${txtwht}
+		undblk=${txtund}${txtblk}
+		undred=${txtund}${txtred}
+		undgrn=${txtund}${txtgrn}
+		undylw=${txtund}${txtylw}
+		undblu=${txtund}${txtblu}
+		undpur=${txtund}${txtpur}
+		undcyn=${txtund}${txtcyn}
+		undwht=${txtund}${txtwht}
+	}
+
+	txtund=; txtbld=; txtrst=; txtcr=;
+	no_colors
 
 	if ! command -v tput &>/dev/null; then
 		log 1 "tput command not found, no colors will be displayed"
-		COLORS=false
-		return
+		colors=false
 	fi
 
-	if [ "$COLORS" = true ]; then
+	# Make sure we run as interractive shell, disable colors otherwise
+	if tty -s; then
+		txtund=$(tput smul)             # Underline
+		txtbld=$(tput bold)             # Bold
+		txtrst=$(tput sgr0)             # Reset
+		txtcr=$(tput cr)                # Carriage return (start of line)
+	fi
+
+	if [ "$colors" = true ]; then
 		local ncolors
 		ncolors=$(tput colors)
 		if [ -n "$ncolors"  ] && [ "$ncolors" -ge 8 ]; then
-			txtblk=$(tput setaf 0)
-			txtred=$(tput setaf 1)
-			txtgrn=$(tput setaf 2)
-			txtylw=$(tput setaf 3)
-			txtblu=$(tput setaf 4)
-			txtpur=$(tput setaf 5)
-			txtcyn=$(tput setaf 6)
-			txtwht=$(tput setaf 7)
-			bakblk=$(tput setab 0)
-			bakred=$(tput setab 1)
-			bakgrn=$(tput setab 2)
-			bakylw=$(tput setab 3)
-			bakblu=$(tput setab 4)
-			bakpur=$(tput setab 5)
-			bakcyn=$(tput setab 6)
-			bakwht=$(tput setab 7)
-			bldblk=${txtbld}${txtblk}
-			bldred=${txtbld}${txtred}
-			bldgrn=${txtbld}${txtgrn}
-			bldylw=${txtbld}${txtylw}
-			bldblu=${txtbld}${txtblu}
-			bldpur=${txtbld}${txtpur}
-			bldcyn=${txtbld}${txtcyn}
-			bldwht=${txtbld}${txtwht}
-			undblk=${txtund}${txtblk}
-			undred=${txtund}${txtred}
-			undgrn=${txtund}${txtgrn}
-			undylw=${txtund}${txtylw}
-			undblu=${txtund}${txtblu}
-			undpur=${txtund}${txtpur}
-			undcyn=${txtund}${txtcyn}
-			undwht=${txtund}${txtwht}
+			yes_colors
 		fi
 	fi
+
 	export txtund txtbld txtrst txtcr
 	export txtblk txtred txtgrn txtylw txtblu txtpur txtcyn txtwht
 	export bakblk bakred bakgrn bakylw bakblu bakpur bakcyn bakwht
@@ -190,11 +211,21 @@ function set_colors
 	export undblk undred undgrn undylw undblu undpur undcyn undwht
 }
 
-# shellcheck disable=SC2120
+#---  FUNCTION  ----------------------------------------------------------------
+#          NAME:  load_config
+#   DESCRIPTION:  Send file content to be parsed by load_arg
+#                 Stop at the first config file loaded
+#       GLOBALS:  END_LOAD_ARG
+#    PARAMETERS:  1) string array: config files to parse
+#        OUTPUT:  Debug or error logs
+#       RETURNS:  
+#-------------------------------------------------------------------------------
 function load_config
 {
+	log 3 "========== function ${FUNCNAME[0]}"
+	declare -a config_files=("$@")
 	declare -i linenum=1
-	for f in "${CONFIG_FILES[@]}"; do
+	for f in "${config_files[@]}"; do
 		if [ -r "$f" ]; then
 			local regex="^#"
 			while read -r line; do
@@ -210,9 +241,11 @@ function load_config
 				fi
 				(( linenum++ ))
 			done < "$f"
+			log 2 "Config '$f' loaded"
 			# Load only the first config we can find, not every config files
 			break
 		fi
+		log 3 "Config '$f' does not exists"
 	done
 }
 
