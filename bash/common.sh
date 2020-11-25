@@ -186,10 +186,10 @@ function set_colors
 	if ! command -v tput &>/dev/null; then
 		log 1 "tput command not found, no colors will be displayed"
 		colors=false
-	fi
-
-	# Make sure we run as interractive shell, disable colors otherwise
-	if tty -s; then
+	elif ! tty -s; then
+		log 1 "Not interractive shell, disabling colors"
+		colors=false
+	else
 		txtund=$(tput smul)             # Underline
 		txtbld=$(tput bold)             # Bold
 		txtrst=$(tput sgr0)             # Reset
