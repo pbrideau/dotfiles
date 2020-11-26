@@ -100,16 +100,6 @@ function sigusr1
 
 ################################################################################
 # ARGS PARSE
-set_colors true
-BASENAME=$(basename "$0")
-export CONFIG_FILES=("./${BASENAME%%.*}.conf" "${HOME}/.${BASENAME%%.*}.conf" "/etc/${BASENAME%%.*}.conf")
-export PARSEABLE=false
-export ALWAYS_YES=false
-declare -gi LOG_LEVEL=1
-
-VAR_A='default_value'
-VAR_B='default_value'
-
 function load_arg
 {
 	declare -A OPTIONS=(
@@ -191,35 +181,48 @@ function load_arg
 	END_LOAD_ARG=("$@")
 }
 
-declare -a END_LOAD_ARG
-load_arg "$@"
-eval set --
-if [ "${#END_LOAD_ARG[@]}" -gt 0 ]; then
-	for arg in "${END_LOAD_ARG[@]}"; do
-		eval set -- "$@" "'$arg'"
-	done
-fi
+BASENAME=$(basename "$0")
+export CONFIG_FILES=("./${BASENAME%%.*}.conf" "${HOME}/.${BASENAME%%.*}.conf" "/etc/${BASENAME%%.*}.conf")
+export PARSEABLE=false
+export ALWAYS_YES=false
+declare -gi LOG_LEVEL=1
 
-load_config "${CONFIG_FILES[@]}"
+VAR_A='default_value'
+VAR_B='default_value'
 
 ################################################################################
 # Start functions
-if [ $# -eq 1 ]; then
-	log 3 "pid: $$"
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+	set_colors true
+
+	declare -a END_LOAD_ARG
+	load_arg "$@"
+	eval set --
+	if [ "${#END_LOAD_ARG[@]}" -gt 0 ]; then
+		for arg in "${END_LOAD_ARG[@]}"; do
+			eval set -- "$@" "'$arg'"
+		done
+	fi
+
+	load_config "${CONFIG_FILES[@]}"
 	validate_inputs
-	case "$1" in
-		run)
-			main
-			;;
-		*)
-			log 0 "No such command: $1"
-			log 0 "See --help for more details"
-			exit "$EX_USAGE"
-			;;
-	esac
-else
-	log 0 "Bad, too many, or no command given:" "$@"
-	log 0 "see --help"
-	exit "$EX_USAGE"
+
+	if [ $# -eq 1 ]; then
+		log 3 "pid: $$"
+		case "$1" in
+			run)
+				main
+				;;
+			*)
+				log 0 "No such command: $1"
+				log 0 "See --help for more details"
+				exit "$EX_USAGE"
+				;;
+		esac
+	else
+		log 0 "Bad, too many, or no command given:" "$@"
+		log 0 "see --help"
+		exit "$EX_USAGE"
+	fi
 fi
-== ENDTEMPLATE ==
+
