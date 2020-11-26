@@ -25,11 +25,18 @@ Plug 'hsitz/VimOrganizer'
 Plug 'vim-syntastic/syntastic'
 call plug#end()
 
-" Turn on syntax highlighting
-syntax on
-
 " For plugins to load correctly
 filetype plugin indent on
+
+set foldenable
+set foldmethod=marker
+au FileType sh let g:sh_fold_enabled=1
+au FileType sh let g:is_bash=1
+au FileType sh set foldmethod=syntax foldclose=all foldlevel=0 foldopen=quickfix,search,tag,undo,mark,hor,block
+au FileType puppet set foldmethod=syntax foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
+au FileType xml,xsd set foldmethod=syntax foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
+
+syntax enable
 
 " TODO: Pick a leader key
 let mapleader = ";"
@@ -132,9 +139,11 @@ highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 au BufRead *.zsh-theme set filetype=sh
 au BufRead *.pp set filetype=puppet
 
-au FileType xml,xsd  setlocal foldmethod=syntax softtabstop=2 shiftwidth=2 foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
-au FileType puppet  setlocal foldmethod=syntax softtabstop=2 shiftwidth=2 foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
-au FileType sh  setlocal foldmethod=syntax softtabstop=2 tabstop=2 shiftwidth=2 expandtab& foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
+au FileType xml,xsd  setlocal softtabstop=2 shiftwidth=2
+au FileType puppet  setlocal softtabstop=2 shiftwidth=2
+au FileType sh  setlocal softtabstop=2 tabstop=2 shiftwidth=2 expandtab&
+
+
 "au BufNewFile,BufRead *.sh set softtabstop=2 tabstop=2 shiftwidth=2 expandtab&
 "au BufNewFile,BufRead * :HiMatchOff
 "au BufNewFile,BufRead *.xsd,*.xml :HiMatchOn
