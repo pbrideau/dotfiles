@@ -1,8 +1,8 @@
 == Skeleton.script-set == nomenu, below ==
 # new-script.templates - 2020-11-24
 
-set -o nounset     # Treat unset variable as an error
-shopt -s extglob   # Extended pattern matching
+set -o nounset   # Treat unset variable as an error
+shopt -s extglob # Extended pattern matching
 
 ################################################################################
 # Why doesn't set -e (or set -o errexit, or trap ERR) do what I expected?
@@ -14,7 +14,7 @@ shopt -s extglob   # Extended pattern matching
 # Return codes
 # Limit user-defined exit codes to the range 64-113
 # See /usr/include/sysexits.h for common examples
-export EX_USAGE=64       # Command line usage error
+export EX_USAGE=64 # Command line usage error
 
 ################################################################################
 # Dependency
@@ -36,8 +36,7 @@ fi
 
 ################################################################################
 # USAGE
-function usage
-{
+function usage {
 	echo "Usage: $BASENAME [options] command"
 	echo
 	echo "Examples:"
@@ -70,8 +69,7 @@ function usage
 
 ################################################################################
 # MAIN
-function main
-{
+function main {
 	log 3 "========== function ${FUNCNAME[0]}"
 	prompt_user_abort "Do you want to continue?"
 	sleep 5 &
@@ -83,16 +81,14 @@ function main
 	log 0 "This show an error to stderr"
 }
 
-function validate_inputs
-{
+function validate_inputs {
 	log 3 "========== function ${FUNCNAME[0]}"
 	log 3 "var_a: $VAR_A"
 	log 3 "var_b: $VAR_B"
 }
 
 trap sigusr1 SIGUSR1
-function sigusr1
-{
+function sigusr1 {
 	# Trigger this with kill -s USR1 <pid>
 	echo
 	log 3 "Signal SIGUSR1 received"
@@ -100,8 +96,7 @@ function sigusr1
 
 ################################################################################
 # ARGS PARSE
-function load_arg
-{
+function load_arg {
 	declare -A OPTIONS=(
 		['h']='help'
 		['d']='debug'
@@ -133,48 +128,48 @@ function load_arg
 	unset opt rc
 	while true; do
 		case "$1" in
-			-h | --help)
-				usage
-				exit 0
-				;;
-			-d | --debug)
-				LOG_LEVEL=3
-				;;
-			-v | --verbose)
-				LOG_LEVEL=$LOG_LEVEL+1
-				;;
-			-q | --quiet)
-				LOG_LEVEL=0
-				;;
-			-y | --yes)
-				ALWAYS_YES=true
-				;;
-			--no-colors)
-				set_colors false
-				;;
-			--parseable)
-				set_colors false
-				PARSEABLE=true
-				;;
-			-c | --config)
-				shift
-				CONFIG_FILES=( "$1" )
-				;;
-			-f | --foo)
-				VAR_A='foobar'
-				;;
-			-b | --bar)
-				shift
-				VAR_B=$1
-				;;
-			--)
-				shift
-				break
-				;;
-			*)
-				log 0 "No such parameter: '$1'"
-				exit "$EX_FAIL"
-				;;
+		-h | --help)
+			usage
+			exit 0
+			;;
+		-d | --debug)
+			LOG_LEVEL=3
+			;;
+		-v | --verbose)
+			LOG_LEVEL=$LOG_LEVEL+1
+			;;
+		-q | --quiet)
+			LOG_LEVEL=0
+			;;
+		-y | --yes)
+			ALWAYS_YES=true
+			;;
+		--no-colors)
+			set_colors false
+			;;
+		--parseable)
+			set_colors false
+			PARSEABLE=true
+			;;
+		-c | --config)
+			shift
+			CONFIG_FILES=("$1")
+			;;
+		-f | --foo)
+			VAR_A='foobar'
+			;;
+		-b | --bar)
+			shift
+			VAR_B=$1
+			;;
+		--)
+			shift
+			break
+			;;
+		*)
+			log 0 "No such parameter: '$1'"
+			exit "$EX_FAIL"
+			;;
 		esac
 		shift
 	done
@@ -210,14 +205,14 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
 	if [ $# -eq 1 ]; then
 		log 3 "pid: $$"
 		case "$1" in
-			run)
-				main
-				;;
-			*)
-				log 0 "No such command: $1"
-				log 0 "See --help for more details"
-				exit "$EX_USAGE"
-				;;
+		run)
+			main
+			;;
+		*)
+			log 0 "No such command: $1"
+			log 0 "See --help for more details"
+			exit "$EX_USAGE"
+			;;
 		esac
 	else
 		log 0 "Bad, too many, or no command given:" "$@"
@@ -225,4 +220,3 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
 		exit "$EX_USAGE"
 	fi
 fi
-
