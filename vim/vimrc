@@ -23,6 +23,7 @@ Plug 'tpope/vim-ragtag'
 Plug 'chrisbra/matchit'
 Plug 'hsitz/VimOrganizer'
 Plug 'vim-syntastic/syntastic'
+Plug 'Chiel92/vim-autoformat'
 call plug#end()
 
 " For plugins to load correctly
@@ -250,6 +251,11 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_sh_checkers = [ 'shellcheck' ]
 let g:syntastic_sh_shellcheck_args = '-x'
 let g:syntastic_sh_bashate_args = '-i E002,E003,E020'
+
+""""""""
+" vim-autoformat
+au BufWrite * :Autoformat
+
 
 " Transparent editing of gpg encrypted files.
 " By Wouter Hanegraaff
