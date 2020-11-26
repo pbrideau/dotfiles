@@ -126,15 +126,6 @@ au BufNewFile,BufRead tags set softtabstop=8 tabstop=8 shiftwidth=8 expandtab&
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 "match OverLength /\%81v.*/
 
-"my mapping to paste(^p) lines(l) and headers(h)
-au FileType js,c,cpp map map <C-p>l o<ESC>80i/<ESC>
-au FileType js,c,cpp map <C-p>h :set paste<CR>o/<ESC>79A*<ESC>A<CR> * <CR> <ESC>78A*<ESC>A/<ESC>:set nopaste<CR>kA
-
-au FileType html,htm map <C-p>l :set paste<CR>o<!-- <ESC>72A-<ESC>A--><ESC>:set nopaste<CR>
-
-au FileType sh map <C-p>l <ESC>o<ESC>80i#<ESC>
-au FileType sh map <C-p>h :set paste<CR>o<ESC>80i#<ESC>A<CR># <CR><ESC>80i#<ESC>:set nopaste<CR>kA
-
 """""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM CONFIGURATION FOR FILETYPE
 au BufRead *.zsh-theme set filetype=sh
