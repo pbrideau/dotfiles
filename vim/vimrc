@@ -115,6 +115,8 @@ map ZA :NERDTreeToggle<CR>
 map ZX :TagbarToggle<CR>
 nmap > >>
 nmap < <<
+vmap > >gv
+vmap < <gv
 
 "Open "GoFile in new tab
 nnoremap gf <C-W>gf
