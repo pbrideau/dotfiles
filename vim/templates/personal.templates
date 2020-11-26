@@ -14,3 +14,4 @@ SetProperty ( 'Bash::FileSkeleton::Script', 'Comments.shebang;Comments.file head
 § =============================================================
 IncludeFile( 'new-script.templates' )
 IncludeFile( 'comments.templates' )
+IncludeFile( 'statements.templates' )
