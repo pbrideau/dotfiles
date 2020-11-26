@@ -9,8 +9,7 @@
 #        OUTPUT:  message to stdout or stderr
 #       RETURNS:
 #-------------------------------------------------------------------------------
-function log
-{
+function log {
 	declare -A available_levels=(
 		[0]="error"
 		[1]="warn "
@@ -24,14 +23,10 @@ function log
 	local color=""
 	shift
 	case $level in
-		0)
-			color="$txtred";;
-		1)
-			color="$txtylw";;
-		2)
-			color="$txtgrn";;
-		3)
-			color="$txtblu";;
+	0) color="$txtred" ;;
+	1) color="$txtylw" ;;
+	2) color="$txtgrn" ;;
+	3) color="$txtblu" ;;
 	esac
 
 	if [ "$LOG_LEVEL" -ge "$level" ]; then
@@ -52,8 +47,7 @@ function log
 #                 Question
 #       RETURNS:
 #-------------------------------------------------------------------------------
-function prompt_user_abort
-{
+function prompt_user_abort {
 	log 3 "========== function ${FUNCNAME[0]}"
 	local question="Are you sure?"
 	local response
@@ -64,12 +58,12 @@ function prompt_user_abort
 	if [ "$ALWAYS_YES" = false ]; then
 		read -r -p "$question" response
 		case "$response" in
-			[yY][eE][sS]|[yY])
-				;;
-			*)
-				log 0 "Aborting..."
-				exit "$EX_ERROR"
-				;;
+		[yY][eE][sS] | [yY]) ;;
+
+		*)
+			log 0 "Aborting..."
+			exit "$EX_ERROR"
+			;;
 		esac
 	fi
 }
@@ -86,8 +80,7 @@ function prompt_user_abort
 #         USAGE:  sleep 10 &
 #                 sleeper $! job_name
 #-------------------------------------------------------------------------------
-function spinner
-{
+function spinner {
 	log 3 "========== function ${FUNCNAME[0]}"
 	local job=$1
 	local process_name
@@ -110,7 +103,7 @@ function spinner
 				echo -n '.'
 			else
 				temp="${spinstr#?}"
-				printf "${txtcr}[${txtylw}warn ${txtrst}] running: %s (%ds) %c" "$process_name" "$((SECONDS-start_time))" "${spinstr}"
+				printf "${txtcr}[${txtylw}warn ${txtrst}] running: %s (%ds) %c" "$process_name" "$((SECONDS - start_time))" "${spinstr}"
 				spinstr=${temp}${spinstr%"$temp"}
 			fi
 		fi
@@ -129,18 +122,29 @@ function spinner
 #        OUTPUT:  May output logs
 #       RETURNS:
 #-------------------------------------------------------------------------------
-function set_colors
-{
+function set_colors {
 	local colors=$1
-	function no_colors
-	{
-		txtblk=; txtred=; txtgrn=; txtylw=; txtblu=; txtpur=; txtcyn=; txtwht=;
-		bakblk=; bakred=; bakgrn=; bakylw=; bakblu=; bakpur=; bakcyn=; bakwht=;
+	function no_colors {
+		txtblk=
+		txtred=
+		txtgrn=
+		txtylw=
+		txtblu=
+		txtpur=
+		txtcyn=
+		txtwht=
+		bakblk=
+		bakred=
+		bakgrn=
+		bakylw=
+		bakblu=
+		bakpur=
+		bakcyn=
+		bakwht=
 		set_bldund
 	}
 
-	function yes_colors
-	{
+	function yes_colors {
 		txtblk=$(tput setaf 0)
 		txtred=$(tput setaf 1)
 		txtgrn=$(tput setaf 2)
@@ -160,8 +164,7 @@ function set_colors
 		set_bldund
 	}
 
-	function set_bldund
-	{
+	function set_bldund {
 		bldblk=${txtbld}${txtblk}
 		bldred=${txtbld}${txtred}
 		bldgrn=${txtbld}${txtgrn}
@@ -180,7 +183,10 @@ function set_colors
 		undwht=${txtund}${txtwht}
 	}
 
-	txtund=; txtbld=; txtrst=; txtcr=;
+	txtund=
+	txtbld=
+	txtrst=
+	txtcr=
 	no_colors
 
 	if ! command -v tput &>/dev/null; then
@@ -190,16 +196,16 @@ function set_colors
 		log 1 "Not interractive shell, disabling colors"
 		colors=false
 	else
-		txtund=$(tput smul)             # Underline
-		txtbld=$(tput bold)             # Bold
-		txtrst=$(tput sgr0)             # Reset
-		txtcr=$(tput cr)                # Carriage return (start of line)
+		txtund=$(tput smul) # Underline
+		txtbld=$(tput bold) # Bold
+		txtrst=$(tput sgr0) # Reset
+		txtcr=$(tput cr)    # Carriage return (start of line)
 	fi
 
 	if [ "$colors" = true ]; then
 		local ncolors
 		ncolors=$(tput colors)
-		if [ -n "$ncolors"  ] && [ "$ncolors" -ge 8 ]; then
+		if [ -n "$ncolors" ] && [ "$ncolors" -ge 8 ]; then
 			yes_colors
 		fi
 	fi
@@ -218,10 +224,9 @@ function set_colors
 #       GLOBALS:  END_LOAD_ARG
 #    PARAMETERS:  1) string array: config files to parse
 #        OUTPUT:  Debug or error logs
-#       RETURNS:  
+#       RETURNS:
 #-------------------------------------------------------------------------------
-function load_config
-{
+function load_config {
 	log 3 "========== function ${FUNCNAME[0]}"
 	declare -a config_files=("$@")
 	declare -i linenum=1
@@ -239,8 +244,8 @@ function load_config
 						exit "$EX_USAGE"
 					fi
 				fi
-				(( linenum++ ))
-			done < "$f"
+				((linenum++))
+			done <"$f"
 			log 2 "Config '$f' loaded"
 			# Load only the first config we can find, not every config files
 			break
@@ -250,45 +255,43 @@ function load_config
 }
 
 # Reserved return codes
-export EX_OK=0           # No error
-export EX_ERROR=1        # General error
-export EX_BLTIN=2        # Misuse of shell builtins
-export EX_TMOUT=124      # Command times out
-export EX_FAIL=125       # Command itself fail
-export EX_NOEXEC=126     # Command is found but cannot be invoked
-export EX_NOTFOUND=127   # Command not found
-export EX_INVAL=128      # Invalid argument
-
 # 128+signal (Specific x86)
 # see kill -l or man 7 signal
-export EX_SIGHUP=129     # Hangup detected on controlling terminal
-export EX_SIGINT=130     # Interrupt from keyboard
-export EX_SIGQUIT=131    # Quit from keyboard
-export EX_SIGILL=132     # Illegal instruction
-export EX_SIGTRAP=133    # Trace/breakpoint trap
-export EX_SIGABRT=134    # Abort signal from abort(3)
-export EX_SIGBUS=135     # Bus error (bad memory access)
-export EX_SIGFPE=136     # Floating point exception
-export EX_SIGKILL=137    # Kill signal
-export EX_SIGUSR1=138    # User-defined signal 1
-export EX_SIGSEGV=139    # Invalid memory reference
-export EX_SIGUSR2=140    # User-defined signal 2
-export EX_SIGPIPE=141    # Broken pipe: write to pipe with no readers
-export EX_SIGALRM=142    # Timer signal from alarm(2)
-export EX_SIGTERM=143    # Termination signal
-export EX_SIGCHLD=145    # Child stopped or terminated
-export EX_SIGCONT=146    # Continue if stopped
-export EX_SIGSTOP=147    # Stop process
-export EX_SIGTSTP=148    # Stop typed at terminal
-export EX_SIGTTIN=149    # Terminal input for background process
-export EX_SIGTTOU=150    # Terminal output for background process
-export EX_SIGURG=151     # Urgent condition on socket (4.2BSD)
-export EX_SIGXCPU=152    # CPU time limit exceeded (4.2BSD)
-export EX_SIGXFSZ=153    # File size limit exceeded (4.2BSD)
-export EX_SIGVTALRM=154  # Virtual alarm click (4.2BSD)
-export EX_SIGPROF=155    # Profiling timer expired
-export EX_SIGWINCH=156   # Window resize signal (4.3BSD, Sun)
-export EX_SIGIO=157      # I/O now possible (4.2BSD)
-export EX_SIGPWR=158     # Power failure (System V)
-export EX_SIGSYS=159     # Bad system call (SVr4)
-
+export EX_OK=0          # No error
+export EX_ERROR=1       # General error
+export EX_BLTIN=2       # Misuse of shell builtins
+export EX_TMOUT=124     # Command times out
+export EX_FAIL=125      # Command itself fail
+export EX_NOEXEC=126    # Command is found but cannot be invoked
+export EX_NOTFOUND=127  # Command not found
+export EX_INVAL=128     # Invalid argument
+export EX_SIGHUP=129    # Hangup detected on controlling terminal
+export EX_SIGINT=130    # Interrupt from keyboard
+export EX_SIGQUIT=131   # Quit from keyboard
+export EX_SIGILL=132    # Illegal instruction
+export EX_SIGTRAP=133   # Trace/breakpoint trap
+export EX_SIGABRT=134   # Abort signal from abort(3)
+export EX_SIGBUS=135    # Bus error (bad memory access)
+export EX_SIGFPE=136    # Floating point exception
+export EX_SIGKILL=137   # Kill signal
+export EX_SIGUSR1=138   # User-defined signal 1
+export EX_SIGSEGV=139   # Invalid memory reference
+export EX_SIGUSR2=140   # User-defined signal 2
+export EX_SIGPIPE=141   # Broken pipe: write to pipe with no readers
+export EX_SIGALRM=142   # Timer signal from alarm(2)
+export EX_SIGTERM=143   # Termination signal
+export EX_SIGCHLD=145   # Child stopped or terminated
+export EX_SIGCONT=146   # Continue if stopped
+export EX_SIGSTOP=147   # Stop process
+export EX_SIGTSTP=148   # Stop typed at terminal
+export EX_SIGTTIN=149   # Terminal input for background process
+export EX_SIGTTOU=150   # Terminal output for background process
+export EX_SIGURG=151    # Urgent condition on socket (4.2BSD)
+export EX_SIGXCPU=152   # CPU time limit exceeded (4.2BSD)
+export EX_SIGXFSZ=153   # File size limit exceeded (4.2BSD)
+export EX_SIGVTALRM=154 # Virtual alarm click (4.2BSD)
+export EX_SIGPROF=155   # Profiling timer expired
+export EX_SIGWINCH=156  # Window resize signal (4.3BSD, Sun)
+export EX_SIGIO=157     # I/O now possible (4.2BSD)
+export EX_SIGPWR=158    # Power failure (System V)
+export EX_SIGSYS=159    # Bad system call (SVr4)
