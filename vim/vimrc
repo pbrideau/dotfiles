@@ -33,6 +33,7 @@ filetype plugin indent on
 
 " TODO: Pick a leader key
 let mapleader = ";"
+let maplocalleader = ","
 
 " Security
 set modelines=0
