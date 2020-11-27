@@ -12,7 +12,7 @@ Plug 'preservim/nerdtree'
 Plug 'majutsushi/tagbar'
 Plug 'edkolev/tmuxline.vim'
 Plug 'vim-airline/vim-airline'
-"Plug 'xolox/vim-easytags'
+Plug 'xolox/vim-easytags'
 Plug 'xolox/vim-misc'
 Plug 'tpope/vim-fugitive'
 Plug 'WolfgangMehner/bash-support'
@@ -134,8 +134,10 @@ au BufNewFile,BufRead tags set softtabstop=8 tabstop=8 shiftwidth=8 expandtab&
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " DISPLAY IF LENGTH >80
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-"match OverLength /\%81v.*/
+"highlight OverLength80 ctermbg=red ctermfg=white guibg=#592929
+"highlight OverLength160 ctermbg=green ctermfg=black guibg=#592929
+"match OverLength80 /\%81v.*/
+"match OverLength160 /\%161v.*/
 
 """""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM CONFIGURATION FOR FILETYPE
@@ -166,15 +168,19 @@ au CursorHold,CursorHoldI * checktime
 "    au BufRead,BufNewFile *.yml set filetype=ansible
 "augroup END
 
-
-
-let g:easytags_suppress_ctags_warning = 1
-let g:easytags_cmd = '/home/ext11363/bin/ctags'
-
-
 let g:ctrlp_buftag_types = {
     \ 'yaml' : '--languages=ansible --ansible-types=t',
     \ }
+
+
+"""""""
+" easytags
+"let g:easytags_suppress_ctags_warning = 1
+let g:easytags_cmd = "$HOME/.local/bin/ctags"
+let g:easytags_async = 1
+"let g:easytags_by_filetype = "~/.vimtags_dir"
+let g:easytags_dynamic_files = 2
+hi shFunctionTag ctermfg=35 cterm=bold
 
 
 """""""
