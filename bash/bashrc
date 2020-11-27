@@ -18,10 +18,15 @@ fi
 export MY_ENV_OVERRIDE
 
 if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
-	if  [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
+	if [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
 		if [[ "${TMUX_HOSTS[*]}" =~ $HOSTNAME ]]; then
-			if [ "$(tmux list-sessions | grep -c attached )" -lt "$(tmux list-sessions | wc -l)" ]; then
-				SESSION_TO_ATTACH="$(tmux list-sessions | grep -v attached | head -1 | cut -d ':' -f 1)"
+			nsess_att="$(tmux list-sessions | grep -c attached)"
+			nsess="$(tmux list-sessions | wc -l)"
+			if [ "${nsess_att}" -lt "${nsess}" ]; then
+				SESSION_TO_ATTACH="$(tmux list-sessions |
+					grep -v attached |
+					head -1 |
+					cut -d ':' -f 1)"
 				tmux attach-session -t "$SESSION_TO_ATTACH"
 				exit
 			else
@@ -34,10 +39,9 @@ fi
 unset MY_ENV_OVERRIDE
 unset SESSION_TO_ATTACH
 
-
 ################################################################################
 # Source profile.d if not login shell
-if ! shopt -q login_shell ; then 
+if ! shopt -q login_shell; then
 	umask 002
 	SHELL=/bin/bash
 	for i in /etc/profile.d/*.sh; do
@@ -67,7 +71,9 @@ if [ -n "$TMUX" ]; then
 
 	#MOTD:
 	#tested on tmux >= 1.5
-	CURRENT_SESSION_NAME="$(tmux list-panes -a | grep "$TMUX_PANE" | cut -d : -f 1 ):"
+	CURRENT_SESSION_NAME="$(tmux list-panes -a |
+		grep "$TMUX_PANE" |
+		cut -d : -f 1):"
 	for word in $(tmux list-sessions); do
 		if [[ "$word" =~ [a-z0-9]+:$ ]]; then
 			if [ "$word" = "$CURRENT_SESSION_NAME" ]; then
@@ -78,7 +84,8 @@ if [ -n "$TMUX" ]; then
 		fi
 		echo -n " $word"
 	done
-	echo; echo
+	echo
+	echo
 	unset CURRENT_SESSION_NAME
 fi
 
@@ -93,7 +100,9 @@ fi
 case "$OS" in
 	*'Red Hat'*)
 		# needs-restarting differ from version to version, check the kernel
-		LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1)
+		LAST_KERNEL=$(rpm -q --last kernel |
+			perl -pe 's/^kernel-(\S+).*/$1/' |
+			head -1)
 		CURRENT_KERNEL=$(uname -r)
 		if [ "$LAST_KERNEL" = "$CURRENT_KERNEL" ]; then
 			REBOOT=""
@@ -102,7 +111,9 @@ case "$OS" in
 		fi
 		;;
 	*'Debian'*)
-		if [ -e /var/run/reboot-required ] || [ -e /var/run/reboot-required.pkgs ]; then
+		reboot_file1="/var/run/reboot-required"
+		reboot_file2="/var/run/reboot-required.pkgs"
+		if [ -e "${reboot_file1}" ] || [ -e "${reboot_file2}" ]; then
 			REBOOT="(reboot) "
 		else
 			REBOOT=""
@@ -110,29 +121,27 @@ case "$OS" in
 		;;
 	*'Solaris'*)
 		REBOOT=""
-		NEW_PATH+=( '/usr/xpg4/bin' )
+		NEW_PATH+=('/usr/xpg4/bin')
 		;;
 	*)
 		REBOOT="(Unknown OS) "
 		;;
 esac
 
-
 ################################################################################
 # BASIC CONFIGS
 NEW_PATH+=(
-"$HOME/.local/bin"
+	"$HOME/.local/bin"
 )
 for x in "${NEW_PATH[@]}"; do
 	case ":$PATH:" in
-		*":$x:"*) :;; # already there
-	*) PATH="$x:$PATH";;
-esac
+		*":$x:"*) : ;; # already there
+		*) PATH="$x:$PATH" ;;
+	esac
 done
 unset NEW_PATH
 
-function refresh_history
-{
+function refresh_history {
 	history -n
 	history -w
 	history -c
@@ -141,11 +150,11 @@ function refresh_history
 
 # are we an interactive shell?
 if [ "$PS1" ]; then
-	shopt -s histappend     # Turn on parallel history
+	shopt -s histappend # Turn on parallel history
 	history -a
-	shopt -s checkwinsize   # Turn on checkwinsize
-	shopt -s cdspell        # Correct minor error in cd command
-	shopt -s cmdhist        # Save multiple-line on the same line
+	shopt -s checkwinsize # Turn on checkwinsize
+	shopt -s cdspell      # Correct minor error in cd command
+	shopt -s cmdhist      # Save multiple-line on the same line
 	HISTFILE="${HOME}/.bash_history_dir/${HOSTNAME%%.*}"
 	HISTCONTROL=ignoreboth:erasedups
 	HISTSIZE=10000
@@ -155,7 +164,8 @@ if [ "$PS1" ]; then
 	export PROMPT_COMMAND="refresh_history; $PROMPT_COMMAND"
 	if [ -e "$HISTFILE" ]; then
 		TEMP_FILE=$(mktemp --tmpdir="$HOME/.bash_history_dir")
-		tac "$HISTFILE" | awk '!x[$0]++' > "$TEMP_FILE" && tac "$TEMP_FILE" > "$HISTFILE"
+		tac "$HISTFILE" | awk '!x[$0]++' >"$TEMP_FILE" &&
+			tac "$TEMP_FILE" >"$HISTFILE"
 		rm "$TEMP_FILE"
 		unset TEMP_FILE
 	fi
@@ -193,8 +203,18 @@ if [ -z "$ICON_COLOR" ]; then
 	ICON_COLOR="\033[01;32m"
 fi
 
-PS1="\n\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h\[${ICON_COLOR}\] >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]\n\$ "
-export SUDO_PS1="\n\[\033[01;41m\]\h\[\033[0m${ICON_COLOR}\] >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]\n# "
+PS1="\n\[\033[31m\]${REBOOT}"
+PS1+="\[\033[01;33m\]${UPDATE_COUNT}"
+PS1+="\[\033[01;32m\]\h\[${ICON_COLOR}\] >"
+PS1+="\[\033[0m\] "
+PS1+="\[\033[01;34m\]\w"
+PS1+="\[\033[0m\]\n\$ "
+SUDO_PS1="\n\[\033[01;41m\]\h"
+SUDO_PS1+="\[\033[0m${ICON_COLOR}\] >"
+SUDO_PS1+="\[\033[0m\] "
+SUDO_PS1+="\[\033[01;34m\]\w"
+SUDO_PS1+="\[\033[0m\]\n# "
+export SUDO_PS1
 
 ################################################################################
 # GIT
@@ -204,7 +224,14 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
 	export GIT_PROMPT_IGNORE_SUBMODULES=0
 	export GIT_PROMPT_SHOW_UPSTREAM=1
 	export GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
-	export GIT_PROMPT_START="\n\[\033[31m\]${REBOOT}\[\033[01;33m\]${UPDATE_COUNT}\[\033[01;32m\]\h\[${ICON_COLOR}\] >\[\033[0m\] \[\033[01;34m\]\w\[\033[0m\]"
+	GIT_PROMPT_START="\n\[\033[31m\]${REBOOT}"
+	GIT_PROMPT_START+="\[\033[01;33m\]${UPDATE_COUNT}"
+	GIT_PROMPT_START+="\[\033[01;32m\]\h"
+	GIT_PROMPT_START+="\[${ICON_COLOR}\] >"
+	GIT_PROMPT_START+="\[\033[0m\] "
+	GIT_PROMPT_START+="\[\033[01;34m\]\w"
+	GIT_PROMPT_START+="\[\033[0m\]"
+	export GIT_PROMPT_START
 	export GIT_PROMPT_END="\n\$ "
 
 	source "$HOME/git/bash-git-prompt/gitprompt.sh"
@@ -214,9 +241,19 @@ alias ga="git add"
 alias gc="git commit"
 alias gco="git checkout"
 alias gst="git status"
-alias glh="git log --date=short --format='%C(yellow)%h %Cblue%ad %Cgreen%<|(40)%an%Creset %s ' --follow"
-alias glo="git log --graph --date=short --format='%C(yellow)%h %Cblue%ad%C(auto)%d%C(yellow) %Creset%s'"
-alias gloa="git log --graph --date=short --format='%C(yellow)%h %Cblue%ad%C(auto)%d%C(yellow) %Creset%s' --all"
+alias glh="git log \
+	--date=short \
+	--format='%C(yellow)%h %Cblue%ad %Cgreen%<|(40)%an%Creset %s ' \
+	--follow"
+alias glo="git log \
+	--graph \
+	--date=short \
+	--format='%C(yellow)%h %Cblue%ad%C(auto)%d%C(yellow) %Creset%s'"
+alias gloa="git log \
+	--graph \
+	--date=short \
+	--format='%C(yellow)%h %Cblue%ad%C(auto)%d%C(yellow) %Creset%s' \
+	--all"
 #alias glo="git log --oneline --decorate --tags --graph "
 #alias gloa="git log --oneline --decorate --tags --graph --all"
 
@@ -237,10 +274,13 @@ else
 	alias vi='vim -p'
 fi
 
-
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-	test -r ~/.dircolors && ( eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)" )
+	if [ -r ~/.dircolors ]; then
+		eval "$(dircolors -b ~/.dircolors)"
+	else
+		eval "$(dircolors -b)"
+	fi
 	alias ls='ls --color=auto'
 	if grep --color "a" <<<"a" &>/dev/null; then
 		alias grep='grep --color=auto'
@@ -253,6 +293,7 @@ alias ll='ls -latr'
 alias la='ls -A'
 alias l='ls -CF'
 
+alias psgrep='ps auxfww | grep -v grep | grep'
 alias nocomment='grep --color=no "^[^ #;]"'
 
 alias ..='cd ..'
@@ -261,9 +302,8 @@ alias ...='cd ../..'
 ################################################################################
 # RVM
 if [ -s "$HOME/.rvm/scripts/rvm" ]; then
-	source "$HOME/.rvm/scripts/rvm" 
+	source "$HOME/.rvm/scripts/rvm"
 	# Load RVM into a shell session *as a function*
 fi
-
 
 # vim: ff=sh ts=2 sw=2
