@@ -263,7 +263,10 @@ let g:syntastic_sh_bashate_args = '-i E002,E003,E004'
 
 """"""""
 " vim-autoformat
-au BufWrite * :Autoformat
+let g:formatdef_my_custom_sh = '"shfmt -ci"'
+let g:formatters_sh = ['my_custom_sh']
+au FileType sh au BufWrite * :Autoformat
+
 
 
 " Transparent editing of gpg encrypted files.
