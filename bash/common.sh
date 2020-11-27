@@ -23,10 +23,10 @@ function log {
 	local color=""
 	shift
 	case $level in
-	0) color="$txtred" ;;
-	1) color="$txtylw" ;;
-	2) color="$txtgrn" ;;
-	3) color="$txtblu" ;;
+		0) color="$txtred" ;;
+		1) color="$txtylw" ;;
+		2) color="$txtgrn" ;;
+		3) color="$txtblu" ;;
 	esac
 
 	if [ "$LOG_LEVEL" -ge "$level" ]; then
@@ -58,12 +58,12 @@ function prompt_user_abort {
 	if [ "$ALWAYS_YES" = false ]; then
 		read -r -p "$question" response
 		case "$response" in
-		[yY][eE][sS] | [yY]) ;;
+			[yY][eE][sS] | [yY]) ;;
 
-		*)
-			log 0 "Aborting..."
-			exit "$EX_ERROR"
-			;;
+			*)
+				log 0 "Aborting..."
+				exit "$EX_ERROR"
+				;;
 		esac
 	fi
 }
