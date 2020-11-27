@@ -103,7 +103,10 @@ function spinner {
 				echo -n '.'
 			else
 				temp="${spinstr#?}"
-				printf "${txtcr}[${txtylw}warn ${txtrst}] running: %s (%ds) %c" "$process_name" "$((SECONDS - start_time))" "${spinstr}"
+				printf "${txtcr}[${txtylw}warn ${txtrst}] running: %s (%ds) %c" \
+					"$process_name" \
+					"$((SECONDS - start_time))" \
+					"${spinstr}"
 				spinstr=${temp}${spinstr%"$temp"}
 			fi
 		fi
@@ -244,7 +247,7 @@ function load_config {
 						exit "$EX_USAGE"
 					fi
 				fi
-				((linenum++))
+				_=$((linenum++))
 			done <"$f"
 			log 2 "Config '$f' loaded"
 			# Load only the first config we can find, not every config files

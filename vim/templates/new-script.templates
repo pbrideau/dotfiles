@@ -177,7 +177,11 @@ function load_arg {
 }
 
 BASENAME=$(basename "$0")
-export CONFIG_FILES=("./${BASENAME%%.*}.conf" "${HOME}/.${BASENAME%%.*}.conf" "/etc/${BASENAME%%.*}.conf")
+export CONFIG_FILES=(
+	"./${BASENAME%%.*}.conf"
+	"${HOME}/.${BASENAME%%.*}.conf"
+	"/etc/${BASENAME%%.*}.conf"
+)
 export PARSEABLE=false
 export ALWAYS_YES=false
 declare -gi LOG_LEVEL=1
