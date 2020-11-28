@@ -3,7 +3,8 @@
 #---  FUNCTION  ----------------------------------------------------------------
 #          NAME:  log
 #   DESCRIPTION:  Output message to stdout or stderr
-#       GLOBALS:  LOG_LEVEL
+#       GLOBALS:  LOG_LEVEL: Don't display logs above this value.
+#                            Default to 1 if unset
 #    PARAMETERS:  1) int:    Which level of log to display (0-3)
 #                 2) string: what to display
 #        OUTPUT:  message to stdout or stderr
@@ -16,9 +17,6 @@ function log {
 		[2]="info "
 		[3]="debug"
 	)
-	if [ "${LOG_LEVEL:-x}" = "x" ]; then
-		declare -i LOG_LEVEL=1
-	fi
 	declare -i level=${1}
 	local color=""
 	shift
@@ -29,7 +27,7 @@ function log {
 		3) color="$txtblu" ;;
 	esac
 
-	if [ "$LOG_LEVEL" -ge "$level" ]; then
+	if [ "${LOG_LEVEL:-1}" -ge "$level" ]; then
 		if [ "$level" -eq 0 ]; then
 			echo -e "[${color}${available_levels[$level]}${txtrst}]" "$@" 1>&2
 		else
