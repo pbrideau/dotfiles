@@ -20,7 +20,8 @@ ln -s ".dotfiles/vim/vimrc" "$HOME/.vimrc"
 ln -s "../.dotfiles/vim/templates" "$HOME/.vim/templates"
 ln -s "../.dotfiles/vim/colors" "$HOME/.vim/colors"
 vim +PlugInstall +qall
-echo "please install shellcheck https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz"
+echo "Please install shellcheck https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz"
+echo "Please install bashate pip3 install --user bashate"
 echo "Please install shfmt https://github.com/mvdan/sh/releases/download/v3.2.0/shfmt_v3.2.0_linux_amd64"
 
 # TMUX
