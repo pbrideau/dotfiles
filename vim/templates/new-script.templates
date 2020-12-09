@@ -18,21 +18,23 @@ export EX_USAGE=64 # Command line usage error
 
 ################################################################################
 # Dependency
-# shellcheck disable=SC1090,SC1091
-if [ -f common.sh ]; then
-	source common.sh
-elif [ -f "$HOME/scripts/common.sh" ]; then
-	source "$HOME/scripts/common.sh"
-else
-	echo "Could not find common.sh"
-	echo "Should be in ./ or in ~/scripts"
-	exit "$EX_NOTFOUND"
-fi
+function check_dependency {
+	# shellcheck disable=SC1090,SC1091
+	if [ -f "${DIRNAME}/common.sh" ]; then
+		source "${DIRNAME}/common.sh"
+	elif [ -f "$HOME/scripts/common.sh" ]; then
+		source "$HOME/scripts/common.sh"
+	else
+		echo "Could not find common.sh"
+		echo "Should be in ./ or in ~/scripts"
+		exit "$EX_NOTFOUND"
+	fi
 
-if ! command -v getopt &>/dev/null; then
-	echo "This script require getopt, please install it"
-	exit "$EX_NOTFOUND"
-fi
+	if ! command -v getopt &>/dev/null; then
+		echo "This script require getopt, please install it"
+		exit "$EX_NOTFOUND"
+	fi
+}
 
 ################################################################################
 # USAGE
@@ -49,7 +51,7 @@ function usage {
 	echo "   -q, --quiet               Show only error logs (default warn)"
 	echo "   -y, --yes                 Answer YES to every questions asked"
 	echo "   -c, --config FILE         Use FILE as config, default:"
-	echo "                               1  ./${BASENAME%%.*}.conf"
+	echo "                               1  ${DIRNAME}/${BASENAME%%.*}.conf"
 	echo "                               2  ~/.${BASENAME%%.*}.conf"
 	echo "                               3  /etc/${BASENAME%%.*}.conf"
 	echo "   --no-colors               Disable colored output"
@@ -177,8 +179,9 @@ function load_arg {
 }
 
 BASENAME=$(basename "$0")
+DIRNAME="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export CONFIG_FILES=(
-	"./${BASENAME%%.*}.conf"
+	"${DIRNAME}/${BASENAME%%.*}.conf"
 	"${HOME}/.${BASENAME%%.*}.conf"
 	"/etc/${BASENAME%%.*}.conf"
 )
@@ -192,6 +195,7 @@ VAR_B='default_value'
 ################################################################################
 # Start functions
 if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+	check_dependency
 	set_colors true
 
 	declare -a END_LOAD_ARG
