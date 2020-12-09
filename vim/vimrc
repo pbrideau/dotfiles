@@ -24,6 +24,8 @@ Plug 'chrisbra/matchit'
 Plug 'hsitz/VimOrganizer'
 Plug 'vim-syntastic/syntastic'
 Plug 'Chiel92/vim-autoformat'
+Plug 'aliou/bats.vim'
+Plug 'jlanzarotta/bufexplorer'
 call plug#end()
 
 " For plugins to load correctly
@@ -156,6 +158,12 @@ autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 let xml_jump_string="`"
 
 au CursorHold,CursorHoldI * checktime
+
+"""""""""""""""""""""""""""""""""""""""""""""
+" BufExplorer
+nnoremap <Leader><Leader> :BufExplorerHorizontalSplit<CR>
+let g:bufExplorerSplitBelow=1
+let g:bufExplorerSplitHorzSize=10
 
 """""""""""""""""""""""""""""""""""""""""""""
 "Ansible
