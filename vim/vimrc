@@ -169,8 +169,8 @@ au CursorHold,CursorHoldI * checktime
 "augroup END
 
 let g:ctrlp_buftag_types = {
-    \ 'yaml' : '--languages=ansible --ansible-types=t',
-    \ }
+      \ 'yaml' : '--languages=ansible --ansible-types=t',
+      \ }
 
 
 """""""
@@ -186,22 +186,22 @@ hi shFunctionTag ctermfg=35 cterm=bold
 """""""
 " TAGBAR
 let g:tagbar_type_ansible = {
-    \ 'ctagstype' : 'ansible',
-    \ 'kinds' : [
-    \ 't:tasks',
-    \ 'h:hosts',
-    \ 'r:roles',
-    \ 'l:listen',
-    \ ],
-    \ 'sort' : 0
-    \ }
+      \ 'ctagstype' : 'ansible',
+      \ 'kinds' : [
+      \ 't:tasks',
+      \ 'h:hosts',
+      \ 'r:roles',
+      \ 'l:listen',
+      \ ],
+      \ 'sort' : 0
+      \ }
 
-let g:tagbar_type_sh = {  
-    \ 'kinds':[
-    \ 'f:functions',
-    \ 'c:constants'
-    \ ]
-    \}
+let g:tagbar_type_sh = {
+      \ 'kinds':[
+      \ 'f:functions',
+      \ 'c:constants'
+      \ ]
+      \}
 
 """"""""
 " vim-ansible
@@ -265,31 +265,32 @@ let g:syntastic_sh_bashate_args = '-i E002,E003,E004'
 " vim-autoformat
 let g:formatdef_my_custom_sh = '"shfmt -ci"'
 let g:formatters_sh = ['my_custom_sh']
-au FileType sh au BufWrite * :Autoformat
+"au FileType sh au BufWrite * :Autoformat
+map F :Autoformat<CR>
 
 
 
 " Transparent editing of gpg encrypted files.
 " By Wouter Hanegraaff
 augroup encrypted
-    au!
-    " First make sure nothing is written to ~/.viminfo while editing
-    " an encrypted file.
-    autocmd BufReadPre,FileReadPre *.gpg set viminfo=
-    " We don't want a swap file, as it writes unencrypted data to disk
-    autocmd BufReadPre,FileReadPre *.gpg set noswapfile
-    " Switch to binary mode to read the encrypted file
-    autocmd BufReadPre,FileReadPre *.gpg set bin
-    autocmd BufReadPre,FileReadPre *.gpg let ch_save = &ch|set ch=2
-    autocmd BufReadPost,FileReadPost *.gpg '[,']!gpg --decrypt 2> /dev/null
-    " Switch to normal mode for editing
-    autocmd BufReadPost,FileReadPost *.gpg set nobin
-    autocmd BufReadPost,FileReadPost *.gpg let &ch = ch_save|unlet ch_save
-    autocmd BufReadPost,FileReadPost *.gpg execute ":doautocmd BufReadPost " . expand("%:r")
+  au!
+  " First make sure nothing is written to ~/.viminfo while editing
+  " an encrypted file.
+  autocmd BufReadPre,FileReadPre *.gpg set viminfo=
+  " We don't want a swap file, as it writes unencrypted data to disk
+  autocmd BufReadPre,FileReadPre *.gpg set noswapfile
+  " Switch to binary mode to read the encrypted file
+  autocmd BufReadPre,FileReadPre *.gpg set bin
+  autocmd BufReadPre,FileReadPre *.gpg let ch_save = &ch|set ch=2
+  autocmd BufReadPost,FileReadPost *.gpg '[,']!gpg --decrypt 2> /dev/null
+  " Switch to normal mode for editing
+  autocmd BufReadPost,FileReadPost *.gpg set nobin
+  autocmd BufReadPost,FileReadPost *.gpg let &ch = ch_save|unlet ch_save
+  autocmd BufReadPost,FileReadPost *.gpg execute ":doautocmd BufReadPost " . expand("%:r")
 
-    " Convert all text to encrypted text before writing
-    autocmd BufWritePre,FileWritePre *.gpg '[,']!gpg --default-recipient-self -ae 2>/dev/null
-    " Undo the encryption so we are back in the normal text, directly
-    " after the file has been written.
-    autocmd BufWritePost,FileWritePost *.gpg u
+  " Convert all text to encrypted text before writing
+  autocmd BufWritePre,FileWritePre *.gpg '[,']!gpg --default-recipient-self -ae 2>/dev/null
+  " Undo the encryption so we are back in the normal text, directly
+  " after the file has been written.
+  autocmd BufWritePost,FileWritePost *.gpg u
 augroup END
