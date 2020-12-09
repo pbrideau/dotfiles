@@ -11,6 +11,15 @@
 #       RETURNS:
 #-------------------------------------------------------------------------------
 function log {
+	if [ "${COLORS_SET:-unset}" = "unset" ]; then
+		set_colors false
+	fi
+
+	if [[ ! "$1" =~ [0-3] ]]; then
+		log 0 "Loglevel shoud be [0-3], '$1' given"
+		exit "$EX_FAIL"
+	fi
+
 	declare -A available_levels=(
 		[0]="error"
 		[1]="warn "
@@ -53,7 +62,7 @@ function prompt_user_abort {
 		question=$1
 	fi
 	question="${question} [y/N] "
-	if [ "$ALWAYS_YES" = false ]; then
+	if [ "${ALWAYS_YES:-false}" = false ]; then
 		read -r -p "$question" response
 		case "$response" in
 			[yY][eE][sS] | [yY]) ;;
@@ -190,20 +199,21 @@ function set_colors {
 	txtcr=
 	no_colors
 
+	export COLORS_SET=true
+
 	if ! command -v tput &>/dev/null; then
 		log 1 "tput command not found, no colors will be displayed"
 		colors=false
 	elif ! tty -s; then
 		log 1 "Not interractive shell, disabling colors"
 		colors=false
-	else
+	fi
+
+	if [ "$colors" = true ]; then
 		txtund=$(tput smul) # Underline
 		txtbld=$(tput bold) # Bold
 		txtrst=$(tput sgr0) # Reset
 		txtcr=$(tput cr)    # Carriage return (start of line)
-	fi
-
-	if [ "$colors" = true ]; then
 		local ncolors
 		ncolors=$(tput colors)
 		if [ -n "$ncolors" ] && [ "$ncolors" -ge 8 ]; then
