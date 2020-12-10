@@ -91,10 +91,12 @@ fi
 
 ################################################################################
 # Set variables by OS
-if [ -e /etc/os-release ]; then
+if [ -n "$(find /etc -name '*-release' 2>/dev/null)" ]; then
+	OS=$(cat /etc/*-release | sort -u)
+elif [ -e /etc/os-release ]; then
 	OS="$(awk -F= '/^NAME/{print $2}' /etc/os-release)"
 else
-	OS="$(cat /etc/*-release | sort -u)"
+	OS="$(uname)"
 fi
 
 case "$OS" in
@@ -122,6 +124,9 @@ case "$OS" in
 	*'Solaris'*)
 		REBOOT=""
 		NEW_PATH+=('/usr/xpg4/bin')
+		;;
+	*'CYGWIN'*)
+		REBOOT=""
 		;;
 	*)
 		REBOOT="(Unknown OS) "
@@ -161,9 +166,9 @@ if [ "$PS1" ]; then
 	HISTFILESIZE=10000
 	unset HISTTIMEFORMAT
 
-	export PROMPT_COMMAND="refresh_history; $PROMPT_COMMAND"
+	#export PROMPT_COMMAND="refresh_history; $PROMPT_COMMAND"
 	if [ -e "$HISTFILE" ]; then
-		TEMP_FILE=$(mktemp --tmpdir="$HOME/.bash_history_dir")
+		TEMP_FILE=$(mktemp "$HOME/.bash_history_dir/tmp.XXXXXX")
 		tac "$HISTFILE" | awk '!x[$0]++' >"$TEMP_FILE" &&
 			tac "$TEMP_FILE" >"$HISTFILE"
 		rm "$TEMP_FILE"
