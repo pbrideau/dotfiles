@@ -3,4 +3,13 @@
   hooks:
     - id: shell-lint
       args: [--format=json]
+- repo: https://github.com/jumanjihouse/pre-commit-hooks
+  rev: 2.1.4
+  hooks:
+    - id: forbid-binary
+    - id: require-ascii
+    - id: script-must-have-extension
+    - id: script-must-not-have-extension
+    - id: shellcheck
+    - id: shfmt
 
