@@ -265,6 +265,58 @@ function load_config {
 	done
 }
 
+#---  FUNCTION  ----------------------------------------------------------------
+#          NAME:  basename
+#   DESCRIPTION:  Alternative to the `basename` command
+#                 From: https://github.com/dylanaraps/pure-bash-bible
+#       GLOBALS:
+#    PARAMETERS:  1) string: path to parse
+#                 2) string: suffix to remove (optional)
+#        OUTPUT:
+#       RETURNS:  string
+#         USAGE:  basename "path" ["suffix"]
+#-------------------------------------------------------------------------------
+function basename {
+	local tmp
+
+	tmp=${1%"${1##*[!/]}"}
+	tmp=${tmp##*/}
+	tmp=${tmp%"${2/"$tmp"/}"}
+
+	printf '%s\n' "${tmp:-/}"
+}
+
+#---  FUNCTION  ----------------------------------------------------------------
+#          NAME:  dirname
+#   DESCRIPTION:  Alternative tho the `dirname` command
+#                 From: https://github.com/dylanaraps/pure-bash-bible
+#       GLOBALS:
+#    PARAMETERS:  1) string: path to parse
+#        OUTPUT:
+#       RETURNS:  string
+#         USAGE:  dirname "path"
+#-------------------------------------------------------------------------------
+function dirname {
+	local tmp=${1:-.}
+
+	[[ $tmp != *[!/]* ]] && {
+		printf '/\n'
+		return
+	}
+
+	tmp=${tmp%%"${tmp##*[!/]}"}
+
+	[[ $tmp != */* ]] && {
+		printf '.\n'
+		return
+	}
+
+	tmp=${tmp%/*}
+	tmp=${tmp%%"${tmp##*[!/]}"}
+
+	printf '%s\n' "${tmp:-/}"
+}
+
 # Reserved return codes
 # 128+signal (Specific x86)
 # see kill -l or man 7 signal
