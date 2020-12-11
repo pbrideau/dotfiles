@@ -1,0 +1,72 @@
+#!/bin/bash -
+
+set -o nounset
+
+function create_link {
+	local target=$1
+	local link_name=$2
+	if [ ! -f "$link_name" ]; then
+		ln -s "$target" "$link_name"
+	elif [ ! -L "$link_name" ]; then
+		echo "$link_name already exists, delete before running this script again"
+	fi
+}
+
+################################################################################
+# GIT
+mkdir -p "$HOME/git"
+
+if [ ! -d "$HOME/git/bash-git-prompt/" ]; then
+	git clone https://github.com/magicmonty/bash-git-prompt.git "$HOME/git/"
+fi
+
+create_link ".dotfiles/git/gitconfig" "$HOME/.gitconfig"
+create_link ".dotfiles/git/gitignore" "$HOME/.gitignore"
+
+################################################################################
+# BASH
+mkdir -p "$HOME/.bash_history_dir"
+mkdir -p "$HOME/.bashrc_dir"
+mkdir -p "$HOME/scripts"
+
+create_link ".dotfiles/bash/bashrc" "$HOME/.bashrc"
+create_link "../.dotfiles/bash/common.sh" "$HOME/scripts/common.sh"
+
+################################################################################
+# VIM
+
+mkdir -p "$HOME/.vim/autoload"
+create_link ".dotfiles/vim/vimrc" "$HOME/.vimrc"
+create_link "../.dotfiles/vim/templates" "$HOME/.vim/templates"
+create_link "../.dotfiles/vim/colors" "$HOME/.vim/colors"
+
+if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
+	curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
+		https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	vim +PlugInstall +qall
+fi
+
+if ! command -v shellcheck &>/dev/null; then
+	url="https://github.com/koalaman/shellcheck/releases/download/stable/"
+	url+="/shellcheck-stable.linux.x87_64.tar.xz"
+	echo "Please install shellcheck (maybe from here?):"
+	echo " $ wget $url"
+fi
+
+if ! command -v bashate &>/dev/null; then
+	echo "Please install bashate (maybe from here?):"
+	echo " $ pip3 install --user bashate"
+fi
+if ! command -v shfmt &>/dev/null; then
+	url="https://github.com/mvdan/sh/releases/download/v3.2.0/"
+	url+="shfmt_v3.2.0_linux_amd64"
+	echo "Please install shfmt:"
+	echo " $ wget $url"
+fi
+
+################################################################################
+# TMUX
+create_link ".dotfiles/tmux.conf" "$HOME/.tmux.conf"
+
+# EDITORCONFIG
+create_link ".dotfiles/editorconfig" "$HOME/.editorconfig"
