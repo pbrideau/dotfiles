@@ -24,8 +24,9 @@ Plug 'chrisbra/matchit'
 Plug 'hsitz/VimOrganizer'
 Plug 'vim-syntastic/syntastic'
 Plug 'Chiel92/vim-autoformat'
-Plug 'aliou/bats.vim'
+Plug 'vim-test/vim-test'
 Plug 'jlanzarotta/bufexplorer'
+Plug 'editorconfig/editorconfig-vim'
 call plug#end()
 
 " For plugins to load correctly
