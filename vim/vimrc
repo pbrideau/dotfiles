@@ -147,8 +147,9 @@ au BufNewFile,BufRead tags set softtabstop=8 tabstop=8 shiftwidth=8 expandtab&
 au BufRead *.zsh-theme set filetype=sh
 au BufRead *.pp set filetype=puppet
 
-au FileType xml,xsd  setlocal softtabstop=2 shiftwidth=2
-au FileType puppet  setlocal softtabstop=2 shiftwidth=2
+" editorconfig does not recognize bash scripts without extension.
+" https://github.com/editorconfig/editorconfig/issues/239
+" https://github.com/editorconfig/editorconfig/issues/404
 au FileType sh  setlocal softtabstop=2 tabstop=2 shiftwidth=2 expandtab&
 
 
@@ -172,7 +173,6 @@ let g:bufExplorerSplitHorzSize=10
 "inoremap <Nul> <C-x><C-o>
 "let g:rocannon_open_action = 'tabnew'  " alternatives: tabnew, edit
 
-
 "augroup filetypedetect
 "    au BufRead,BufNewFile *.yml set filetype=ansible
 "augroup END
@@ -180,7 +180,6 @@ let g:bufExplorerSplitHorzSize=10
 let g:ctrlp_buftag_types = {
       \ 'yaml' : '--languages=ansible --ansible-types=t',
       \ }
-
 
 """""""
 " easytags
@@ -190,7 +189,6 @@ let g:easytags_async = 1
 "let g:easytags_by_filetype = "~/.vimtags_dir"
 let g:easytags_dynamic_files = 2
 hi shFunctionTag ctermfg=35 cterm=bold
-
 
 """""""
 " TAGBAR
@@ -242,7 +240,6 @@ endfunction
 au BufRead,BufNewFile */ansible/*.yml nnoremap gr :call FindAnsibleRoleUnderCursor()<CR>
 au BufRead,BufNewFile */ansible/*.yml vnoremap gr :call FindAnsibleRoleUnderCursor()<CR>
 
-
 """"""""
 " vim-airline
 " Disable all extensions as they incur a big slowdown
@@ -277,8 +274,7 @@ let g:formatters_sh = ['my_custom_sh']
 "au FileType sh au BufWrite * :Autoformat
 map F :Autoformat<CR>
 
-
-
+""""""""
 " Transparent editing of gpg encrypted files.
 " By Wouter Hanegraaff
 augroup encrypted
