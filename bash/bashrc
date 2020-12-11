@@ -133,6 +133,29 @@ case "$OS" in
 		;;
 esac
 
+function check_ssh_agent {
+	if [ -n "$SSH_AUTH_SOCK" ]; then
+		if [ -e "$SSH_AUTH_SOCK" ]; then
+			return
+		fi
+	fi
+
+	# Try to use an existing ssh_agent
+	declare -a agents
+	while IFS= read -r -d $'\0'; do
+		agents+=("$REPLY")
+	done < <(find /tmp/ssh-* -name 'agent.*' -user "$USER" -print0 2>/dev/null)
+
+	if [ "${#agents[@]}" -gt 0 ]; then
+		export SSH_AUTH_SOCK="${agents[0]}"
+		if [ "${#agents[@]}" -gt 1 ]; then
+			echo "More than one ssh-agent found for $USER, picking one of them"
+		fi
+	else
+		eval "$(ssh-agent -s)"
+	fi
+}
+
 ################################################################################
 # BASIC CONFIGS
 NEW_PATH+=(
