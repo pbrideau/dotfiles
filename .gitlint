@@ -1,4 +1,5 @@
 [general]
+ignore=B6
 contrib=contrib-title-conventional-commits
 
 [contrib-title-conventional-commits]
