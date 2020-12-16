@@ -267,6 +267,7 @@ fi
 
 alias ga="git add"
 alias gc="git commit"
+alias gd="git diff"
 alias gco="git checkout"
 alias gst="git status"
 alias glh="git log \
