@@ -1,0 +1,107 @@
+------------------------------------------------------------------------------
+Default mappings~
+                                                                  *org-mappings*
+Here is a short overview of the default mappings. They also can be invoked
+via the 'Org' menu. Most are only usable in command mode.
+
+  Show/Hide:~
+    <TAB>           - Cycle Visibility
+
+  Editing Structure:~
+    In GVIM:~
+      <C-S-CR>        - insert heading above
+      <S-CR>          - insert heading below, taking over children
+      <CR>            - insert heading below, taking over children
+      <C-CR>          - insert heading above, after children
+    In general Vim Versions:~
+      <localleader>hN  - insert heading above
+      <localleader>hh  - insert heading below, taking over children
+      <localleader>hn  - insert heading above, after children
+
+      m}              - move heading down
+      m{              - move heading up
+      m]]             - move subtree down
+      m[[             - move subtree up
+
+      yah             - yank heading
+      dah             - delete heading
+      yar             - yank subtree
+      dar             - delete subtree
+      p               - paste subtree
+
+      >> or >ah       - demote heading
+      << or <ah       - promote heading
+      >ar             - demote subtree
+      <ar             - promote subtree
+
+  Hyperlinks:~
+    gl              - goto link
+    gyl             - yank link
+    gil             - insert new link
+
+    gn              - next link
+    go              - previous link
+
+  TODO Lists:~
+    <localleader>d  - select keyword
+    <S-Left>        - previous keyword
+    <S-Right>       - next keyword
+    <C-S-Left>      - previous keyword set
+    <C-S-Right>     - next keyword set
+
+  Plain List:~
+    <localleader>cl or <CR>     - insert plainlist item below
+    <localleader>cL or <C-S-CR> - insert plainlist item above
+
+  Checkboxes:~
+    <localleader>cc             - toggle status
+    <localleader>cn or <CR>     - insert checkbox below
+    <localleader>cN or <C-S-CR> - insert checkbox above
+
+  TAGS and properties:~
+    <localleader>st     - set tags
+
+  Dates:~
+    <localleader>sa     - insert date
+    <localleader>si     - insert inactive date
+    <localleader>pa     - insert date by using calendar selection
+    <localleader>pi     - insert inactive date by using calendar selection
+
+  Agenda:~
+    <localleader>caa    - agenda for the week
+    <localleader>cat    - agenda of all TODOs
+    <localleader>caA    - agenda for the week for current buffer
+    <localleader>caT    - agenda of all TODOs for current buffer
+
+    Not yet implemented in vim-orgmode~
+    <localleader>caL    - timeline of current buffer
+
+  Export:~
+    <localleader>ep     - export as PDF
+    <localleader>eb     - export as Beamer PDF
+    <localleader>eh     - export as HTML
+    <localleader>el     - export as LaTeX
+
+------------------------------------------------------------------------------
+Inline markup~
+
+  We support org authoring markup as closely as possible
+  (we're adding two markdown-like variants for =code= and blockquotes).
+
+  Inline markup:
+>
+  *bold*
+  /italic/
+  _underline_
+  +strike-through+
+  =code=
+  ~verbatim~
+<
+
+  Note:
+  - /italic/ is rendered as reverse in most terms (works fine in gVim, though)
+  - +strike-through+ doesn't work on Vim / GVim
+  - the non-standard `code' markup is also supported
+  - =code= and ~verbatim~ are also supported as block-level markup, see below.
+
+  Ref: http://orgmode.org/manual/Emphasis-and-monospace.html

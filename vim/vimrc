@@ -21,7 +21,10 @@ Plug 'tpope/vim-ragtag'
 Plug 'chrisbra/matchit'
 
 """" Organize
-Plug 'hsitz/VimOrganizer'
+"Plug 'hsitz/VimOrganizer'
+Plug 'jceb/vim-orgmode'
+Plug 'tpope/vim-speeddating'
+Plug 'mattn/calendar-vim'
 
 """" Format
 Plug 'vim-syntastic/syntastic'
@@ -302,6 +305,11 @@ map F :Autoformat<CR>
 " SyntaxRange
 autocmd Syntax sh call SyntaxRange#Include('#+BEGIN_SRC awk','#+END_SRC','awk')
 
+""""""""
+" vim-orgmode
+let g:org_agenda_files=['~/org/index.org']
+
+""""""""
 " Transparent editing of gpg encrypted files.
 " By Wouter Hanegraaff
 augroup encrypted
