@@ -147,9 +147,9 @@ au BufNewFile,BufRead tags set softtabstop=8 tabstop=8 shiftwidth=8 expandtab&
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " DISPLAY IF LENGTH >80
-"highlight OverLength80 ctermbg=red ctermfg=white guibg=#592929
-"highlight OverLength160 ctermbg=green ctermfg=black guibg=#592929
-"match OverLength80 /\%81v.*/
+highlight OverLength80 ctermbg=red ctermfg=white guibg=#592929
+highlight OverLength160 ctermbg=green ctermfg=black guibg=#592929
+au FileType sh match OverLength80 /\%81v.*/
 "match OverLength160 /\%161v.*/
 
 """""""""""""""""""""""""""""""""""""""""""""""""
