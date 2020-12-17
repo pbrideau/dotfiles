@@ -27,6 +27,7 @@ Plug 'hsitz/VimOrganizer'
 Plug 'vim-syntastic/syntastic'
 Plug 'Chiel92/vim-autoformat'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'vim-scripts/SyntaxRange'
 
 """" Tests
 Plug 'vim-test/vim-test'
@@ -298,6 +299,9 @@ let g:formatters_sh = ['my_custom_sh']
 map F :Autoformat<CR>
 
 """"""""
+" SyntaxRange
+autocmd Syntax sh call SyntaxRange#Include('#+BEGIN_SRC awk','#+END_SRC','awk')
+
 " Transparent editing of gpg encrypted files.
 " By Wouter Hanegraaff
 augroup encrypted
