@@ -268,6 +268,7 @@ fi
 alias ga="git add"
 alias gc="git commit"
 alias gd="git diff"
+alias gds="git diff --staged"
 alias gco="git checkout"
 alias gst="git status"
 alias grst="git reset"
@@ -301,7 +302,7 @@ alias genpass="tr -cd '[:alnum:]' < /dev/urandom | fold -w43 | head -n1"
 if [ -x /usr/bin/gvim ]; then
 	alias vi="vim --servername VIM --remote-tab-silent"
 else
-	alias vi='vim -p'
+	alias vi='vim'
 fi
 
 # enable color support of ls and also add handy aliases
