@@ -30,6 +30,9 @@ Plug 'editorconfig/editorconfig-vim'
 
 """" Tests
 Plug 'vim-test/vim-test'
+Plug 'tpope/vim-dispatch'
+"Plug 'sheerun/vim-polyglot', { 'tag': 'v4.15.1' } "https://github.com/sheerun/vim-polyglot/issues/616
+"Plug 'dpelle/vim-Grammalecte'
 
 """" Languages
 Plug 'WolfgangMehner/bash-support'
@@ -153,6 +156,8 @@ au BufNewFile,BufRead tags set softtabstop=8 tabstop=8 shiftwidth=8 expandtab&
 " CUSTOM CONFIGURATION FOR FILETYPE
 au BufRead *.zsh-theme set filetype=sh
 au BufRead *.pp set filetype=puppet
+au BufRead *.bats set filetype=sh
+au BufRead *.md set filetype=markdown
 
 " editorconfig does not recognize bash scripts without extension.
 " https://github.com/editorconfig/editorconfig/issues/239
@@ -251,7 +256,14 @@ au BufRead,BufNewFile */ansible/*.yml vnoremap gr :call FindAnsibleRoleUnderCurs
 " vim-airline
 " Disable all extensions as they incur a big slowdown
 let g:airline_extensions = []
+
 """"""""
+" vim-test
+nmap <silent> tn :TestNearest<CR>
+nmap <silent> tf :TestFile<CR>
+nmap <silent> ts :TestSuite<CR>
+nmap <silent> tl :TestLast<CR>
+nmap <silent> tg :TestVisit<CR>
 
 """"""""
 " bash-support
@@ -273,6 +285,10 @@ let g:syntastic_sh_bashate_args = '-i E002,E003,E004'
 " E002: Tabs are not an option in bash, it is a design feature
 " E003: Related to tabs...
 " E004: shfmt remove the last line, don't fight with yourself...
+
+let g:syntastic_markdown_checkers = [ "markdownlint","proselint" ]
+let g:syntastic_markdown_mdl_exec = 'markdownlint'
+let g:syntastic_markdown_mdl_args = ''
 
 """"""""
 " vim-autoformat
