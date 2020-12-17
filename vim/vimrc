@@ -133,7 +133,7 @@ vmap > >gv
 vmap < <gv
 
 "Open "GoFile in new tab
-nnoremap gf <C-W>gf
+"nnoremap gf <C-W>gf
 
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
