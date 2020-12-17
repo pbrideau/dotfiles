@@ -19,6 +19,7 @@ Plug 'gergap/ShowMarks'
 Plug 'vim-scripts/AutoComplPop'
 Plug 'tpope/vim-ragtag'
 Plug 'chrisbra/matchit'
+Plug 'junegunn/fzf'
 
 """" Organize
 "Plug 'hsitz/VimOrganizer'

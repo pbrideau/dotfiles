@@ -330,6 +330,13 @@ alias ..='cd ..'
 alias ...='cd ../..'
 
 ################################################################################
+# FZF
+if [[ "$-" =~ i ]] && [ -d "$HOME/git/fzf" ]; then
+	source "$HOME/git/fzf/shell/completion.bash"
+	source "$HOME/git/fzf/shell/key-bindings.bash"
+fi
+
+################################################################################
 # RVM
 if [ -s "$HOME/.rvm/scripts/rvm" ]; then
 	source "$HOME/.rvm/scripts/rvm"
