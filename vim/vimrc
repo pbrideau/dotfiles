@@ -290,7 +290,7 @@ let g:syntastic_sh_bashate_args = '-i E002,E003,E004'
 " E003: Related to tabs...
 " E004: shfmt remove the last line, don't fight with yourself...
 
-let g:syntastic_markdown_checkers = [ "markdownlint","proselint" ]
+let g:syntastic_markdown_checkers = [ "mdl","proselint" ]
 let g:syntastic_markdown_mdl_exec = 'markdownlint'
 let g:syntastic_markdown_mdl_args = ''
 
