@@ -7,7 +7,6 @@ filetype off
 " TODO: Load plugins here (pathogen or vundle)
 "execute pathogen#infect()
 call plug#begin('~/.vim/plugged')
-Plug 'pearofducks/ansible-vim'
 Plug 'preservim/nerdtree'
 Plug 'majutsushi/tagbar'
 Plug 'edkolev/tmuxline.vim'
@@ -15,18 +14,26 @@ Plug 'vim-airline/vim-airline'
 Plug 'xolox/vim-easytags'
 Plug 'xolox/vim-misc'
 Plug 'tpope/vim-fugitive'
-Plug 'WolfgangMehner/bash-support'
-
+Plug 'jlanzarotta/bufexplorer'
 Plug 'gergap/ShowMarks'
 Plug 'vim-scripts/AutoComplPop'
 Plug 'tpope/vim-ragtag'
 Plug 'chrisbra/matchit'
+
+"""" Organize
 Plug 'hsitz/VimOrganizer'
+
+"""" Format
 Plug 'vim-syntastic/syntastic'
 Plug 'Chiel92/vim-autoformat'
-Plug 'vim-test/vim-test'
-Plug 'jlanzarotta/bufexplorer'
 Plug 'editorconfig/editorconfig-vim'
+
+"""" Tests
+Plug 'vim-test/vim-test'
+
+"""" Languages
+Plug 'WolfgangMehner/bash-support'
+Plug 'pearofducks/ansible-vim'
 call plug#end()
 
 " For plugins to load correctly
