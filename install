@@ -73,15 +73,16 @@ if ! command -v markdownlint &>/dev/null; then
 	echo "Please install markdownlint:"
 	echo " $ npm install markdownlint-cli"
 	echo "OR with nodeenv"
-	echo " $ nodeenv ~/.local/lib/mardownlint"
+	echo " $ nodeenv ~/.local/lib/markdownlint"
 	echo " $ source ~/.local/lib/markdownlint/bin/activate"
-	echo " $ npm install mardownlint-cli"
+	echo " $ npm install markdownlint-cli"
 	echo " $ deactivate_node"
 	echo " $ echo '#!/bin/bash' > ~/.local/bin/markdownlint"
-	echo -n " $ echo 'source \$HOME/.local/bin/markdownlint/bin/activate'"
+	echo -n " $ echo 'source \$HOME/.local/lib/markdownlint/bin/activate'"
 	echo " >> ~/.local/bin/markdownlint"
 	echo -n " $ echo '$HOME/.local/lib/markdownlint/node_module/markdownlint-cli/"
 	echo "mardownlint.js' \$@ >> ~/.local/bin/markdownlint"
+	echo " $ chmod +x ~/.local/bin/markdownlint"
 fi
 
 if ! command -v proselint &>/dev/null; then
