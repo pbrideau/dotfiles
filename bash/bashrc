@@ -270,6 +270,7 @@ alias gc="git commit"
 alias gd="git diff"
 alias gco="git checkout"
 alias gst="git status"
+alias grst="git reset"
 alias glh="git log \
 	--date=short \
 	--format='%C(yellow)%h %Cblue%ad %Cgreen%<|(40)%an%Creset %s ' \
