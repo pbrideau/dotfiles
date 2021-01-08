@@ -3,3 +3,11 @@ function |?FUNCTION_NAME| {
 <CURSOR><SPLIT>
 }
 == ENDTEMPLATE ==
+
+== Statements.test_function == map:sft, shortcut:f  ==
+function |?FUNCTION_NAME| { #@test
+run "${cmd[@]}"<CURSOR><SPLIT>
+
+assert_success
+}
+== ENDTEMPLATE ==
