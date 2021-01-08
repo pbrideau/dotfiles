@@ -1,6 +1,5 @@
 == Statements.function == map:sfu, shortcut:f  ==
-|?FUNCTION_NAME|
-{
+function |?FUNCTION_NAME| {
 <CURSOR><SPLIT>
 }
 == ENDTEMPLATE ==
