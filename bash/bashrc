@@ -148,11 +148,16 @@ function check_ssh_agent {
 
 	if [ "${#agents[@]}" -gt 0 ]; then
 		export SSH_AUTH_SOCK="${agents[0]}"
-		if [ "${#agents[@]}" -gt 1 ]; then
-			echo "More than one ssh-agent found for $USER, picking one of them"
+		export SSH_AGENT_PID="$((${SSH_AUTH_SOCK#*.} + 1))"
+		# shellcheck disable=SC2009
+		if ! ps -p "$SSH_AGENT_PID" | grep ssh-agent &>/dev/null ; then
+			echo "Something went wrong with ssh-agent"
 		fi
 	else
-		eval "$(ssh-agent -s)"
+		eval "$(ssh-agent -s)" >/dev/null
+	fi
+	if [[ ! "$PROMPT_COMMAND" =~ check_ssh_agent ]]; then
+		export PROMPT_COMMAND="check_ssh_agent; $PROMPT_COMMAND"
 	fi
 }
 
@@ -227,6 +232,11 @@ fi
 # RedHat: nice -n 19 yum check-update | sed -n "/Obsoleting/q;p" | wc -l | awk '{print $1-3}' > $HOME/.update_count
 
 ################################################################################
+# IS SSH_AGENT STARTED?
+SSH_AGENT="test -n \"\$SSH_AUTH_SOCK\" && echo \"@\""
+
+
+################################################################################
 # PROMPT
 if [ -z "$ICON_COLOR" ]; then
 	ICON_COLOR="\033[01;32m"
@@ -234,6 +244,7 @@ fi
 
 PS1="\n\[\033[31m\]${REBOOT}"
 PS1+="\[\033[01;33m\]${UPDATE_COUNT}"
+PS1+="\[\033[01;31m\]\$(${SSH_AGENT})"
 PS1+="\[\033[01;32m\]\h\[${ICON_COLOR}\] >"
 PS1+="\[\033[0m\] "
 PS1+="\[\033[01;34m\]\w"
@@ -255,6 +266,7 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
 	export GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
 	GIT_PROMPT_START="\n\[\033[31m\]${REBOOT}"
 	GIT_PROMPT_START+="\[\033[01;33m\]${UPDATE_COUNT}"
+	GIT_PROMPT_START+="\[\033[01;31m\]\$(${SSH_AGENT})"
 	GIT_PROMPT_START+="\[\033[01;32m\]\h"
 	GIT_PROMPT_START+="\[${ICON_COLOR}\] >"
 	GIT_PROMPT_START+="\[\033[0m\] "
