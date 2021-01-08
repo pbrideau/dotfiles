@@ -170,16 +170,17 @@ done
 unset NEW_PATH
 
 function refresh_history {
-	history -n
-	history -w
-	history -c
-	history -r
+	#history -n
+	#history -w
+	#history -c
+	#history -r
+	history -a
 }
 
 # are we an interactive shell?
 if [ "$PS1" ]; then
 	shopt -s histappend # Turn on parallel history
-	history -a
+	#history -a
 	shopt -s checkwinsize # Turn on checkwinsize
 	shopt -s cdspell      # Correct minor error in cd command
 	shopt -s cmdhist      # Save multiple-line on the same line
@@ -189,7 +190,7 @@ if [ "$PS1" ]; then
 	HISTFILESIZE=10000
 	unset HISTTIMEFORMAT
 
-	#export PROMPT_COMMAND="refresh_history; $PROMPT_COMMAND"
+	export PROMPT_COMMAND="refresh_history; $PROMPT_COMMAND"
 	if [ -e "$HISTFILE" ]; then
 		TEMP_FILE=$(mktemp "$HOME/.bash_history_dir/tmp.XXXXXX")
 		tac "$HISTFILE" | awk '!x[$0]++' >"$TEMP_FILE" &&
