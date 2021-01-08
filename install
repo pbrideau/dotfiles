@@ -7,6 +7,10 @@ function create_link {
 	local link_name=$2
 	if [ ! -f "$link_name" ]; then
 		ln -s "$target" "$link_name"
+	elif [ -L "$link_name" ] && [ ! -e "$link_name" ]; then
+		echo "$link_name is broken, creating it again"
+		rm "$link_name"
+		ln -s "$target" "$link_name"
 	elif [ ! -L "$link_name" ]; then
 		echo "$link_name already exists, delete before running this script again"
 	fi
