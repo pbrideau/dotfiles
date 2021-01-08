@@ -145,6 +145,9 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+nmap <C-o> O<Esc>
+nmap <CR> o<Esc>
+
 autocmd! bufwritepost .vimrc source %
 
 "Use TAB instead of spaces in these files
