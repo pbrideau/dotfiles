@@ -300,7 +300,7 @@ let g:syntastic_markdown_mdl_args = ''
 
 """"""""
 " vim-autoformat
-let g:formatdef_my_custom_sh = '"shfmt -ci"'
+let g:formatdef_my_custom_sh = '"shfmt -ci -sr"'
 let g:formatters_sh = ['my_custom_sh']
 "au FileType sh au BufWrite * :Autoformat
 map F :Autoformat<CR>
