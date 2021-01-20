@@ -378,6 +378,16 @@ alias nocomment='grep --color=no "^[^ #;]"'
 alias ..='cd ..'
 alias ...='cd ../..'
 
+if ! command -v lsof &>/dev/null; then
+	message="\033[01;33m Running \033[01;31mfuser -cu"
+	message+="\033[01;33m as lsof does not exists on this system\033[0m"
+
+	# shellcheck disable=SC2139
+	# I know the $message variable is expanded when defined, this is what i want
+	alias lsof="echo;echo -e \"$message\";echo; fuser -cu"
+	unset message
+fi
+
 ################################################################################
 # FZF
 if [[ "$-" =~ i ]] && [ -d "$HOME/git/fzf" ]; then
