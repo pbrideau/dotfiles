@@ -383,7 +383,7 @@ alias nocomment='grep --color=no "^[^ #;]"'
 alias ..='cd ..'
 alias ...='cd ../..'
 
-if ! command -v lsof &>/dev/null; then
+if ! command -v lsof &> /dev/null; then
 	message="\033[01;33m Running \033[01;31mfuser -cu"
 	message+="\033[01;33m as lsof does not exists on this system\033[0m"
 
