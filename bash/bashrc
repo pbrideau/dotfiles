@@ -127,9 +127,9 @@ case "$OS" in
 			REBOOT=""
 		fi
 		;;
-	*'Solaris'*)
+	*'Solaris'* | *'SunOS'*)
 		REBOOT=""
-		NEW_PATH+=('/usr/xpg4/bin')
+		NEW_PATH+=('/usr/xpg4/bin' '/usr/xpg6/bin')
 		;;
 	*'CYGWIN'*)
 		REBOOT=""
