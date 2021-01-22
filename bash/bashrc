@@ -406,6 +406,32 @@ function man {
 }
 
 ################################################################################
+# LIST WHO HAS CONNECTED
+function lslast {
+	function ls_last_users {
+		for D in /var/log/wtmp*; do
+			# shellcheck disable=SC2086
+			# This quote is within an awk script
+			last -f $D | grep pts | awk '{print $1}'
+		done
+	}
+
+	function print_last_users {
+		local username
+		local last_date
+		for i in $(ls_last_users | sort -u); do
+			username=$(getent passwd "$i" | cut -f5 -d:)
+			last_date=$(last -F -1 "$i" | awk '{print $5" "$6" "$8}' | head -1)
+			date_format=$(date -d "$last_date" "+%F")
+			printf '%-10s %-8s %s\n' "$date_format" "$i" "$username"
+		done
+	}
+
+	print_last_users | sort -r
+	unset -f ls_last_users print_last_users
+}
+
+################################################################################
 # FZF
 if [[ "$-" =~ i ]] && [ -d "$HOME/git/fzf" ]; then
 	source "$HOME/git/fzf/shell/completion.bash"
