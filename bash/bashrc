@@ -25,7 +25,9 @@ fi
 declare -a TMUX_HOSTS
 declare -a AGENT_HOSTS
 if [ -d "$HOME/.bashrc_dir" ]; then
-	source "${HOME}/.bashrc_dir/"*
+	for f in "${HOME}"/.bashrc_dir/*; do
+		source "$f"
+	done
 fi
 
 ################################################################################
