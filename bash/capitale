@@ -2,7 +2,6 @@
 ################################################################################
 # TMUX
 TMUX_HOSTS+=(
-  'cpl1-web-mgnt'
   'cpl1-infr-sec2'
 )
 
@@ -38,6 +37,7 @@ fi
 # ALIASES
 
 alias aut3="ssh cpl1-infr-aut3"
+alias mgnt="ssh cpl1-web-mgnt"
 
 if [ -e /usr/bin/ansible ]; then
   alias ansible='sudo -u auto-it ansible'
