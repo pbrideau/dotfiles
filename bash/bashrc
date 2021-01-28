@@ -161,7 +161,9 @@ esac
 
 ################################################################################
 # BASIC CONFIGS
-add_path "$HOME/.local/bin"
+if [ "$(uname -m)" = "x86_64" ]; then
+	add_path "$HOME/.local/bin"
+fi
 
 function refresh_history {
 	#history -n
