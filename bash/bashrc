@@ -22,6 +22,17 @@ if [[ ! "$-" =~ i ]]; then
 	return
 fi
 
+function add_path {
+	# This is the redhat pathmunge()
+	if ! echo "$PATH" | grep -E -q "(^|:)$1($|:)"; then
+		if [ "$2" = "after" ]; then
+			PATH=$PATH:$1
+		else
+			PATH=$1:$PATH
+		fi
+	fi
+}
+
 declare -a TMUX_HOSTS
 declare -a AGENT_HOSTS
 if [ -d "$HOME/.bashrc_dir" ]; then
@@ -139,7 +150,6 @@ case "$OS" in
 		;;
 	*'Solaris'* | *'SunOS'*)
 		REBOOT=""
-		NEW_PATH+=('/usr/xpg4/bin' '/usr/xpg6/bin')
 		;;
 	*'CYGWIN'*)
 		REBOOT=""
@@ -151,16 +161,7 @@ esac
 
 ################################################################################
 # BASIC CONFIGS
-NEW_PATH+=(
-	"$HOME/.local/bin"
-)
-for x in "${NEW_PATH[@]}"; do
-	case ":$PATH:" in
-		*":$x:"*) : ;; # already there
-		*) PATH="$x:$PATH" ;;
-	esac
-done
-unset NEW_PATH
+add_path "$HOME/.local/bin"
 
 function refresh_history {
 	#history -n
@@ -490,4 +491,5 @@ if [ -s "$HOME/.rvm/scripts/rvm" ]; then
 	# Load RVM into a shell session *as a function*
 fi
 
+unset add_path
 # vim: ff=sh ts=2 sw=2
