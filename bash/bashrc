@@ -390,7 +390,7 @@ alias la='ls -A'
 alias l='ls -CF'
 
 alias psgrep='ps auxfww | grep -v grep | grep'
-alias nocomment='grep --color=no "^[^ #;]"'
+alias nocomment='grep --color=no "^[^#;$]"'
 
 alias ..='cd ..'
 alias ...='cd ../..'
