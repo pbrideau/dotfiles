@@ -468,7 +468,7 @@ function lslast {
 				if [ "$(date '+%m')" -ge "$month_format" ]; then
 					year_format="$(date '+%Y')"
 				else
-					year_format="$(( $(date '+%Y') - 1 ))"
+					year_format="$(($(date '+%Y') - 1))"
 				fi
 				date_format="$year_format-$month_format-$day_format"
 				printf '%-11s %-8s %s\n' "?$date_format" "$i" "$username"
