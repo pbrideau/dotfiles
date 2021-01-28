@@ -42,6 +42,13 @@ if [[ "$TERM" =~ .*:.* ]]; then
 fi
 export MY_ENV_OVERRIDE
 
+if [ "$TERM" = "screen-256color" ]; then
+	if ! infocmp "$TERM" &> /dev/null; then
+		# Make sure we do not break vim if screen-256color does not exists
+		TERM=screen
+	fi
+fi
+
 if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
 	if [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
 		if [[ "${TMUX_HOSTS[*]}" =~ $HOSTNAME ]]; then
@@ -351,7 +358,6 @@ export CHEAT_CONFIG_PATH="$HOME/.dotfiles/cheat/conf.yml"
 
 ################################################################################
 # ALIASES
-alias tmux='TERM=xterm-256color tmux'
 alias genpass="tr -cd '[:alnum:]' < /dev/urandom | fold -w43 | head -n1"
 
 if [ -x /usr/bin/gvim ]; then
