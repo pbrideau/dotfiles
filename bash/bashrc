@@ -68,6 +68,7 @@ if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
 		fi
 	fi
 fi
+unset nsess_att nsess
 unset MY_ENV_OVERRIDE
 unset SESSION_TO_ATTACH
 
