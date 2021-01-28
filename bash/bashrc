@@ -418,7 +418,8 @@ function man {
 # LIST WHO HAS CONNECTED
 function lslast {
 	function ls_last_users {
-		for D in /var/log/wtmp*; do
+		local wtmp_file=$1
+		for D in "$wtmp_file"*; do
 			# shellcheck disable=SC2086
 			# This quote is within an awk script
 			last -f $D | grep pts | awk '{print $1}'
@@ -428,16 +429,51 @@ function lslast {
 	function print_last_users {
 		local username
 		local last_date
-		for i in $(ls_last_users | sort -u); do
-			username=$(getent passwd "$i" | cut -f5 -d:)
-			last_date=$(last -F -1 "$i" | awk '{print $5" "$6" "$8}' | head -1)
-			date_format=$(date -d "$last_date" "+%F")
-			printf '%-10s %-8s %s\n' "$date_format" "$i" "$username"
-		done
+		local wtmp_path
+		local date_format
+		case "$(uname)" in
+			Linux) wtmp_path='/var/log/wtmp' ;;
+			SunOS) wtmp_path='/var/adm/wtmp' ;;
+			*)
+				echo "Error: OS ($(uname)) not found in print_last_user()"
+				echo "OS Known: Linux, SunOS"
+				exit 1
+				;;
+		esac
+
+		if last -F -1 &> /dev/null; then
+			for i in $(ls_last_users "$wtmp_path" | sort -u); do
+				username=$(getent passwd "$i" | cut -f5 -d:)
+				last_date=$(last -F -1 "$i" | awk '{print $5" "$6" "$8}' | head -1)
+				date_format=$(date -d "$last_date" "+%F")
+				printf '%-10s %-8s %s\n' "$date_format" "$i" "$username"
+			done
+		else
+			# Old RedHat + Solaris does not have last -F
+			for i in $(ls_last_users "$wtmp_path" | sort -u); do
+				username=$(getent passwd "$i" | cut -f5 -d:)
+				last_date=$(last -1 "$i" | awk '{print $5" "$6}' | head -1)
+				declare -A months=(
+					["Jan"]="01" ["Feb"]="02" ["Mar"]="03" ["Apr"]="04"
+					["May"]="05" ["Jun"]="06" ["Jul"]="07" ["Aug"]="08"
+					["Sep"]="09" ["Oct"]="10" ["Nov"]="11" ["Dec"]="12"
+				)
+				local month_format="${months[${last_date:0:3}]}"
+				local day_format
+				day_format=$(printf "%02d" "${last_date:4:6}")
+				local year_format
+				if [ "$(date '+%m')" -ge "$month_format" ]; then
+					year_format="$(date '+%Y')"
+				else
+					year_format="$(( $(date '+%Y') - 1 ))"
+				fi
+				date_format="$year_format-$month_format-$day_format"
+				printf '%-11s %-8s %s\n' "?$date_format" "$i" "$username"
+			done
+		fi
 	}
 
 	print_last_users | sort -r
-	unset -f ls_last_users print_last_users
 }
 
 ################################################################################
