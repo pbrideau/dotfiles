@@ -105,3 +105,6 @@ create_link ".dotfiles/tmux.conf" "$HOME/.tmux.conf"
 
 # EDITORCONFIG
 create_link ".dotfiles/editorconfig" "$HOME/.editorconfig"
+
+# DIGRC
+create_link ".dotfiles/digrc" "$HOME/.digrc"
