@@ -455,6 +455,7 @@ function lslast {
 				username=$(getent passwd "$i" | cut -f5 -d:)
 				last_date=$(last -1 "$i" | awk '{print $5" "$6}' | head -1)
 				local day_format month_format year_format
+				day_format=$(printf "%02d" "${last_date:4:6}")
 				case "${last_date:0:3}" in
 					'Jan') month_format='01' ;;
 					'Feb') month_format='02' ;;
@@ -469,7 +470,6 @@ function lslast {
 					'Nov') month_format='11' ;;
 					'Dec') month_format='12' ;;
 				esac
-				day_format=$(printf "%02d" "${last_date:4:6}")
 				if [ "$(date '+%m')" -ge "$month_format" ]; then
 					year_format="$(date '+%Y')"
 				else
