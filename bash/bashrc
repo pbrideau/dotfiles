@@ -454,12 +454,21 @@ function lslast {
 			for i in $(ls_last_users "$wtmp_path" | sort -u); do
 				username=$(getent passwd "$i" | cut -f5 -d:)
 				last_date=$(last -1 "$i" | awk '{print $5" "$6}' | head -1)
-				declare -A months=(
-					["Jan"]="01" ["Feb"]="02" ["Mar"]="03" ["Apr"]="04"
-					["May"]="05" ["Jun"]="06" ["Jul"]="07" ["Aug"]="08"
-					["Sep"]="09" ["Oct"]="10" ["Nov"]="11" ["Dec"]="12"
-				)
-				local month_format="${months[${last_date:0:3}]}"
+				local month_format
+				case "${last_date:0:3}" in
+					'Jan') month_format='01' ;;
+					'Feb') month_format='02' ;;
+					'Mar') month_format='03' ;;
+					'Apr') month_format='04' ;;
+					'May') month_format='05' ;;
+					'Jun') month_format='06' ;;
+					'Jul') month_format='07' ;;
+					'Aug') month_format='08' ;;
+					'Sep') month_format='09' ;;
+					'Oct') month_format='10' ;;
+					'Nov') month_format='11' ;;
+					'Dec') month_format='12' ;;
+				esac
 				local day_format
 				day_format=$(printf "%02d" "${last_date:4:6}")
 				local year_format
