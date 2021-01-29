@@ -423,9 +423,7 @@ function lslast {
 	function ls_last_users {
 		local wtmp_file=$1
 		for D in "$wtmp_file"*; do
-			# shellcheck disable=SC2086
-			# This quote is within an awk script
-			last -f $D | grep pts | awk '{print $1}'
+			last -f "$D" | grep pts | awk '{print $1}'
 		done
 	}
 
