@@ -212,7 +212,7 @@ fi
 # IS THERE PACKAGES TO UPDATES?
 function update_count {
 	if [ -e "$HOME/.update_count" ]; then
-		local update_content
+		declare -i update_content
 		update_content=$(cat "$HOME/.update_count")
 		if [ "$update_content" -gt 0 ]; then
 			echo "($update_content) "
