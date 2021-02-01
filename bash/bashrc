@@ -284,8 +284,16 @@ if [ "${#agents[@]}" -gt 1 ]; then
 fi
 unset agents
 
-PROMPT_SSH_AGENT="test -e \"\$SSH_AUTH_SOCK\" && echo -n \"@\""
-PROMPT_SSH_AGENT+="&& \$(ssh-add -l &>/dev/null) && echo -n \"+\""
+function prompt_ssh_agent {
+	if [ -e "$SSH_AUTH_SOCK" ]; then
+		echo -n "@"
+		if ssh-add -l &> /dev/null; then
+			echo -n "+"
+		fi
+	fi
+}
+#PROMPT_SSH_AGENT="test -e \"\$SSH_AUTH_SOCK\" && echo -n \"@\""
+#PROMPT_SSH_AGENT+="&& \$(ssh-add -l &>/dev/null) && echo -n \"+\""
 # You can add this to ~/.ssh/config:
 #      Host SERVERNAME
 #      ForwardAgent yes
@@ -296,9 +304,14 @@ if [ -z "$ICON_COLOR" ]; then
 	ICON_COLOR="\033[01;32m"
 fi
 
-PS1="\n\[\033[31m\]${REBOOT}"
-PS1+="\[\033[01;33m\]\$(update_count)"
-PS1+="\[\033[01;31m\]\$(${PROMPT_SSH_AGENT})"
+PS1="\n"
+if [ "$REBOOT" != "" ]; then
+	PS1+="\[\033[31m\]${REBOOT}"
+fi
+if [ -e "$HOME/.update_count" ]; then
+	PS1+="\[\033[01;33m\]\$(update_count)"
+fi
+PS1+="\[\033[01;31m\]\$(prompt_ssh_agent)"
 PS1+="\[\033[01;32m\]\h\[${ICON_COLOR}\] >"
 PS1+="\[\033[0m\] "
 PS1+="\[\033[01;34m\]\w"
@@ -318,9 +331,14 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
 	export GIT_PROMPT_IGNORE_SUBMODULES=0
 	export GIT_PROMPT_SHOW_UPSTREAM=1
 	export GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
-	GIT_PROMPT_START="\n\[\033[31m\]${REBOOT}"
-	GIT_PROMPT_START+="\[\033[01;33m\]${UPDATE_COUNT}"
-	GIT_PROMPT_START+="\[\033[01;31m\]\$(${PROMPT_SSH_AGENT})"
+	GIT_PROMPT_START="\n"
+	if [ "$REBOOT" != "" ]; then
+		GIT_PROMPT_START+="\n\[\033[31m\]${REBOOT}"
+	fi
+	if [ -e "$HOME/.update_count" ]; then
+		GIT_PROMPT_START+="\[\033[01;33m\]\$(update_count)"
+	fi
+	GIT_PROMPT_START+="\[\033[01;31m\]\$(prompt_ssh_agent)"
 	GIT_PROMPT_START+="\[\033[01;32m\]\h"
 	GIT_PROMPT_START+="\[${ICON_COLOR}\] >"
 	GIT_PROMPT_START+="\[\033[0m\] "
