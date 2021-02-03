@@ -1,4 +1,4 @@
-
+#!/bin/bash
 ################################################################################
 # TMUX
 TMUX_HOSTS+=(
@@ -16,6 +16,7 @@ AGENT_HOSTS+=(
 # SDC
 
 if [ -f /data/rootscripts/sdc ]; then
+	# shellcheck disable=SC1090
   source ~/git/sdc-bash-completion/sdc.sh
 
   alias sdc='sudo -u asuser -i /data/rootscripts/sdc'
@@ -24,12 +25,11 @@ if [ -f /data/rootscripts/sdc ]; then
 
   #donner accès à un nouveau développeur
   function sdc-sec-newguy {
-    SDC_SEC='sudo -u asuser -i /data/rootscripts/sdc-sec'
-    $SDC_SEC user add $1
-    $SDC_SEC group useradd global_permissions $1
-    getent passwd  $1
-    $SDC_SEC user permlist $1
-    unset SDC_SEC
+    local SDC_SEC='sudo -u asuser -i /data/rootscripts/sdc-sec'
+    "$SDC_SEC" user add "$1"
+    "$SDC_SEC" group useradd global_permissions "$1"
+    getent passwd  "$1"
+    "$SDC_SEC" user permlist "$1"
   }
 fi
 
@@ -49,7 +49,7 @@ fi
 # Test if the servername has a "P" for PROD
 if [[ "${HOSTNAME%%.*}" =~ ^[a-zA-Z0-9]{4}-[^-]+-[^-]+$ ]]; then
   if [ "${HOSTNAME:1:1}" = 'p' ]; then
-    ICON_COLOR="\033[01;31m"
+    export ICON_COLOR="\033[01;31m"
   fi
 fi
 
