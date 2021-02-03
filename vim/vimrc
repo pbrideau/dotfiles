@@ -210,7 +210,8 @@ if filereadable("$HOME/.local/bin/ctags")
 endif
 let g:easytags_async = 1
 "let g:easytags_by_filetype = "~/.vimtags_dir"
-let g:easytags_dynamic_files = 2
+let g:easytags_dynamic_files = 1
+set tags=./tags;
 hi shFunctionTag ctermfg=35 cterm=bold
 
 """""""
