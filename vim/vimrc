@@ -173,7 +173,6 @@ au BufRead *.md set filetype=markdown
 " https://github.com/editorconfig/editorconfig/issues/404
 au FileType sh  setlocal softtabstop=2 tabstop=2 shiftwidth=2 expandtab&
 
-
 "au BufNewFile,BufRead *.sh set softtabstop=2 tabstop=2 shiftwidth=2 expandtab&
 "au BufNewFile,BufRead * :HiMatchOff
 "au BufNewFile,BufRead *.xsd,*.xml :HiMatchOn
@@ -181,6 +180,10 @@ autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 let xml_jump_string="`"
 
 au CursorHold,CursorHoldI * checktime
+
+"""""""""""""""""""""""""""""""""""""""""""""
+" EditorConfig
+let g:EditorConfig_exclude_patterns = ['fugitive://.*','scp://.*']
 
 """""""""""""""""""""""""""""""""""""""""""""
 " BufExplorer
@@ -209,7 +212,7 @@ if filereadable("$HOME/.local/bin/ctags")
   let g:easytags_cmd = "$HOME/.local/bin/ctags"
 endif
 let g:easytags_async = 1
-"let g:easytags_by_filetype = "~/.vimtags_dir"
+let g:easytags_by_filetype = "~/.vimtags_dir"
 let g:easytags_dynamic_files = 1
 set tags=./tags;
 hi shFunctionTag ctermfg=35 cterm=bold
