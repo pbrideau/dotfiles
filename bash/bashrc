@@ -441,9 +441,37 @@ function man {
 function lslast {
 	function ls_last_users {
 		local wtmp_file=$1
-		for D in "$wtmp_file"*; do
-			last -f "$D" | grep pts | awk '{print $1}'
+		# shellcheck disable=SC2116
+		# echo here is required to expand the glob.
+		# https://unix.stackexchange.com/questions/314804/how-to-make-bash-glob-a-string-variable
+		for D in $(echo "$wtmp_file"*); do
+			last -w -f "$D" | grep pts | awk '{print $1}'
 		done
+	}
+
+	function get_last_date {
+		local wtmp_file="$1"
+		local user=$2
+		local last_date
+		local date_to_return=0
+		# shellcheck disable=SC2116
+		# echo here is required to expand the glob.
+		# https://unix.stackexchange.com/questions/314804/how-to-make-bash-glob-a-string-variable
+		for D in $(echo "$wtmp_file*"); do
+			local last_cmd="last -w -F -1 -f $D $user"
+			last_date=$($last_cmd | awk '{print $5" "$6" "$8}' | head -1)
+			local last_date_regex="[A-Z][a-z][a-z] [0-9]+ [0-9]+"
+			if [[ "$last_date" =~ $last_date_regex ]]; then
+				if [ "$(date -d "$last_date" "+%s")" -gt "$date_to_return" ]; then
+					date_to_return=$(date -d "$last_date" "+%s")
+				fi
+			fi
+		done
+		if [ "$date_to_return" = 0 ]; then
+			echo "????-??-??"
+		else
+			date -d "@$date_to_return" "+%F"
+		fi
 	}
 
 	function print_last_users {
@@ -464,8 +492,7 @@ function lslast {
 		if last -F -1 &> /dev/null; then
 			for i in $(ls_last_users "$wtmp_path" | sort -u); do
 				username=$(getent passwd "$i" | cut -f5 -d:)
-				last_date=$(last -F -1 "$i" | awk '{print $5" "$6" "$8}' | head -1)
-				date_format=$(date -d "$last_date" "+%F")
+				date_format="$(get_last_date "$wtmp_path" "$i")"
 				printf '%-10s %-8s %s\n' "$date_format" "$i" "$username"
 			done
 		else
