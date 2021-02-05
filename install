@@ -27,7 +27,7 @@ fi
 create_link ".dotfiles/git/gitconfig" "$HOME/.gitconfig"
 create_link ".dotfiles/git/gitignore" "$HOME/.gitignore"
 
-if ! command -v pre-commit &>/dev/null; then
+if ! command -v pre-commit &> /dev/null; then
 	echo "Please install pre-commit:"
 	echo " $ pip3 install --user pre-commit"
 fi
@@ -55,25 +55,25 @@ if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
 	vim +PlugInstall +qall
 fi
 
-if ! command -v shellcheck &>/dev/null; then
+if ! command -v shellcheck &> /dev/null; then
 	url="https://github.com/koalaman/shellcheck/releases/download/stable/"
 	url+="/shellcheck-stable.linux.x87_64.tar.xz"
 	echo "Please install shellcheck (maybe from here?):"
 	echo " $ wget $url"
 fi
 
-if ! command -v bashate &>/dev/null; then
+if ! command -v bashate &> /dev/null; then
 	echo "Please install bashate (maybe from here?):"
 	echo " $ pip3 install --user bashate"
 fi
-if ! command -v shfmt &>/dev/null; then
+if ! command -v shfmt &> /dev/null; then
 	url="https://github.com/mvdan/sh/releases/download/v3.2.0/"
 	url+="shfmt_v3.2.0_linux_amd64"
 	echo "Please install shfmt:"
 	echo " $ wget $url"
 fi
 
-if ! command -v markdownlint &>/dev/null; then
+if ! command -v markdownlint &> /dev/null; then
 	echo "Please install markdownlint:"
 	echo " $ npm install markdownlint-cli"
 	echo "OR with nodeenv"
@@ -89,12 +89,12 @@ if ! command -v markdownlint &>/dev/null; then
 	echo " $ chmod +x ~/.local/bin/markdownlint"
 fi
 
-if ! command -v proselint &>/dev/null; then
+if ! command -v proselint &> /dev/null; then
 	echo "Please install proselint:"
 	echo " $ pip3 install --user proselint"
 fi
 
-if ! command -v ansible-lint &>/dev/null; then
+if ! command -v ansible-lint &> /dev/null; then
 	echo "Please install ansible-lint:"
 	echo " $ pip3 install --user ansible-lint"
 fi
