@@ -1,0 +1,116 @@
+#!/bin/bash
+
+################################################################################
+# LIST WHO HAS CONNECTED
+function lslast {
+	function ls_last_users {
+		local wtmp_file=$1
+		# shellcheck disable=SC2116
+		# echo here is required to expand the glob.
+		# https://unix.stackexchange.com/questions/314804/how-to-make-bash-glob-a-string-variable
+		case "$(uname)" in
+			SunOS) lastcmd="last" ;;
+			Linux) lastcmd="last -w" ;;
+		esac
+
+		for D in $(echo "$wtmp_file"*); do
+			$lastcmd -f "$D" | grep pts | awk '{print $1}'
+		done
+	}
+
+	function get_last_date {
+		local wtmp_file="$1"
+		local user=$2
+		local last_date
+		local date_to_return=0
+
+		local dow="[A-Z][a-z][a-z]"
+		local mon="[A-Z][a-z][a-z]"
+		local day="[0-9]*"
+		local hour="[012][0-9]:[0-5][0-9]:[0-5][0-9]"
+		local tz="[-+][0-9][0-9][0-9][0-9]"
+		local year="[12][0-9][0-9][0-9]"
+		local date_regex
+
+		case "$(uname)" in
+			Linux)
+				date_regex="$dow $mon *$day $hour $tz $year"
+				last_date=$(
+					lastlog -u "$user" |
+						tail -1 |
+						sed -n -e "s/.*\\($date_regex\\).*/\\1/p" |
+						awk '{print $2" "$3" "$6}'
+				)
+				date_to_return="$(date -d "$last_date" "+%F")"
+				;;
+			SunOS)
+				date_regex="$dow $mon *$day $hour $year"
+				# Date format is UTC, I don't bother to change it
+				# so the date may vary here...
+				last_date=$(/usr/lib/acct/fwtmp < /var/adm/wtmpx |
+					grep "$user" |
+					tail -1 |
+					sed -n -e "s/.*\\($date_regex\\).*/\\1/p" |
+					awk '{print $2" "$3" "$5}')
+
+				# There is no date -d on solaris, so parse manually
+				local day_format month_format year_format
+
+				declare -i int_day="${last_date:4:2}"
+				day_format=$(printf "%02d" "${int_day}")
+
+				case "${last_date:0:3}" in
+					'Jan') month_format='01' ;;
+					'Feb') month_format='02' ;;
+					'Mar') month_format='03' ;;
+					'Apr') month_format='04' ;;
+					'May') month_format='05' ;;
+					'Jun') month_format='06' ;;
+					'Jul') month_format='07' ;;
+					'Aug') month_format='08' ;;
+					'Sep') month_format='09' ;;
+					'Oct') month_format='10' ;;
+					'Nov') month_format='11' ;;
+					'Dec') month_format='12' ;;
+				esac
+
+				if [[ "${last_date}" =~ [12][0-9][0-9][0-9] ]]; then
+					year_format=" ${BASH_REMATCH[0]}"
+				fi
+
+				date_to_return="$year_format-$month_format-$day_format"
+				;;
+		esac
+
+		date_regex='[ ?]?[12][0-9][0-9][0-9]-[01][0-9]-[012][0-9]'
+		if [[ "$date_to_return" =~ $date_regex ]]; then
+			echo "$date_to_return"
+		else
+			echo "????"
+		fi
+	}
+
+	function print_last_users {
+		local username
+		local last_date
+		local wtmp_path
+		local date_format
+		case "$(uname)" in
+			Linux) wtmp_path='/var/log/wtmp' ;;
+			SunOS) wtmp_path='/var/adm/wtmp' ;;
+			*)
+				echo "Error: OS ($(uname)) not found in print_last_user()"
+				echo "OS Known: Linux, SunOS"
+				exit 1
+				;;
+		esac
+
+		for i in $(ls_last_users "$wtmp_path" | sort -u); do
+			username=$(getent passwd "$i" | cut -f5 -d:)
+			date_format="$(get_last_date "$wtmp_path" "$i")"
+			printf '%-10s %-8s %s\n' "$date_format" "$i" "$username"
+		done
+	}
+
+	print_last_users | sort -r
+}
