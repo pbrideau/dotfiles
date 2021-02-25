@@ -1,0 +1,36 @@
+#!/bin/bash
+
+function pipchk {
+	declare -a PIP_PACKAGE_TO_CHECK
+
+	# shellcheck disable=SC1090
+	source "$HOME/.pipchkrc"
+
+	local latest_version current_version
+	local chk version
+	local pypi_url='https://pypi.org/project'
+	local semver_regex='(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.'
+	semver_regex+='(?P<patch>0|[1-9]\d*)'
+	semver_regex+='(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)'
+	semver_regex+='(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?'
+	semver_regex+='(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?'
+
+	echo "Checking latest versions from ${pypi_url}"
+	for p in "${PIP_PACKAGE_TO_CHECK[@]}"; do
+		current_version=$(pip3 show "$p" | grep Version | grep -P -o "$semver_regex")
+		latest_version=$(curl -s "${pypi_url}/${p}/" |
+			grep -m 1 -A 1 'release__version' |
+			grep -P -o "$semver_regex"
+			)
+		if [ "$current_version" != "$latest_version" ]; then
+			chk="[$(tput setaf 1)✘$(tput sgr0)]"
+			version="$current_version (latest: $latest_version)"
+		else
+			chk="[$(tput setaf 3)✔$(tput sgr0)]"
+			version="$current_version"
+		fi
+		printf "%s %-20s %s\n" "$chk" "$p" "$version"
+	done
+
+}
+
