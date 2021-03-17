@@ -39,7 +39,7 @@ mkdir -p "$HOME/.bashrc_dir"
 mkdir -p "$HOME/scripts"
 
 create_link ".dotfiles/bash/bashrc" "$HOME/.bashrc"
-create_link ".dotfiles/bash/lslast" "$HOME/.bashrc_dir/lslast"
+create_link "../.dotfiles/bash/lslast" "$HOME/.bashrc_dir/lslast"
 
 ################################################################################
 # VIM
