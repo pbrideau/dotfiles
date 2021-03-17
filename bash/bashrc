@@ -364,11 +364,11 @@ alias glh="git log \
 alias glo="git log \
 	--graph \
 	--date=short \
-	--format='%C(yellow)%h %Cblue%ad%C(auto)%d%C(yellow) %Creset%s'"
+	--format='%C(yellow)%h %Cblue%ad %Cgreen%an %C(auto)%d%C(yellow) %Creset%s'"
 alias gloa="git log \
 	--graph \
 	--date=short \
-	--format='%C(yellow)%h %Cblue%ad%C(auto)%d%C(yellow) %Creset%s' \
+	--format='%C(yellow)%h %Cblue%ad %Cgreen%an %C(auto)%d%C(yellow) %Creset%s' \
 	--all"
 #alias glo="git log --oneline --decorate --tags --graph "
 #alias gloa="git log --oneline --decorate --tags --graph --all"
