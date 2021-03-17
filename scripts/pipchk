@@ -15,16 +15,19 @@ function pipchk {
 	semver_regex+='(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?'
 	semver_regex+='(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?'
 
+	declare -i pip_to_update=0
 	echo "Checking latest versions from ${pypi_url}"
 	for p in "${PIP_PACKAGE_TO_CHECK[@]}"; do
 		current_version=$(pip3 show "$p" | grep Version | grep -P -o "$semver_regex")
-		latest_version=$(curl -s "${pypi_url}/${p}/" |
-			grep -m 1 -A 1 'release__version' |
-			grep -P -o "$semver_regex"
-			)
+		latest_version=$(
+			curl -s "${pypi_url}/${p}/" |
+				grep -m 1 -A 1 'release__version' |
+				grep -P -o "$semver_regex"
+		)
 		if [ "$current_version" != "$latest_version" ]; then
 			chk="[$(tput setaf 1)✘$(tput sgr0)]"
 			version="$current_version (latest: $latest_version)"
+			pip_to_update+=1
 		else
 			chk="[$(tput setaf 3)✔$(tput sgr0)]"
 			version="$current_version"
@@ -32,5 +35,8 @@ function pipchk {
 		printf "%s %-20s %s\n" "$chk" "$p" "$version"
 	done
 
+	echo "$pip_to_update" > "$HOME/.pipchk_count"
+
 }
 
+pipchk

@@ -100,6 +100,11 @@ if ! command -v ansible-lint &> /dev/null; then
 fi
 
 ################################################################################
+# PACKAGE CHECKER
+create_link "../../.dotfiles/scripts/pipchk" "$HOME/.local/bin/pipchk"
+create_link "../../.dotfiles/scripts/gitchk" "$HOME/.local/bin/gitchk"
+
+################################################################################
 # TMUX
 create_link ".dotfiles/tmux.conf" "$HOME/.tmux.conf"
 
