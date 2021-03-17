@@ -223,6 +223,31 @@ function update_count {
 # Debian: nice -n 19 aptitude search "~U" | wc -l > $HOME/.update_count
 # RedHat: nice -n 19 yum check-update | sed -n "/Obsoleting/q;p" | wc -l | awk '{print $1-3}' > $HOME/.update_count
 
+function pipchk_count {
+	if [ -e "$HOME/.pipchk_count" ]; then
+		declare -i pipchk_content
+		pipchk_content=$(cat "$HOME/.pipchk_count")
+		if [ "$pipchk_content" -gt 0 ]; then
+			echo "(pip:$pipchk_content) "
+		fi
+	fi
+}
+# Crontabs:
+# $HOME/.local/bin/pipchk &>/dev/null
+
+function gitchk_count {
+	if [ -e "$HOME/.gitchk_count" ]; then
+		declare -i gitchk_content
+		gitchk_content=$(cat "$HOME/.gitchk_count")
+		if [ "$gitchk_content" -gt 0 ]; then
+			echo "(git:$gitchk_content) "
+		fi
+	fi
+}
+# Crontabs:
+# $HOME/.local/bin/gitchk &>/dev/null
+
+
 ################################################################################
 # SSH CONFIG
 if [ -d "${HOME}/.ssh/config.d" ]; then
@@ -311,6 +336,12 @@ fi
 if [ -e "$HOME/.update_count" ]; then
 	PS1+="\[\033[01;33m\]\$(update_count)"
 fi
+if [ -e "$HOME/.pipchk_count" ]; then
+	PS1+="\[\033[01;33m\]\$(pipchk_count)"
+fi
+if [ -e "$HOME/.gitchk_count" ]; then
+	PS1+="\[\033[01;33m\]\$(gitchk_count)"
+fi
 PS1+="\[\033[01;31m\]\$(prompt_ssh_agent)"
 PS1+="\[\033[01;32m\]\h\[${ICON_COLOR}\] >"
 PS1+="\[\033[0m\] "
@@ -337,6 +368,12 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
 	fi
 	if [ -e "$HOME/.update_count" ]; then
 		GIT_PROMPT_START+="\[\033[01;33m\]\$(update_count)"
+	fi
+	if [ -e "$HOME/.pipchk_count" ]; then
+		GIT_PROMPT_START+="\[\033[01;33m\]\$(pipchk_count)"
+	fi
+	if [ -e "$HOME/.gitchk_count" ]; then
+		GIT_PROMPT_START+="\[\033[01;33m\]\$(gitchk_count)"
 	fi
 	GIT_PROMPT_START+="\[\033[01;31m\]\$(prompt_ssh_agent)"
 	GIT_PROMPT_START+="\[\033[01;32m\]\h"
