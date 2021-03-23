@@ -1,0 +1,14 @@
+#!/bin/bash
+PIP_PACKAGE_TO_CHECK=(
+	'bashate'
+	'ansible-lint'
+	'gitlint'
+	'pre-commit'
+	'proselint'
+	'yamllint'
+	'lastversion'
+)
+
+PIP_PACKAGE_TO_IGNORE=(
+	['ansible-lint']='5.0.5a1'
+)

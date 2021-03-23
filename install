@@ -109,6 +109,8 @@ fi
 # PACKAGE CHECKER
 create_link "../../.dotfiles/scripts/pipchk" "$HOME/.local/bin/pipchk"
 create_link "../../.dotfiles/scripts/gitchk" "$HOME/.local/bin/gitchk"
+create_link ".dotfiles/scripts/pipchkrc" "$HOME/.pipchkrc"
+create_link ".dotfiles/scripts/gitchkrc" "$HOME/.gitchkrc"
 
 ################################################################################
 # TMUX

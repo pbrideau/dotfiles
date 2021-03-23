@@ -1,0 +1,13 @@
+#!/bin/bash
+
+GIT_PACKAGE_TO_CHECK=(
+	['fzf']='junegunn/fzf'
+	['shellcheck']='koalaman/shellcheck'
+	['Universal Ctags']='universal-ctags/ctags'
+)
+
+GIT_PACKAGE_VERSION=(
+	['fzf']=$(fzf --version | awk '{print $1}')
+	['shellcheck']=$(shellcheck --version | grep version: | awk '{print $2}')
+	['Universal Ctags']=$(ctags --version | grep -P -o '(?<=\(p)[^)]+(?=\),)')
+)
