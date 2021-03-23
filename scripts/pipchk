@@ -2,6 +2,7 @@
 
 function pipchk {
 	declare -a PIP_PACKAGE_TO_CHECK
+	declare -A PIP_PACKAGE_TO_IGNORE
 
 	# shellcheck disable=SC1090
 	source "$HOME/.pipchkrc"
@@ -24,7 +25,11 @@ function pipchk {
 				grep -m 1 -A 1 'release__version' |
 				grep -P -o "$semver_regex"
 		)
-		if [ "$current_version" != "$latest_version" ]; then
+
+		if [ "$latest_version" = "${PIP_PACKAGE_TO_IGNORE[$p]}" ]; then
+			chk="[$(tput setaf 3)✔$(tput sgr0)]"
+			version="$current_version (ignored: $latest_version)"
+		elif [ "$current_version" != "$latest_version" ]; then
 			chk="[$(tput setaf 1)✘$(tput sgr0)]"
 			version="$current_version (latest: $latest_version)"
 			pip_to_update+=1
