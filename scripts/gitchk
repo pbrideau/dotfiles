@@ -16,20 +16,14 @@ function gitchk {
 	local latest_version current_version
 	local chk version
 	local git_url='https://github.com'
-	local semver_regex='(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.'
-	semver_regex+='(?P<patch>0|[1-9]\d*)'
-	semver_regex+='(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)'
-	semver_regex+='(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?'
-	semver_regex+='(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?'
 
 	declare -i git_to_update=0
 	echo "Checking latest versions from ${git_url}"
 	for p in "${!GIT_PACKAGE_TO_CHECK[@]}"; do
-		current_version=$(echo "${GIT_PACKAGE_VERSION[$p]}" | grep -P -o "$semver_regex")
+		current_version="${GIT_PACKAGE_VERSION[$p]}"
 		latest_version=$(
 			lastversion "${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
 		)
-		latest_version=$(echo "$latest_version" | grep -P -o "$semver_regex")
 		if [ "$current_version" != "$latest_version" ]; then
 			chk="[$(tput setaf 1)✘$(tput sgr0)]"
 			version="$current_version (latest: $latest_version)"

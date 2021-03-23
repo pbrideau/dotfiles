@@ -10,20 +10,15 @@ function pipchk {
 	local latest_version current_version
 	local chk version
 	local pypi_url='https://pypi.org/project'
-	local semver_regex='(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.'
-	semver_regex+='(?P<patch>0|[1-9]\d*)'
-	semver_regex+='(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)'
-	semver_regex+='(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?'
-	semver_regex+='(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?'
 
 	declare -i pip_to_update=0
 	echo "Checking latest versions from ${pypi_url}"
 	for p in "${PIP_PACKAGE_TO_CHECK[@]}"; do
-		current_version=$(pip3 show "$p" | grep Version | grep -P -o "$semver_regex")
+		current_version=$(pip3 show "$p" | grep Version | awk '{print $2}')
 		latest_version=$(
 			curl -s "${pypi_url}/${p}/" |
-				grep -m 1 -A 1 'release__version' |
-				grep -P -o "$semver_regex"
+				sed -n -e '/release__version/{n;p;q}' |
+				grep -o '\S*'
 		)
 
 		if [ "$latest_version" = "${PIP_PACKAGE_TO_IGNORE[$p]}" ]; then
