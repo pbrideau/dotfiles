@@ -54,9 +54,11 @@ fi
 export MY_ENV_OVERRIDE
 
 if [ "$TERM" = "screen-256color" ]; then
-	if ! infocmp "$TERM" &> /dev/null; then
-		# Make sure we do not break vim if screen-256color does not exists
-		TERM=screen
+	# Make sure we do not break vim if screen-256color does not exists
+	if infocmp "screen" &> /dev/null; then
+		TERM="screen"
+	elif infocmp "xterm" &> /dev/null; then
+		TERM="xterm"
 	fi
 fi
 
