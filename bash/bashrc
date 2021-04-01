@@ -180,11 +180,13 @@ if [ "$PS1" ]; then
 
 	export PROMPT_COMMAND="refresh_history;$PROMPT_COMMAND"
 	if [ -e "$HISTFILE" ]; then
-		TEMP_FILE=$(mktemp "$HOME/.bash_history_dir/tmp.XXXXXX")
-		tac "$HISTFILE" | awk '!x[$0]++' > "$TEMP_FILE" &&
-			tac "$TEMP_FILE" > "$HISTFILE"
-		rm "$TEMP_FILE"
-		unset TEMP_FILE
+		if command -v tac &> /dev/null; then
+			TEMP_FILE=$(mktemp "$HOME/.bash_history_dir/tmp.XXXXXX")
+			tac "$HISTFILE" | awk '!x[$0]++' > "$TEMP_FILE" &&
+				tac "$TEMP_FILE" > "$HISTFILE"
+			rm "$TEMP_FILE"
+			unset TEMP_FILE
+		fi
 	fi
 fi
 
@@ -238,7 +240,6 @@ function gitchk_count {
 }
 # Crontabs:
 # $HOME/.local/bin/gitchk &>/dev/null
-
 
 ################################################################################
 # SSH CONFIG
