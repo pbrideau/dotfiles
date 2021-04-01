@@ -88,16 +88,6 @@ unset SESSION_TO_ATTACH
 ################################################################################
 # When using tmux:
 if [ -n "$TMUX" ]; then
-	settitle() {
-		printf "\033k%s\033\\" "$1"
-	}
-
-	ssh() {
-		settitle "$*"
-		command ssh "$@"
-		settitle "bash"
-	}
-
 	#MOTD:
 	#tested on tmux >= 1.5
 	CURRENT_SESSION_NAME="$(tmux list-panes -a |
