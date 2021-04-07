@@ -443,6 +443,7 @@ alias nocomment='grep --color=no "^[^#;$]"'
 
 alias ..='cd ..'
 alias ...='cd ../..'
+alias ....='cd ../../..'
 
 if ! command -v lsof &> /dev/null; then
 	message="\033[01;33m Running \033[01;31mfuser -cu"
