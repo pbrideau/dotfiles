@@ -239,6 +239,7 @@ function gitchk_count {
 	fi
 }
 # Crontabs:
+# PATH in crontab must be set to run lastversion (~/.local/bin)
 # $HOME/.local/bin/gitchk &>/dev/null
 
 ################################################################################
