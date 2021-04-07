@@ -11,3 +11,6 @@ GIT_PACKAGE_VERSION=(
 	['shellcheck']=$(shellcheck --version | grep version: | awk '{print $2}')
 	['Universal Ctags']=$(ctags --version | grep -P -o '(?<=\(p)[^)]+(?=\),)')
 )
+
+GIT_PACKAGE_TO_IGNORE=(
+)

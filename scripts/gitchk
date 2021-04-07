@@ -8,6 +8,7 @@ fi
 
 function gitchk {
 	declare -A GIT_PACKAGE_TO_CHECK
+	declare -A GIT_PACKAGE_TO_IGNORE
 	declare -A GIT_PACKAGE_VERSION
 
 	# shellcheck disable=SC1090
@@ -24,7 +25,10 @@ function gitchk {
 		latest_version=$(
 			lastversion "${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
 		)
-		if [ "$current_version" != "$latest_version" ]; then
+		if [ "$latest_version" = "${GIT_PACKAGE_TO_IGNORE[$p]}" ]; then
+			chk="[$(tput setaf 3)✔$(tput sgr0)]"
+			version="$current_version (ignored: $latest_version)"
+		elif [ "$current_version" != "$latest_version" ]; then
 			chk="[$(tput setaf 1)✘$(tput sgr0)]"
 			version="$current_version (latest: $latest_version)"
 			git_to_update+=1
