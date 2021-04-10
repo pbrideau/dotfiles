@@ -470,9 +470,13 @@ function man {
 
 ################################################################################
 # FZF
-if [[ "$-" =~ i ]] && [ -d "$HOME/git/fzf" ]; then
-	source "$HOME/git/fzf/shell/completion.bash"
-	source "$HOME/git/fzf/shell/key-bindings.bash"
+if [[ "$-" =~ i ]]; then
+	if [ -d "$HOME/git/fzf" ]; then
+		source "$HOME/git/fzf/shell/completion.bash"
+		source "$HOME/git/fzf/shell/key-bindings.bash"
+	elif [ -e "/usr/share/doc/fzf/examples/key-bindings.bash" ]; then
+		source /usr/share/doc/fzf/examples/key-bindings.bash
+	fi
 fi
 
 ################################################################################
