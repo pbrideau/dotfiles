@@ -4,12 +4,14 @@ GIT_PACKAGE_TO_CHECK=(
 	['fzf']='junegunn/fzf'
 	['shellcheck']='koalaman/shellcheck'
 	['Universal Ctags']='universal-ctags/ctags'
+	['Docopts']='docopt/docopts'
 )
 
 GIT_PACKAGE_VERSION=(
 	['fzf']=$(fzf --version | awk '{print $1}')
 	['shellcheck']=$(shellcheck --version | grep version: | awk '{print $2}')
 	['Universal Ctags']=$(ctags --version | grep -P -o '(?<=\(p)[^)]+(?=\),)')
+	['Docopts']=$(docopts --version | awk '{ sub(/v/,"",$2); sub(/-/,"",$2); print $2; exit }')
 )
 
 GIT_PACKAGE_TO_IGNORE=(
