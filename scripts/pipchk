@@ -22,14 +22,14 @@ function pipchk {
 		)
 
 		if [ "$latest_version" = "${PIP_PACKAGE_TO_IGNORE[$p]}" ]; then
-			chk="[$(tput setaf 3)✔$(tput sgr0)]"
+			chk="[$(tput setaf 2)✔$(tput sgr0)]"
 			version="$current_version (ignored: $latest_version)"
 		elif [ "$current_version" != "$latest_version" ]; then
 			chk="[$(tput setaf 1)✘$(tput sgr0)]"
 			version="$current_version (latest: $latest_version)"
 			pip_to_update+=1
 		else
-			chk="[$(tput setaf 3)✔$(tput sgr0)]"
+			chk="[$(tput setaf 2)✔$(tput sgr0)]"
 			version="$current_version"
 		fi
 		printf "%s %-20s %s\n" "$chk" "$p" "$version"
