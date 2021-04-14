@@ -21,7 +21,10 @@ function pipchk {
 				grep -o '\S*'
 		)
 
-		if [ "$latest_version" = "${PIP_PACKAGE_TO_IGNORE[$p]}" ]; then
+		if ! pip3 show "$p" &> /dev/null; then
+			chk="[$(tput setaf 3)-$(tput sgr0)]"
+			version="(not currently installed)"
+		elif [ "$latest_version" = "${PIP_PACKAGE_TO_IGNORE[$p]}" ]; then
 			chk="[$(tput setaf 2)✔$(tput sgr0)]"
 			version="$current_version (ignored: $latest_version)"
 		elif [ "$current_version" != "$latest_version" ]; then
