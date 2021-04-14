@@ -23,7 +23,7 @@ function gitchk {
 	for p in "${!GIT_PACKAGE_TO_CHECK[@]}"; do
 		current_version="${GIT_PACKAGE_VERSION[$p]}"
 		latest_version=$(
-			lastversion "${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
+			lastversion --pre "${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
 		)
 		if [ "$latest_version" = "${GIT_PACKAGE_TO_IGNORE[$p]}" ]; then
 			chk="[$(tput setaf 2)✔$(tput sgr0)]"
