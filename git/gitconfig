@@ -10,3 +10,5 @@
   editor = vim
 [init]
   templateDir = ~/.dotfiles/git/template
+[pull]
+  rebase = true
