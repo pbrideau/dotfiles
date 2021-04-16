@@ -237,13 +237,13 @@ hi shFunctionTag ctermfg=35 cterm=bold
 let g:tagbar_type_ansible = {
       \ 'ctagstype' : 'ansible',
       \ 'kinds' : [
-      \ 't:tasks',
-      \ 'h:hosts',
-      \ 'r:roles',
-      \ 'l:listen',
-      \ ],
-      \ 'sort' : 0
-      \ }
+	\ 't:tasks',
+	\ 'h:hosts',
+	\ 'r:roles',
+	\ 'l:listen',
+	\ ],
+	\ 'sort' : 0
+	\ }
 
 let g:tagbar_type_sh = {
       \ 'kinds':[
