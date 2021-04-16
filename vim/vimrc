@@ -44,6 +44,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'WolfgangMehner/bash-support'
 "Plug 'pearofducks/ansible-vim'
 Plug 'chase/vim-ansible-yaml'
+Plug 'dpelle/vim-Grammalecte'
 call plug#end()
 
 " For plugins to load correctly
@@ -283,6 +284,11 @@ nmap <silent> tg :TestVisit<CR>
 
 """"""""
 " bash-support
+
+""""""""
+" vim-grammalecte
+let g:grammalecte_cli_py='$HOME/git/grammalecte/grammalecte-cli.py'
+let g:grammalecte_win_height=-1
 
 """"""""
 " syntastic
