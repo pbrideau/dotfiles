@@ -412,6 +412,16 @@ export CHEAT_CONFIG_PATH="$HOME/.dotfiles/cheat/conf.yml"
 export CHEAT_USE_FZF=true
 source "$HOME/git/cheat/scripts/cheat.bash"
 
+
+################################################################################
+# TLDR
+complete -W "$(tldr 2>/dev/null --list)" tldr
+export TLDR_HEADER='magenta bold underline'
+export TLDR_QUOTE='italic'
+export TLDR_DESCRIPTION='green'
+export TLDR_CODE='red'
+export TLDR_PARAM='blue'
+
 ################################################################################
 # ALIASES
 alias genpass="tr -cd '[:alnum:]' < /dev/urandom | fold -w43 | head -n1"
