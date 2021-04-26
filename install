@@ -47,6 +47,17 @@ mkdir -p "$HOME/scripts"
 create_link ".dotfiles/bash/bashrc" "$HOME/.bashrc"
 create_link "../.dotfiles/bash/lslast" "$HOME/.bashrc_dir/lslast"
 
+if ! command -v cheat &> /dev/null; then
+	echo "cheat not installed, to do so:"
+	url="https://github.com/cheat/cheat/releases/download/"
+	url+="4.2.0/cheat-linux-amd64.gz"
+	echo " $ wget $url"
+fi
+
+if [ ! -d "$HOME/git/cheatsheets/" ]; then
+	git clone https://github.com/cheat/cheatsheets.git "$HOME/git/"
+fi
+
 ################################################################################
 # VIM
 

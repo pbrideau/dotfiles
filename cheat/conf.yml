@@ -32,14 +32,14 @@ pager: less -FRX
 # 'community' rather than your own, you can use: cheat tar -t community
 cheatpaths:
   - name: community
-    path: /home/ext11363/.dotfiles/cheat/cheatsheets/community
+    path: ~/git/cheatsheets
     tags: [ community ]
     readonly: true
 
   # If you have personalized cheatsheets, list them last. They will take
   # precedence over the more global cheatsheets.
   - name: personal
-    path: /home/ext11363/.dotfiles/cheat/cheatsheets/personal
+    path: ~/.dotfiles/cheat/personal
     tags: [ personal ]
     readonly: false
 
