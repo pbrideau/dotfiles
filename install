@@ -58,6 +58,12 @@ if [ ! -d "$HOME/git/cheatsheets/" ]; then
 	git clone https://github.com/cheat/cheatsheets.git "$HOME/git/"
 fi
 
+if ! command -v tldr &> /dev/null; then
+	echo "tldr is not installed, to do so:"
+	echo " $ git clone https://github.com/raylee/tldr-sh-client.git"
+	echo " $ ln -s ../../git/tldr-sh-client/tldr \"$HOME/.local/bin/tldr\""
+fi
+
 ################################################################################
 # VIM
 
