@@ -5,6 +5,7 @@ GIT_PACKAGE_TO_CHECK=(
 	['shellcheck']='koalaman/shellcheck'
 	['Universal Ctags']='universal-ctags/ctags'
 	['Docopts']='docopt/docopts'
+	['Cheat']='cheat/cheat'
 )
 
 GIT_PACKAGE_VERSION=(
@@ -12,6 +13,7 @@ GIT_PACKAGE_VERSION=(
 	['shellcheck']=$(shellcheck --version | grep version: | awk '{print $2}')
 	['Universal Ctags']=$(ctags --version | grep -P -o '(?<=\(p)[^)]+(?=\),)')
 	['Docopts']=$(docopts --version | awk '{ sub(/v/,"",$2); sub(/-/,"",$2); print $2; exit }')
+	['Cheat']=$(cheat --version)
 )
 
 GIT_PACKAGE_TO_IGNORE=(
