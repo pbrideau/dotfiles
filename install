@@ -23,6 +23,8 @@ function create_link {
 	fi
 }
 
+err="[$(tput setaf 1)✘$(tput sgr0)]"
+
 ################################################################################
 # GIT
 mkdir -p "$HOME/git"
@@ -35,7 +37,7 @@ create_link ".dotfiles/git/gitconfig" "$HOME/.gitconfig"
 create_link ".dotfiles/git/gitignore" "$HOME/.gitignore"
 
 if ! command -v pre-commit &> /dev/null; then
-	echo "Please install pre-commit:"
+	echo -e "$err pre-commit is not installed, to do so:"
 	echo " $ pip3 install --user pre-commit"
 fi
 
@@ -49,7 +51,7 @@ create_link ".dotfiles/bash/bashrc" "$HOME/.bashrc"
 create_link "../.dotfiles/bash/lslast" "$HOME/.bashrc_dir/lslast"
 
 if ! command -v cheat &> /dev/null; then
-	echo "cheat not installed, to do so:"
+	echo -e "$err cheat is not installed, to do so:"
 	url="https://github.com/cheat/cheat/releases/download/"
 	url+="4.2.0/cheat-linux-amd64.gz"
 	echo " $ wget $url"
@@ -60,7 +62,7 @@ if [ ! -d "$HOME/git/cheatsheets/" ]; then
 fi
 
 if ! command -v tldr &> /dev/null; then
-	echo "tldr is not installed, to do so:"
+	echo -e "$err tldr is not installed, to do so:"
 	echo " $ git clone https://github.com/raylee/tldr-sh-client.git"
 	echo " $ ln -s ../../git/tldr-sh-client/tldr \"$HOME/.local/bin/tldr\""
 fi
@@ -82,30 +84,30 @@ fi
 if ! command -v shellcheck &> /dev/null; then
 	url="https://github.com/koalaman/shellcheck/releases/download/stable/"
 	url+="/shellcheck-stable.linux.x87_64.tar.xz"
-	echo "Please install shellcheck (maybe from here?):"
+	echo -e "$err shellcheck is not installed, to do so:"
 	echo " $ wget $url"
 fi
 
 if ! command -v bashate &> /dev/null; then
-	echo "Please install bashate (maybe from here?):"
+	echo -e "$err bashate is not installed, to do so:"
 	echo " $ pip3 install --user bashate"
 fi
 if ! command -v shfmt &> /dev/null; then
 	url="https://github.com/mvdan/sh/releases/download/v3.2.0/"
 	url+="shfmt_v3.2.0_linux_amd64"
-	echo "Please install shfmt:"
+	echo -e "$err shfmt is not installed, to do so:"
 	echo " $ wget $url"
 fi
 
 if ! command -v docopts &> /dev/null; then
 	url="https://github.com/docopt/docopts/releases/download/v0.6.3-rc2/"
 	url+="docopts_linux_amd64"
-	echo "Please install docopts:"
+	echo -e "$err docpots is not installed, to do so:"
 	echo " $ wget $url"
 fi
 
 if ! command -v markdownlint &> /dev/null; then
-	echo "Please install markdownlint:"
+	echo -e "$err markdownlint is not installed, to do so:"
 	echo " $ npm install markdownlint-cli"
 	echo "OR with nodeenv"
 	echo " $ nodeenv ~/.local/lib/markdownlint"
@@ -121,12 +123,12 @@ if ! command -v markdownlint &> /dev/null; then
 fi
 
 if ! command -v proselint &> /dev/null; then
-	echo "Please install proselint:"
+	echo -e "$err proselint is not installed, to do so:"
 	echo " $ pip3 install --user proselint"
 fi
 
 if ! command -v ansible-lint &> /dev/null; then
-	echo "Please install ansible-lint:"
+	echo -e "$err ansible-lint is not installed, to do so:"
 	echo " $ pip3 install --user ansible-lint"
 fi
 
