@@ -148,3 +148,6 @@ create_link ".dotfiles/editorconfig" "$HOME/.editorconfig"
 
 # DIGRC
 create_link ".dotfiles/digrc" "$HOME/.digrc"
+
+# PROSELINT
+create_link ".dotfiles/proselintrc" "$HOME/.proselintrc"
