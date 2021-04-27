@@ -6,7 +6,8 @@ function create_link {
 	local target=$1
 	local link_name=$2
 	err="[$(tput setaf 1)✘$(tput sgr0)]"
-	ok="[$(tput setaf 3)✔$(tput sgr0)]"
+	ok="[$(tput setaf 2)✔$(tput sgr0)]"
+	no="[$(tput setaf 3)-$(tput sgr0)]"
 	if [ ! -f "${link_name}" ] && [ ! -L "${link_name}" ]; then
 		ln -s "$target" "${link_name}"
 		echo "$ok ${link_name}: done"
@@ -18,7 +19,7 @@ function create_link {
 		echo -ne "$err ${link_name}: already exists but is not a symlink: "
 		echo "delete before running this script again"
 	else
-		echo "$ok ${link_name}: Nothing to do"
+		echo "$no ${link_name}: Nothing to do"
 	fi
 }
 
