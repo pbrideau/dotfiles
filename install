@@ -30,7 +30,8 @@ err="[$(tput setaf 1)✘$(tput sgr0)]"
 mkdir -p "$HOME/git"
 
 if [ ! -d "$HOME/git/bash-git-prompt/" ]; then
-	git clone https://github.com/magicmonty/bash-git-prompt.git "$HOME/git/"
+	git clone https://github.com/magicmonty/bash-git-prompt.git \
+		"$HOME/git/bash-git-prompt"
 fi
 
 create_link ".dotfiles/git/gitconfig" "$HOME/.gitconfig"
@@ -58,7 +59,7 @@ if ! command -v cheat &> /dev/null; then
 fi
 
 if [ ! -d "$HOME/git/cheatsheets/" ]; then
-	git clone https://github.com/cheat/cheatsheets.git "$HOME/git/"
+	git clone https://github.com/cheat/cheatsheets.git "$HOME/git/cheatsheets"
 fi
 
 if ! command -v tldr &> /dev/null; then
