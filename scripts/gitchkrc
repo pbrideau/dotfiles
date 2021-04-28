@@ -6,6 +6,7 @@ GIT_PACKAGE_TO_CHECK=(
 	['Universal Ctags']='universal-ctags/ctags'
 	['Docopts']='docopt/docopts'
 	['Cheat']='cheat/cheat'
+	['Semantic-Release']='go-semantic-release/semantic-release'
 )
 
 GIT_PACKAGE_VERSION=(
@@ -14,6 +15,7 @@ GIT_PACKAGE_VERSION=(
 	['Universal Ctags']=$(ctags --version | grep -P -o '(?<=\(p)[^)]+(?=\),)')
 	['Docopts']=$(docopts --version | awk '{ sub(/v/,"",$2); sub(/-/,"",$2); print $2; exit }')
 	['Cheat']=$(cheat --version)
+	['Semantic-Release']=$(semantic-release --version | awk '{print $3}')
 )
 
 GIT_PACKAGE_TO_IGNORE=(
