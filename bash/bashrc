@@ -329,7 +329,14 @@ if [ -z "$HOSTNAME_COLOR" ]; then
 	HOSTNAME_COLOR="\033[01;32m"
 fi
 
+function prompt_line {
+	printf %${COLUMNS:-$(tput cols)}s | tr " " "-"
+}
+
 PS1="\[\033[0m\]\n"
+PS1+="\[\033[s\]" #save cursor position
+PS1+="\$(prompt_line)"
+PS1+="\[\033[u\]" # restore cursor position
 
 ### Display current time on right hand side
 PS1+="\[\033[s\]" #save cursor position
@@ -377,6 +384,9 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
 	export GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
 
 	GIT_PROMPT_START="\[\033[0m\]\n"
+	GIT_PROMPT_START+="\[\033[s\]" #save cursor position
+	GIT_PROMPT_START+="\$(prompt_line)"
+	GIT_PROMPT_START+="\[\033[u\]" # restore cursor position
 
 	### Display current time on right hand side
 	GIT_PROMPT_START+="\[\033[s\]" #save cursor position
