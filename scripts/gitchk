@@ -21,20 +21,25 @@ function gitchk {
 	declare -i git_to_update=0
 	echo "Checking latest versions from ${git_url}"
 	for p in "${!GIT_PACKAGE_TO_CHECK[@]}"; do
-		current_version="${GIT_PACKAGE_VERSION[$p]}"
-		latest_version=$(
-			lastversion --pre "${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
-		)
-		if [ "$latest_version" = "${GIT_PACKAGE_TO_IGNORE[$p]}" ]; then
-			chk="[$(tput setaf 2)✔$(tput sgr0)]"
-			version="$current_version (ignored: $latest_version)"
-		elif [ "$current_version" != "$latest_version" ]; then
-			chk="[$(tput setaf 1)✘$(tput sgr0)]"
-			version="$current_version (latest: $latest_version)"
-			git_to_update+=1
+		if ! $p --version &> /dev/null; then
+			chk="[$(tput setaf 3)-$(tput sgr0)]"
+			version="(not currently installed)"
 		else
-			chk="[$(tput setaf 2)✔$(tput sgr0)]"
-			version="$current_version"
+			latest_version=$(
+				lastversion --pre "${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
+			)
+			current_version="${GIT_PACKAGE_VERSION[$p]}"
+			if [ "$latest_version" = "${GIT_PACKAGE_TO_IGNORE[$p]}" ]; then
+				chk="[$(tput setaf 2)✔$(tput sgr0)]"
+				version="$current_version (ignored: $latest_version)"
+			elif [ "$current_version" != "$latest_version" ]; then
+				chk="[$(tput setaf 1)✘$(tput sgr0)]"
+				version="$current_version (latest: $latest_version)"
+				git_to_update+=1
+			else
+				chk="[$(tput setaf 2)✔$(tput sgr0)]"
+				version="$current_version"
+			fi
 		fi
 		printf "%s %-20s %s\n" "$chk" "$p" "$version"
 	done
