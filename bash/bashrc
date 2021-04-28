@@ -308,6 +308,7 @@ function prompt_ssh_agent {
 		if ssh-add -l &> /dev/null; then
 			echo -n "+"
 		fi
+		echo -n " "
 	fi
 }
 #PROMPT_SSH_AGENT="test -e \"\$SSH_AUTH_SOCK\" && echo -n \"@\""
@@ -318,11 +319,20 @@ function prompt_ssh_agent {
 
 ################################################################################
 # PROMPT
-if [ -z "$ICON_COLOR" ]; then
-	ICON_COLOR="\033[01;32m"
+if [ -z "$HOSTNAME_COLOR" ]; then
+	HOSTNAME_COLOR="\033[01;32m"
 fi
 
-PS1="\n"
+PS1="\[\033[0m\]\n"
+
+### Display current time on right hand side
+PS1+="\[\033[s\]" #save cursor position
+PS1+="\[\033[${COLUMNS:-$(tput cols)}C\033[12D\]"
+PS1+="\[\033[0m\][ \[\033[1;33m\]\t\[\033[0m\] ]"
+PS1+="\[\033[u\]" # restore cursor position
+
+PS1+="\[\033[0m\][ "
+PS1+="\[\033[01;31m\]\$(prompt_ssh_agent)"
 if [ "$REBOOT" != "" ]; then
 	PS1+="\[\033[31m\]${REBOOT}"
 fi
@@ -335,14 +345,18 @@ fi
 if [ -e "$HOME/.gitchk_count" ]; then
 	PS1+="\[\033[01;33m\]\$(gitchk_count)"
 fi
-PS1+="\[\033[01;31m\]\$(prompt_ssh_agent)"
-PS1+="\[\033[01;32m\]\h\[${ICON_COLOR}\] >"
-PS1+="\[\033[0m\] "
+PS1+="\[\033[0m\]]"
+
+#PS1+="\[\033[01;33m\]\t"
+PS1+="\n"
+PS1+="\[\033[01;32m\]\u\[\033[1;0m\]@"
+PS1+="\[\033[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
 PS1+="\[\033[01;34m\]\w"
 PS1+="\[\033[0m\]\n\$ "
-SUDO_PS1="\n\[\033[01;41m\]\h"
-SUDO_PS1+="\[\033[0m${ICON_COLOR}\] >"
-SUDO_PS1+="\[\033[0m\] "
+
+SUDO_PS1="\[\033[0m\]\n"
+SUDO_PS1+="\[\033[01;31m\]\u\[\033[1;0m\]@"
+SUDO_PS1+="\[\033[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
 SUDO_PS1+="\[\033[01;34m\]\w"
 SUDO_PS1+="\[\033[0m\]\n# "
 export SUDO_PS1
@@ -355,9 +369,19 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
 	export GIT_PROMPT_IGNORE_SUBMODULES=0
 	export GIT_PROMPT_SHOW_UPSTREAM=1
 	export GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
-	GIT_PROMPT_START="\n"
+
+	GIT_PROMPT_START="\[\033[0m\]\n"
+
+	### Display current time on right hand side
+	GIT_PROMPT_START+="\[\033[s\]" #save cursor position
+	GIT_PROMPT_START+="\[\033[${COLUMNS:-$(tput cols)}C\033[12D\]"
+	GIT_PROMPT_START+="\[\033[0m\][ \[\033[1;33m\]\t\[\033[0m\] ]"
+	GIT_PROMPT_START+="\[\033[u\]" # restore cursor position
+
+	GIT_PROMPT_START+="\[\033[0m\][ "
+	GIT_PROMPT_START+="\[\033[01;31m\]\$(prompt_ssh_agent)"
 	if [ "$REBOOT" != "" ]; then
-		GIT_PROMPT_START+="\n\[\033[31m\]${REBOOT}"
+		GIT_PROMPT_START+="\[\033[31m\]${REBOOT}"
 	fi
 	if [ -e "$HOME/.update_count" ]; then
 		GIT_PROMPT_START+="\[\033[01;33m\]\$(update_count)"
@@ -368,14 +392,16 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
 	if [ -e "$HOME/.gitchk_count" ]; then
 		GIT_PROMPT_START+="\[\033[01;33m\]\$(gitchk_count)"
 	fi
-	GIT_PROMPT_START+="\[\033[01;31m\]\$(prompt_ssh_agent)"
-	GIT_PROMPT_START+="\[\033[01;32m\]\h"
-	GIT_PROMPT_START+="\[${ICON_COLOR}\] >"
-	GIT_PROMPT_START+="\[\033[0m\] "
-	GIT_PROMPT_START+="\[\033[01;34m\]\w"
-	GIT_PROMPT_START+="\[\033[0m\]"
+	GIT_PROMPT_START+="\[\033[0m\]]"
+
+	GIT_PROMPT_END="\n"
+	GIT_PROMPT_END+="\[\033[01;32m\]\u\[\033[1;0m\]@"
+	GIT_PROMPT_END+="\[\033[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
+	GIT_PROMPT_END+="\[\033[01;34m\]\w"
+	GIT_PROMPT_END+="\[\033[0m\]\n\$ "
+
 	export GIT_PROMPT_START
-	export GIT_PROMPT_END="\n\$ "
+	export GIT_PROMPT_END
 
 	source "$HOME/git/bash-git-prompt/gitprompt.sh"
 fi

@@ -49,7 +49,7 @@ fi
 # Test if the servername has a "P" for PROD
 if [[ "${HOSTNAME%%.*}" =~ ^[a-zA-Z0-9]{4}-[^-]+-[^-]+$ ]]; then
   if [ "${HOSTNAME:1:1}" = 'p' ]; then
-    export ICON_COLOR="\033[01;31m"
+    export HOSTNAME_COLOR="\033[01;31m"
   fi
 fi
 
