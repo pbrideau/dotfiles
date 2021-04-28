@@ -333,6 +333,10 @@ function prompt_line {
 	printf %${COLUMNS:-$(tput cols)}s | tr " " "-"
 }
 
+function prompt_goto_eol {
+	printf "\033[%sC" "${COLUMNS:-$(tput cols)}"
+}
+
 PS1="\[\033[0m\]\n"
 PS1+="\[\033[s\]" #save cursor position
 PS1+="\$(prompt_line)"
@@ -340,8 +344,9 @@ PS1+="\[\033[u\]" # restore cursor position
 
 ### Display current time on right hand side
 PS1+="\[\033[s\]" #save cursor position
-PS1+="\[\033[${COLUMNS:-$(tput cols)}C\033[12D\]"
-PS1+="\[\033[0m\][ \[\033[1;33m\]\t\[\033[0m\] ]"
+PS1+="\$(prompt_goto_eol)"
+PS1+="\[\033[15D\]" #go back 15 char
+PS1+="\[\033[0m\][ \[\033[1;33m\]\D{%b %d %R}\[\033[0m\] ]"
 PS1+="\[\033[u\]" # restore cursor position
 
 PS1+="\[\033[0m\][ "
@@ -390,8 +395,9 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
 
 	### Display current time on right hand side
 	GIT_PROMPT_START+="\[\033[s\]" #save cursor position
-	GIT_PROMPT_START+="\[\033[${COLUMNS:-$(tput cols)}C\033[12D\]"
-	GIT_PROMPT_START+="\[\033[0m\][ \[\033[1;33m\]\t\[\033[0m\] ]"
+	GIT_PROMPT_START+="\$(prompt_goto_eol)"
+	GIT_PROMPT_START+="\[\033[15D\]" #go back 15 char
+	GIT_PROMPT_START+="\[\033[0m\][ \[\033[1;33m\]\D{%b %d %R}\[\033[0m\] ]"
 	GIT_PROMPT_START+="\[\033[u\]" # restore cursor position
 
 	GIT_PROMPT_START+="\[\033[0m\][ "
