@@ -409,8 +409,9 @@ export GIT_CEILING_DIRECTORIES="$HOME:/home"
 # CHEAT
 export CHEAT_CONFIG_PATH="$HOME/.dotfiles/cheat/conf.yml"
 export CHEAT_USE_FZF=true
-source "$HOME/git/cheat/scripts/cheat.bash"
-
+if [ -e "$HOME/git/cheat/script/cheat.bash" ]; then
+	source "$HOME/git/cheat/scripts/cheat.bash"
+fi
 
 ################################################################################
 # TLDR
