@@ -148,7 +148,7 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-let g:loclist_is_open = 0
+let g:loclist_is_open = 1
 function! LocListToggle()
   if g:loclist_is_open == 1
     lclose
