@@ -415,7 +415,7 @@ fi
 
 ################################################################################
 # TLDR
-complete -W "$(tldr 2>/dev/null --list)" tldr
+complete -W "$(tldr 2> /dev/null --list)" tldr
 export TLDR_HEADER='magenta bold underline'
 export TLDR_QUOTE='italic'
 export TLDR_DESCRIPTION='green'
