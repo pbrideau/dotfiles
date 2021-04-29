@@ -453,6 +453,7 @@ alias gloa="git log \
 #alias gloa="git log --oneline --decorate --tags --graph --all"
 
 export GIT_CEILING_DIRECTORIES="$HOME:/home"
+export GIT_EDITOR=vim
 
 ################################################################################
 # CHEAT
