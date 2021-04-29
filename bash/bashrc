@@ -68,6 +68,7 @@ if ! infocmp "$TERM" &> /dev/null; then
 	fi
 fi
 
+alias tmux='tmux -2' # Force 256colors
 if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
 	if [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
 		if [[ "${TMUX_HOSTS[*]}" =~ $HOSTNAME ]]; then
