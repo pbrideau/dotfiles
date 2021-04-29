@@ -69,9 +69,9 @@ if ! infocmp "$TERM" &> /dev/null; then
 fi
 
 alias tmux='tmux -2' # Force 256colors
-if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
-	if [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
-		if [[ "${TMUX_HOSTS[*]}" =~ $HOSTNAME ]]; then
+if [[ "${TMUX_HOSTS[*]}" =~ $HOSTNAME ]]; then
+	if [ "$MY_ENV_OVERRIDE" != 'no_tmux' ]; then
+		if [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
 			nsess_att="$(tmux list-sessions | grep -c attached)"
 			nsess="$(tmux list-sessions | wc -l)"
 			if [ "${nsess_att}" -lt "${nsess}" ]; then
