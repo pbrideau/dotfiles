@@ -53,4 +53,15 @@ if [[ "${HOSTNAME%%.*}" =~ ^[a-zA-Z0-9]{4}-[^-]+-[^-]+$ ]]; then
 	fi
 fi
 
+case "$HOSTNAME" in
+	"cpl1-infr-sec2")
+		HOSTNAME_COLOR="\033[01;33m"
+		;;
+	"cpl1-infr-aut3" | "cpl1-web-mgnt")
+		HOSTNAME_COLOR="\033[01;35m"
+		;;
+esac
+
+export HOSTNAME_COLOR
+
 # vim: ff=sh ts=2 sw=2
