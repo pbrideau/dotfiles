@@ -21,7 +21,7 @@ function gitchk {
 	declare -i git_to_update=0
 	echo "Checking latest versions from ${git_url}"
 	for p in "${!GIT_PACKAGE_TO_CHECK[@]}"; do
-		if ! $p --version &> /dev/null; then
+		if ! command -v "$p" &> /dev/null; then
 			chk="[$(tput setaf 3)-$(tput sgr0)]"
 			version="(not currently installed)"
 		else
