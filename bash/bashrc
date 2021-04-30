@@ -33,6 +33,14 @@ function add_path {
 	fi
 }
 
+################################################################################
+# BASIC CONFIGS
+if [ -d "$HOME/.local/bin" ]; then
+	if [ "$(uname -m)" = "x86_64" ]; then
+		add_path "$HOME/.local/bin"
+	fi
+fi
+
 declare -a TMUX_HOSTS
 declare -a AGENT_HOSTS
 if [ -d "$HOME/.bashrc_dir" ]; then
@@ -157,12 +165,6 @@ case "$OS" in
 		REBOOT="(Unknown OS) "
 		;;
 esac
-
-################################################################################
-# BASIC CONFIGS
-if [ "$(uname -m)" = "x86_64" ]; then
-	add_path "$HOME/.local/bin"
-fi
 
 function refresh_history {
 	#history -n
