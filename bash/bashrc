@@ -166,6 +166,7 @@ case "$OS" in
 		else
 			REBOOT=""
 		fi
+		unset reboot_file1 reboot_file2
 		;;
 	*'Solaris'* | *'SunOS'*)
 		REBOOT=""
