@@ -41,10 +41,6 @@ if [ -d "$HOME/.local/bin" ]; then
 	fi
 fi
 
-if [ -d "$HOME/.local/lib" ]; then
-	export LD_LIBRARY_PATH="$HOME/.local/lib:$LD_LIBRARY_PATH"
-fi
-
 declare -a TMUX_HOSTS
 declare -a AGENT_HOSTS
 if [ -d "$HOME/.bashrc_dir" ]; then
