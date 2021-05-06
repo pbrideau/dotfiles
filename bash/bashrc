@@ -135,16 +135,28 @@ fi
 
 case "$OS" in
 	*'Red Hat'*)
-		# needs-restarting differ from version to version, check the kernel
-		LAST_KERNEL=$(rpm -q --last kernel |
-			perl -pe 's/^kernel-(\S+).*/$1/' |
-			head -1)
-		CURRENT_KERNEL=$(uname -r)
-		if [ "$LAST_KERNEL" = "$CURRENT_KERNEL" ]; then
+		# needs-restarting differ from version to version
+		(needs-restarting -r &> /dev/null)
+		restart_rc=$?
+
+		if [ "$restart_rc" -eq 0 ]; then
 			REBOOT=""
-		else
+		elif [ "$restart_rc" -eq 1 ]; then
 			REBOOT="(reboot) "
+		else
+			# -r option not supported, check at least if the kernel has changed
+			last_kernel=$(rpm -q --last kernel |
+				perl -pe 's/^kernel-(\S+).*/$1/' |
+				head -1)
+			current_kernel=$(uname -r)
+			if [ "$last_kernel" = "$current_kernel" ]; then
+				REBOOT=""
+			else
+				REBOOT="(reboot) "
+			fi
+			unset last_kernel current_kernel
 		fi
+		unset restart_rc
 		;;
 	*'Debian'*)
 		reboot_file1="/var/run/reboot-required"
