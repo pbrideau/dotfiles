@@ -38,6 +38,7 @@ fi
 
 alias aut3="ssh cpl1-infr-aut3"
 alias mgnt="ssh cpl1-web-mgnt"
+alias dsb="ssh cdl1-infr-dsb05"
 
 if [ -e /usr/bin/ansible ]; then
 	alias ansible='sudo -u auto-it ansible'
