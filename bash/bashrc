@@ -496,8 +496,12 @@ alias ll='ls -latr'
 alias la='ls -A'
 alias l='ls -CF'
 
-alias psgrep='ps auxfww | grep -v grep | grep'
-alias nocomment='grep --color=no "^[^#;$]"'
+alias psgrep='ps -ef | grep -v grep | grep'
+if echo 'aa' | grep --color=no a &> /dev/null; then
+	alias nocomment='grep --color=no "^[^#;$]"'
+else
+	alias nocomment='grep "^[^#;$]"'
+fi
 
 alias ..='cd ..'
 alias ...='cd ../..'
