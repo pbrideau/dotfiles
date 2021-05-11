@@ -132,7 +132,7 @@ elif [ -e /etc/debian-release ]; then
 elif [ -e /etc/os-release ]; then
 	OS="$(awk -F= '/^NAME/{print $2}' /etc/os-release)"
 else
-	OS="$(uname -o)"
+	OS="$(uname)"
 fi
 
 case "$OS" in
@@ -173,7 +173,7 @@ case "$OS" in
 	*'Solaris'* | *'SunOS'*)
 		REBOOT=""
 		;;
-	*'Cygwin'*)
+	*'CYGWIN'*)
 		REBOOT=""
 		;;
 	*)
