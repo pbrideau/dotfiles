@@ -228,12 +228,38 @@ fi
 ################################################################################
 # IS THERE PACKAGES TO UPDATES?
 function update_count {
-	if [ -e "$HOME/.update_count" ]; then
-		declare -i update_content
-		update_content=$(cat "$HOME/.update_count")
-		if [ "$update_content" -gt 0 ]; then
-			echo "($update_content) "
-		fi
+	force=${1:-no}
+	cache="$HOME/.update_count_dir/${HOSTNAME}"
+	declare -i update_content
+
+	last_mod=$(stat --print="%Y" "${cache}")
+	update_content=$(cat "$cache")
+	now_epoch=$(date +%s)
+	time_since_cache=$((now_epoch - last_mod))
+
+	if [ "$update_content" -gt 0 ]; then
+		echo -ne "\033[1;33m(os:$update_content) "
+	fi
+
+	#Start update in the background if cache is older than 3 hours
+	if [ "$time_since_cache" -gt 10800 ] || [ "$force" = "force" ]; then
+		case "$OS" in
+			*'Red Hat'*)
+				touch "$cache"
+				nohup nice -n 19 yum check-update --quiet 2> /dev/null |
+					grep -v "^$" -c > "$cache" &
+				disown
+				;;
+			*'Debian'*)
+				:
+				;;
+			*'Solaris'* | *'SunOS'*)
+				:
+				;;
+			*'CYGWIN'*)
+				:
+				;;
+		esac
 	fi
 }
 # Crontabs:
