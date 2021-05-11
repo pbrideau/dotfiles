@@ -245,7 +245,7 @@ function pipchk_count {
 		declare -i pipchk_content
 		pipchk_content=$(cat "$HOME/.pipchk_count")
 		if [ "$pipchk_content" -gt 0 ]; then
-			echo "(pip:$pipchk_content) "
+			echo -e "\033[1;33m(pip:$pipchk_content) "
 		fi
 	fi
 }
@@ -257,7 +257,7 @@ function gitchk_count {
 		declare -i gitchk_content
 		gitchk_content=$(cat "$HOME/.gitchk_count")
 		if [ "$gitchk_content" -gt 0 ]; then
-			echo "(git:$gitchk_content) "
+			echo -e "\033[1;33m(git:$gitchk_content) "
 		fi
 	fi
 }
@@ -328,11 +328,11 @@ unset agents
 
 function prompt_ssh_agent {
 	if [ -e "$SSH_AUTH_SOCK" ]; then
-		echo -n "@"
+		echo -ne "\033[1;31m@"
 		if ssh-add -l &> /dev/null; then
 			echo -n "+"
 		fi
-		echo -n " "
+		echo -ne "\033[0m "
 	fi
 }
 #PROMPT_SSH_AGENT="test -e \"\$SSH_AUTH_SOCK\" && echo -n \"@\""
@@ -355,6 +355,39 @@ function prompt_goto_eol {
 	printf "\033[%sC" "${COLUMNS:-$(tput cols)}"
 }
 
+function prompt_reboot {
+	if [ "$REBOOT" != "" ]; then
+		echo -e "\033[31m${REBOOT}"
+	fi
+}
+
+function prompt_box {
+	local s
+	s="$(prompt_ssh_agent)"
+	s+="$(prompt_reboot)"
+	if [ -e "$HOME/.update_count_dir/${HOSTNAME}" ]; then
+		s+="$(update_count)"
+	else
+		mkdir -p "$HOME/.update_count_dir"
+		cache_file="$HOME/.update_count_dir/${HOSTNAME}"
+		echo "0" > "$cache_file"
+		update_count force &> /dev/null
+		unset cache_file
+	fi
+	if [ -e "$HOME/.pipchk_count" ]; then
+		s+="$(pipchk_count)"
+	fi
+	if [ -e "$HOME/.gitchk_count" ]; then
+		s+="$(gitchk_count)"
+	fi
+
+	if [ -n "$s" ]; then
+		echo -n "┤ "
+		echo -n "$s"
+		echo -ne "\033[0m├─"
+	fi
+}
+
 function set_ps1_line1 {
 	echo "\[\033[0m\]"
 	echo -n "\[\033[s\]"      #save cursor position
@@ -368,21 +401,7 @@ function set_ps1_line1 {
 	echo -n "\[\033[0m\]┤ \[\033[1;33m\]\D{%b %d %R}\[\033[0m\] ├┄"
 	echo -n "\[\033[u\]" # restore cursor position
 
-	echo -n "\[\033[0m\]┌┤ "
-	echo -n "\[\033[01;31m\]\$(prompt_ssh_agent)"
-	if [ "$REBOOT" != "" ]; then
-		echo -n "\[\033[31m\]${REBOOT}"
-	fi
-	if [ -e "$HOME/.update_count" ]; then
-		echo -n "\[\033[01;33m\]\$(update_count)"
-	fi
-	if [ -e "$HOME/.pipchk_count" ]; then
-		echo -n "\[\033[01;33m\]\$(pipchk_count)"
-	fi
-	if [ -e "$HOME/.gitchk_count" ]; then
-		echo -n "\[\033[01;33m\]\$(gitchk_count)"
-	fi
-	echo -n "\[\033[0m\]├─"
+	echo -n "\[\033[0m\]┌\$(prompt_box)"
 }
 function set_ps1_line2 {
 	echo
