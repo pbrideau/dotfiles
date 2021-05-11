@@ -386,15 +386,18 @@ function set_ps1_line1 {
 }
 function set_ps1_line2 {
 	echo
-	echo -n "└ \[\033[01;32m\]\u\[\033[1;0m\]@"
+	echo -n "│ \[\033[01;32m\]\u\[\033[1;0m\]@"
 	echo -n "\[\033[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
 	echo -n "\[\033[01;34m\]\w"
-	echo -n "\[\033[0m\]\$ "
-
+}
+function set_ps1_line3 {
+	echo
+	echo -n "\[\033[0m\]╰ \$ "
 }
 
 PS1=$(set_ps1_line1)
 PS1+=$(set_ps1_line2)
+PS1+=$(set_ps1_line3)
 
 SUDO_PS1="\[\033[0m\]\n"
 SUDO_PS1+="\[\033[01;31m\]\u\[\033[1;0m\]@"
@@ -418,6 +421,7 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
 
 	GIT_PROMPT_START=$(set_ps1_line1)
 	GIT_PROMPT_END=$(set_ps1_line2)
+	GIT_PROMPT_END+=$(set_ps1_line3)
 
 	export GIT_PROMPT_START
 	export GIT_PROMPT_END
