@@ -348,7 +348,7 @@ if [ -z "$HOSTNAME_COLOR" ]; then
 fi
 
 function prompt_line {
-	printf "%${COLUMNS:-$(tput cols)}s" | sed "s/ /─/g" 2>/dev/null
+	printf "%${COLUMNS:-$(tput cols)}s" | sed "s/ /─/g" 2> /dev/null
 }
 
 function prompt_goto_eol {
