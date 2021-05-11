@@ -228,6 +228,11 @@ fi
 ################################################################################
 # IS THERE PACKAGES TO UPDATES?
 function update_count {
+	case "$OS" in
+		*'Solaris'* | *'SunOS'* | *'CYGWIN'*)
+			exit
+			;;
+	esac
 	force=${1:-no}
 	cache="$HOME/.update_count_dir/${HOSTNAME}"
 	declare -i update_content
@@ -251,12 +256,6 @@ function update_count {
 				disown
 				;;
 			*'Debian'*)
-				:
-				;;
-			*'Solaris'* | *'SunOS'*)
-				:
-				;;
-			*'CYGWIN'*)
 				:
 				;;
 		esac
