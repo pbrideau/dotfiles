@@ -7,6 +7,7 @@ GIT_PACKAGE_TO_CHECK=(
 	['docopts']='docopt/docopts'
 	['cheat']='cheat/cheat'
 	['semantic-release']='go-semantic-release/semantic-release'
+	['pyenv']='pyenv/pyenv'
 )
 
 GIT_PACKAGE_VERSION=(
@@ -16,6 +17,7 @@ GIT_PACKAGE_VERSION=(
 	['docopts']=$(docopts --version 2> /dev/null | awk '{ sub(/v/,"",$2); sub(/-/,"",$2); print $2; exit }')
 	['cheat']=$(cheat --version 2> /dev/null)
 	['semantic-release']=$(semantic-release --version 2> /dev/null | awk '{print $3}')
+	['pyenv']=$(pyenv --version | awk '{print $2}')
 )
 
 GIT_PACKAGE_TO_IGNORE=(

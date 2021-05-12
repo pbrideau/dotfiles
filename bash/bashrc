@@ -597,5 +597,17 @@ if [ -s "$HOME/.rvm/scripts/rvm" ]; then
 	# Load RVM into a shell session *as a function*
 fi
 
+################################################################################
+# PYENV
+if [ -d "$HOME/git/pyenv" ]; then
+	if [ "$(uname -p)" = "x86_64" ]; then
+		export PYENV_ROOT="$HOME/git/pyenv"
+		add_path "$PYENV_ROOT/bin"
+		if command -v pyenv 1> /dev/null 2>&1; then
+			eval "$(pyenv init -)"
+		fi
+	fi
+fi
+
 unset add_path
 # vim: ff=sh ts=2 sw=2
