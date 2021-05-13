@@ -227,6 +227,14 @@ fi
 
 ################################################################################
 # IS THERE PACKAGES TO UPDATES?
+
+#Start update in the background if cache is older than 12 hours
+# Used in:
+#   update_count
+#   pipchk_count
+#   gitchk_count
+UPD_CACHE_TMOUT="43200"
+
 function update_count {
 	case "$OS" in
 		*'Solaris'* | *'SunOS'* | *'CYGWIN'*)
@@ -238,27 +246,32 @@ function update_count {
 	declare -i update_content
 
 	last_mod=$(stat --print="%Y" "${cache}")
-	update_content=$(cat "$cache")
 	now_epoch=$(date +%s)
-	time_since_cache=$((now_epoch - last_mod))
+	cache_time=$((now_epoch - last_mod))
 
-	if [ "$update_content" -gt 0 ]; then
-		echo -ne "\033[1;33m(os:$update_content) "
-	fi
-
-	#Start update in the background if cache is older than 3 hours
-	if [ "$time_since_cache" -gt 10800 ] || [ "$force" = "force" ]; then
+	if [ "$cache_time" -gt "$UPD_CACHE_TMOUT" ] || [ "$force" = "force" ]; then
 		case "$OS" in
 			*'Red Hat'*)
-				touch "$cache"
-				nohup nice -n 19 yum check-update --quiet 2> /dev/null |
-					grep -v "^$" -c > "$cache" &
+				echo "-1" > "$cache"
+				tmp_file=$(mktemp)
+				nohup bash -c "
+				nice -n 19 yum check-update --quiet 2> /dev/null |
+					grep -v '^$' -c > '$tmp_file'
+									mv '$tmp_file' '$cache'
+									" &> /dev/null &
 				disown
 				;;
 			*'Debian'*)
 				:
 				;;
 		esac
+	fi
+
+	update_content=$(cat "$cache")
+	if [ "$update_content" -gt 0 ]; then
+		echo -ne "\033[1;33m(os:$update_content) "
+	elif [ "$update_content" = '-1' ]; then
+		echo -ne "\033[1;33m(os:--) "
 	fi
 }
 # Crontabs:
