@@ -244,7 +244,7 @@ function update_count {
 			;;
 	esac
 	force=${1:-no}
-	cache="$HOME/.update_count_dir/${HOSTNAME}"
+	cache="$HOME/.update_count_dir/${HOSTNAME%%.*}"
 	declare -i update_content
 
 	last_mod=$(stat --print="%Y" "${cache}")
@@ -438,11 +438,11 @@ function prompt_box {
 	local s
 	s="$(prompt_ssh_agent)"
 	s+="$(prompt_reboot)"
-	if [ -e "$HOME/.update_count_dir/${HOSTNAME}" ]; then
+	if [ -e "$HOME/.update_count_dir/${HOSTNAME%%.*}" ]; then
 		s+="$(update_count)"
 	else
 		mkdir -p "$HOME/.update_count_dir"
-		cache_file="$HOME/.update_count_dir/${HOSTNAME}"
+		cache_file="$HOME/.update_count_dir/${HOSTNAME%%.*}"
 		echo "0" > "$cache_file"
 		update_count force &> /dev/null
 		unset cache_file
