@@ -591,6 +591,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 alias ll='ls -latr'
+alias lt='ls -ltr'
 alias la='ls -A'
 alias l='ls -CF'
 
