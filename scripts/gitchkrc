@@ -12,13 +12,21 @@ GIT_PACKAGE_TO_CHECK=(
 
 GIT_PACKAGE_VERSION=(
 	['fzf']=$(fzf --version 2> /dev/null | awk '{print $1}')
-	['shellcheck']=$(shellcheck --version 2> /dev/null | grep version: | awk '{print $2}')
-	['ctags']=$(ctags --version 2> /dev/null | grep -P -o '(?<=\(p)[^)]+(?=\),)')
-	['docopts']=$(docopts --version 2> /dev/null | awk '{ sub(/v/,"",$2); sub(/-/,"",$2); print $2; exit }')
+	['shellcheck']=$(shellcheck --version 2> /dev/null |
+		grep version: | awk '{print $2}')
+	['ctags']=$(ctags --version 2> /dev/null |
+		grep -P -o '(?<=\(p)[^)]+(?=\),)')
+	['docopts']=$(docopts --version 2> /dev/null |
+		awk '{ sub(/v/,"",$2); sub(/-/,"",$2); print $2; exit }')
 	['cheat']=$(cheat --version 2> /dev/null)
-	['semantic-release']=$(semantic-release --version 2> /dev/null | awk '{print $3}')
+	['semantic-release']=$(semantic-release --version 2> /dev/null |
+		awk '{print $3}')
 	['pyenv']=$(pyenv --version | awk '{print $2}')
 )
 
 GIT_PACKAGE_TO_IGNORE=(
 )
+
+export GIT_PACKAGE_TO_CHECK
+export GIT_PACKAGE_VERSION
+export GIT_PACKAGE_TO_IGNORE
