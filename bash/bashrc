@@ -432,6 +432,13 @@ function prompt_reboot {
 	fi
 }
 
+function prompt_last_rc {
+	if [ "${GIT_PROMPT_LAST_COMMAND_STATE:-0}" != 0 ]; then
+		echo -n "┤ "
+		echo -ne "\033[31m**$GIT_PROMPT_LAST_COMMAND_STATE**\033[0m "
+		echo -ne "\033[0m├─"
+	fi
+}
 function prompt_box {
 	local s
 	s="$(prompt_ssh_agent)"
@@ -469,7 +476,7 @@ function set_ps1_line1 {
 	echo -n "\[\033[0m\]┤ \[\033[1;33m\]\D{%b %d %R}\[\033[0m\] ├┄"
 	echo -n "\[\033[u\]" # restore cursor position
 
-	echo -n "\[\033[0m\]┌\$(prompt_box)"
+	echo -n "\[\033[0m\]┌\$(prompt_last_rc)\$(prompt_box)"
 }
 function set_ps1_line2 {
 	echo
@@ -514,6 +521,23 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
 	export GIT_PROMPT_END
 
 	source "$HOME/git/bash-git-prompt/gitprompt.sh"
+else
+	# CAPTURE LAST RETURN CODE
+	#   Only add if the bash-git-prompt is not loaded
+	#   Variable GIT_PROMPT_LAST_COMMAND_STATE is used in custom PS1
+	function setLastCommandState {
+		local RETVAL="${?}"
+		if [[ "${RETVAL}" -gt 128 ]] 2> /dev/null; then
+			GIT_PROMPT_LAST_COMMAND_STATE=$(
+				kill -l "$((RETVAL - 128))" 2> /dev/null || echo "$RETVAL"
+			)
+		else
+			GIT_PROMPT_LAST_COMMAND_STATE="$RETVAL"
+		fi
+	}
+	if [[ ! "$PROMPT_COMMAND" =~ setLastCommandState ]]; then
+		PROMPT_COMMAND="setLastCommandState;$PROMPT_COMMAND"
+	fi
 fi
 
 alias ga="git add"
