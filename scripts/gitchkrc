@@ -25,6 +25,7 @@ GIT_PACKAGE_VERSION=(
 )
 
 GIT_PACKAGE_TO_IGNORE=(
+	['pyenv']='2.0.0rc1'
 )
 
 export GIT_PACKAGE_TO_CHECK
