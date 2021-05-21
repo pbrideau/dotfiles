@@ -674,7 +674,7 @@ if [ -d "$HOME/git/pyenv" ]; then
 		export PYENV_ROOT="$HOME/git/pyenv"
 		add_path "$PYENV_ROOT/bin"
 		if command -v pyenv 1> /dev/null 2>&1; then
-			eval "$(pyenv init -)"
+			eval "$(pyenv init --path)"
 		fi
 	fi
 fi
