@@ -266,7 +266,14 @@ function update_count {
 				disown
 				;;
 			*'Debian'*)
-				:
+				echo "-1" > "$cache"
+				tmp_file=$(mktemp)
+				nohup bash -c "
+					nice -n 19 aptitude search '~U' 2> /dev/null |
+						wc -l > '$tmp_file'
+				mv '$tmp_file' '$cache'
+				" &> /dev/null &
+				disown
 				;;
 		esac
 	fi
