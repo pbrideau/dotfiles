@@ -496,10 +496,6 @@ function set_ps1_line3 {
 	echo -n "\[\033[0m\]╰ \$ "
 }
 
-PS1=$(set_ps1_line1)
-PS1+=$(set_ps1_line2)
-PS1+=$(set_ps1_line3)
-
 SUDO_PS1="\[\033[0m\]\n"
 SUDO_PS1+="\[\033[01;31m\]\u\[\033[1;0m\]@"
 SUDO_PS1+="\[\033[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
@@ -510,7 +506,7 @@ export SUDO_PS1
 ################################################################################
 # GIT
 if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
-	export GIT_PROMPT_ONLY_IN_REPO=1
+	export GIT_PROMPT_ONLY_IN_REPO=0
 	export GIT_PROMPT_FETCH_REMOTE_STATUS=1
 	export GIT_PROMPT_IGNORE_SUBMODULES=0
 	export GIT_PROMPT_SHOW_UPSTREAM=1
@@ -545,6 +541,10 @@ else
 	if [[ ! "$PROMPT_COMMAND" =~ setLastCommandState ]]; then
 		PROMPT_COMMAND="setLastCommandState;$PROMPT_COMMAND"
 	fi
+
+	PS1=$(set_ps1_line1)
+	PS1+=$(set_ps1_line2)
+	PS1+=$(set_ps1_line3)
 fi
 
 alias ga="git add"
