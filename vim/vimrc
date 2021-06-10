@@ -42,8 +42,8 @@ Plug 'tpope/vim-dispatch'
 
 """" Languages
 Plug 'WolfgangMehner/bash-support'
-"Plug 'pearofducks/ansible-vim'
-Plug 'chase/vim-ansible-yaml'
+Plug 'pearofducks/ansible-vim'
+"Plug 'chase/vim-ansible-yaml'
 Plug 'dpelle/vim-Grammalecte'
 call plug#end()
 
@@ -206,20 +206,6 @@ nnoremap <Leader><Leader> :BufExplorerHorizontalSplit<CR>
 let g:bufExplorerSplitBelow=1
 let g:bufExplorerSplitHorzSize=10
 
-"""""""""""""""""""""""""""""""""""""""""""""
-"Ansible
-"set up <C-Space> for omni-completion
-"inoremap <Nul> <C-x><C-o>
-"let g:rocannon_open_action = 'tabnew'  " alternatives: tabnew, edit
-
-"augroup filetypedetect
-"    au BufRead,BufNewFile *.yml set filetype=ansible
-"augroup END
-
-let g:ctrlp_buftag_types = {
-      \ 'yaml' : '--languages=ansible --ansible-types=t',
-      \ }
-
 """""""
 " easytags
 "let g:easytags_suppress_ctags_warning = 1
@@ -233,32 +219,9 @@ let g:easytags_syntax_keyword = 'always'
 set tags=./tags;
 hi shFunctionTag ctermfg=35 cterm=bold
 
-"""""""
-" TAGBAR
-let g:tagbar_type_ansible = {
-      \ 'ctagstype' : 'ansible',
-      \ 'kinds' : [
-	\ 't:tasks',
-	\ 'h:hosts',
-	\ 'r:roles',
-	\ 'l:listen',
-	\ ],
-	\ 'sort' : 0
-	\ }
-
-let g:tagbar_type_sh = {
-      \ 'kinds':[
-      \ 'f:functions',
-      \ 'c:constants'
-      \ ]
-      \}
-
 """"""""
-" vim-ansible
-augroup ansible_vim_fthosts
-  autocmd!
-  autocmd BufNewFile,BufRead hosts setfiletype yaml.ansible
-augroup END
+" ansible-vim
+
 let g:ansible_unindent_after_newline = 1
 let g:ansible_attribute_highlight = "ob"
 let g:ansible_name_highlight = 'b'
@@ -325,6 +288,11 @@ let g:syntastic_sh_bashate_args = '-i E002,E003,E004'
 let g:syntastic_markdown_checkers = [ "mdl","proselint" ]
 let g:syntastic_markdown_mdl_exec = 'markdownlint'
 let g:syntastic_markdown_mdl_args = ''
+
+let g:syntastic_ansible_checkers = [ "ansible_lint" ]
+let g:syntastic_yaml_checkers = [ "yamllint" ]
+
+let b:syntastic_yaml_yamllint_args = '-c ' . findfile(".yamllint",".;")
 
 """"""""
 " vim-autoformat
