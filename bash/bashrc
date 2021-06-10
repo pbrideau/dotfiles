@@ -390,7 +390,7 @@ function check_ssh_agent {
 }
 
 # Start ssh-agent on AGENT_HOSTS server list
-if [[ "${AGENT_HOSTS[*]}" =~ $HOSTNAME ]]; then
+if [[ "${AGENT_HOSTS[*]}" =~ ${HOSTNAME%%.*} ]]; then
 	check_ssh_agent
 	if [[ ! "$PROMPT_COMMAND" =~ check_ssh_agent ]]; then
 		export PROMPT_COMMAND="check_ssh_agent;$PROMPT_COMMAND"
