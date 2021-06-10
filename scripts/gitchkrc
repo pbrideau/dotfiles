@@ -21,7 +21,7 @@ GIT_PACKAGE_VERSION=(
 	['cheat']=$(cheat --version 2> /dev/null)
 	['semantic-release']=$(semantic-release --version 2> /dev/null |
 		awk '{print $3}')
-	['pyenv']=$(pyenv --version | awk '{print $2}')
+	['pyenv']=$(pyenv --version 2> /dev/null | awk '{print $2}')
 )
 
 GIT_PACKAGE_TO_IGNORE=(
