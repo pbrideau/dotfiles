@@ -41,7 +41,8 @@ function gitchk {
 				version="$current_version"
 			fi
 		fi
-		printf "%s %-20s %s\n" "$chk" "$p" "$version"
+		url="${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
+		printf "%s %-20s %-50s %s\n" "$chk" "$p" "$url" "$version"
 	done
 
 	echo "$git_to_update" > "$HOME/.gitchk_count"
