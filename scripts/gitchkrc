@@ -8,6 +8,9 @@ GIT_PACKAGE_TO_CHECK=(
 	['cheat']='cheat/cheat'
 	['semantic-release']='go-semantic-release/semantic-release'
 	['pyenv']='pyenv/pyenv'
+	['git']='git/git'
+	['glow']='charmbracelet/glow'
+	['markdownlint']='igorshubovych/markdownlint-cli'
 )
 
 GIT_PACKAGE_VERSION=(
@@ -22,6 +25,9 @@ GIT_PACKAGE_VERSION=(
 	['semantic-release']=$(semantic-release --version 2> /dev/null |
 		awk '{print $3}')
 	['pyenv']=$(pyenv --version 2> /dev/null | awk '{print $2}')
+	['git']=$(git --version 2> /dev/null | awk '{print $3}')
+	['glow']=$(glow --version 2> /dev/null | awk '{print $3}')
+	['markdownlint']=$(markdownlint --version 2> /dev/null)
 )
 
 GIT_PACKAGE_TO_IGNORE=(
