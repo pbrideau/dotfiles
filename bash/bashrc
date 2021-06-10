@@ -616,10 +616,9 @@ if [ -x /usr/bin/dircolors ]; then
 	fi
 fi
 
-alias ll='ls -latr'
-alias lt='ls -ltr'
-alias la='ls -A'
-alias l='ls -CF'
+alias ll='ls -l'
+alias la='ls -la'
+alias l='ls -ltr'
 
 alias psgrep='ps -ef | grep -v grep | grep'
 if echo 'aa' | grep --color=no a &> /dev/null; then
