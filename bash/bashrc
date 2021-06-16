@@ -290,6 +290,8 @@ function update_count {
 		echo -ne "\033[1;33m(os:$update_content) "
 	elif [ "$update_content" = '-1' ]; then
 		echo -ne "\033[1;33m(os:--) "
+	elif [ "$update_content" = '-2' ]; then
+		echo -ne "\033[1;33m(os:==) "
 	fi
 }
 # Crontabs:
