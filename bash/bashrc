@@ -258,7 +258,11 @@ function update_count {
 	now_epoch=$(date +%s)
 	cache_time=$((now_epoch - last_mod))
 
-	if [ "$cache_time" -gt "$UPD_CACHE_TMOUT" ] || [ "$force" = "force" ]; then
+	update_content=$(cat "$cache")
+	if [ "$update_content" = '-2' ] && [ "$force" != 'force' ]; then
+		:
+		# Do not attempt to update if there was an error previously
+	elif [ "$cache_time" -gt "$UPD_CACHE_TMOUT" ] || [ "$force" = "force" ]; then
 		case "$OS" in
 			*'Red Hat'*)
 				echo "-1" > "$cache"
