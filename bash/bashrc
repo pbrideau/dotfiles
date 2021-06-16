@@ -239,6 +239,48 @@ fi
 #   gitchk_count
 UPD_CACHE_TMOUT="43200"
 
+function background_check_update {
+	cache="$1"
+	tmp_file=$(mktemp)
+	cmd_head='timeout 30s nice -n 19'
+
+	if [ -e /etc/redhat-release ]; then
+		OS=$(cat /etc/redhat-release)
+	elif [ -e /etc/debian-release ]; then
+		OS=$(cat /etc/debian-release)
+	elif [ -e /etc/os-release ]; then
+		OS="$(awk -F= '/^NAME/{print $2}' /etc/os-release)"
+	else
+		OS="$(uname)"
+	fi
+	case "$OS" in
+		*'Red Hat'*)
+			pkg_cmd=$($cmd_head yum check-update --quiet 2> /dev/null)
+			pkg_rc="$?"
+			if [ "$pkg_rc" = 100 ]; then
+				#Returns exit value of 100 if there are packages available for an  update.
+				#Returns 0 if no packages are available for update.
+				#Returns 1 if an error occurred.
+				pkg_rc=0
+			fi
+			;;
+		*'Debian'*)
+			pkg_cmd=$($cmd_head aptitude search '~U' 2> /dev/null)
+			pkg_rc="$?"
+			;;
+	esac
+
+	if [ "$pkg_rc" = 0 ]; then
+		pkg_count=$(echo -n "$pkg_cmd" | wc -l)
+		echo "$pkg_count" > "$tmp_file"
+	else
+		echo '-2' > "$tmp_file"
+	fi
+
+	mv "$tmp_file" "$cache"
+}
+export -f background_check_update
+
 function update_count {
 	case "$OS" in
 		*'Solaris'* | *'SunOS'* | *'CYGWIN'*)
@@ -263,28 +305,9 @@ function update_count {
 		:
 		# Do not attempt to update if there was an error previously
 	elif [ "$cache_time" -gt "$UPD_CACHE_TMOUT" ] || [ "$force" = "force" ]; then
-		case "$OS" in
-			*'Red Hat'*)
-				echo "-1" > "$cache"
-				tmp_file=$(mktemp)
-				nohup bash -c "
-				nice -n 19 yum check-update --quiet 2> /dev/null |
-					grep -v '^$' -c > '$tmp_file'
-									mv '$tmp_file' '$cache'
-									" &> /dev/null &
-				disown
-				;;
-			*'Debian'*)
-				echo "-1" > "$cache"
-				tmp_file=$(mktemp)
-				nohup bash -c "
-					nice -n 19 aptitude search '~U' 2> /dev/null |
-						wc -l > '$tmp_file'
-				mv '$tmp_file' '$cache'
-				" &> /dev/null &
-				disown
-				;;
-		esac
+		echo '-1' > "$cache"
+		nohup bash -c "background_check_update '$cache'" &> /dev/null &
+		disown
 	fi
 
 	update_content=$(cat "$cache")
