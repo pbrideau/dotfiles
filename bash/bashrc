@@ -244,6 +244,11 @@ function update_count {
 		*'Solaris'* | *'SunOS'* | *'CYGWIN'*)
 			exit
 			;;
+		*'Red Hat'* | *'Debian'*) ;;
+		*)
+			echo -ne "\033[1;33m(os:\033[0;31munknown\033[1;33m) "
+			exit
+			;;
 	esac
 	force=${1:-no}
 	cache="$HOME/.update_count_dir/${HOSTNAME%%.*}"
