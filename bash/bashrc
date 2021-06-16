@@ -252,7 +252,7 @@ function update_count {
 	esac
 	force=${1:-no}
 	cache="$HOME/.update_count_dir/${HOSTNAME%%.*}"
-	declare -i update_content
+	declare update_content
 
 	last_mod=$(stat --print="%Y" "${cache}")
 	now_epoch=$(date +%s)
@@ -284,7 +284,9 @@ function update_count {
 	fi
 
 	update_content=$(cat "$cache")
-	if [ "$update_content" -gt 0 ]; then
+	if [[ ! "$update_content" =~ -?[0-9]+ ]]; then
+		echo -ne "\033[1;33m(os:\033[0;31mNaN\033[1;33m) "
+	elif [ "$update_content" -gt 0 ]; then
 		echo -ne "\033[1;33m(os:$update_content) "
 	elif [ "$update_content" = '-1' ]; then
 		echo -ne "\033[1;33m(os:--) "
