@@ -17,8 +17,8 @@ function pipchk {
 		current_version=$(pip3 show "$p" | grep Version | awk '{print $2}')
 		latest_version=$(
 			curl -s "${pypi_url}/${p}/" |
-				sed -n -e '/release__version/{n;p;q}' |
-				grep -o '\S*'
+				sed -n -e '/package-header__name/{n;p;q}' |
+				awk '{print $2}'
 		)
 
 		if ! pip3 show "$p" &> /dev/null; then
