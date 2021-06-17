@@ -17,7 +17,6 @@ GITCHK_HOSTS+=(
 ################################################################################
 # SSH-AGENT
 AGENT_HOSTS+=(
-	'cpl1-infr-sec2'
 	'cpl1-infr-aut3'
 	'cdl1-infr-dsb05'
 )
