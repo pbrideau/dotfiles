@@ -475,7 +475,7 @@ unset agents
 
 function prompt_ssh_agent {
 	if [ -e "$SSH_AUTH_SOCK" ]; then
-		echo -ne "\033[1;31m@"
+		echo -ne "\033[1;36m@"
 		if ssh-add -l &> /dev/null; then
 			echo -n "+"
 		fi
@@ -500,7 +500,7 @@ function prompt_line {
 
 function prompt_reboot {
 	if [ "$REBOOT" != "" ]; then
-		echo -e "\033[31m${REBOOT}"
+		echo -e "\033[33m${REBOOT}"
 	fi
 }
 
