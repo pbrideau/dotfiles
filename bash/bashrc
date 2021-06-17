@@ -207,15 +207,18 @@ if [ "$PS1" ]; then
 	if [[ ! "$PROMPT_COMMAND" =~ refresh_history ]]; then
 		export PROMPT_COMMAND="refresh_history;$PROMPT_COMMAND"
 	fi
-	if [ -e "$HISTFILE" ]; then
-		if command -v tac &> /dev/null; then
-			TEMP_FILE=$(mktemp "$HOME/.bash_history_dir/tmp.XXXXXX")
-			tac "$HISTFILE" | awk '!x[$0]++' > "$TEMP_FILE" &&
-				tac "$TEMP_FILE" > "$HISTFILE"
-			rm "$TEMP_FILE"
-			unset TEMP_FILE
-		fi
-	fi
+
+	#Remove duplicated entries in .bash_history
+	#unset HISTTIMEFORMAT
+	#if [ -e "$HISTFILE" ]; then
+	#	if command -v tac &> /dev/null; then
+	#		TEMP_FILE=$(mktemp "$HOME/.bash_history_dir/tmp.XXXXXX")
+	#		tac "$HISTFILE" | awk '!x[$0]++' > "$TEMP_FILE" &&
+	#			tac "$TEMP_FILE" > "$HISTFILE"
+	#		rm "$TEMP_FILE"
+	#		unset TEMP_FILE
+	#	fi
+	#fi
 fi
 
 # enable programmable completion features (you don't need to enable
