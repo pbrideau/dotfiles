@@ -402,13 +402,28 @@ fi
 function check_ssh_agent {
 	if [ -n "$SSH_AUTH_SOCK" ]; then
 		if [ -e "$SSH_AUTH_SOCK" ]; then
-			if ! ssh-add -l &> /dev/null; then
+			_=$(ssh-add -l &> /dev/null)
+			local ssh_rc=$?
+
+			if [ "$ssh_rc" -eq 0 ]; then
+				return
+			elif [ "$ssh_rc" -eq 1 ]; then
+				# Only automatically add identity when host is in AGENT_HOSTS list
+				if [[ "${AGENT_HOSTS[*]}" =~ ${HOSTNAME%%.*} ]]; then
+					echo
+					echo -e "\033[01;33mcheck_ssh_agent(): No identity in agent\033[0m"
+					echo -e "\033[01;33m Running \033[01;31mssh-add\033[0m"
+					ssh-add
+				fi
+				return
+			elif [ "$ssh_rc" -eq 2 ]; then
+			# ssh_rc == 2: Error connecting to agent: Connection refused
 				echo
-				echo -e "\033[01;33mcheck_ssh_agent(): No identity in agent\033[0m"
-				echo -e "\033[01;33m Running \033[01;31mssh-add\033[0m"
-				ssh-add
+				echo -e "\033[01;33mcheck_ssh_agent(): Agent appear to be stale\033[0m"
+				echo -e "\033[01;33m Deleting \033[0;31m${SSH_AUTH_SOCK%/*}\033[0m"
+				rm -rf "${SSH_AUTH_SOCK%/*}"
+				unset SSH_AUTH_SOCK
 			fi
-			return
 		fi
 	fi
 
@@ -428,21 +443,23 @@ function check_ssh_agent {
 			#ForwardAgent ssh_config or MobaXterm
 			unset SSH_AGENT_PID
 		fi
+		# Recursively check if this new found agent is broken
+		check_ssh_agent
 	else
-		eval "$(ssh-agent -s -t 12h)" > /dev/null
-		echo
-		echo -e "\033[01;33mcheck_ssh_agent(): new ssh-agent started\033[0m"
-		echo -e "\033[01;33m Running \033[01;31mssh-add\033[0m"
-		ssh-add
+		if [[ "${AGENT_HOSTS[*]}" =~ ${HOSTNAME%%.*} ]]; then
+			eval "$(ssh-agent -s -t 12h)" > /dev/null
+			echo
+			echo -e "\033[01;33mcheck_ssh_agent(): new ssh-agent started\033[0m"
+			echo -e "\033[01;33m Running \033[01;31mssh-add\033[0m"
+			ssh-add
+		fi
 	fi
 }
 
 # Start ssh-agent on AGENT_HOSTS server list
-if [[ "${AGENT_HOSTS[*]}" =~ ${HOSTNAME%%.*} ]]; then
-	check_ssh_agent
-	if [[ ! "$PROMPT_COMMAND" =~ check_ssh_agent ]]; then
-		export PROMPT_COMMAND="check_ssh_agent;$PROMPT_COMMAND"
-	fi
+check_ssh_agent
+if [[ ! "$PROMPT_COMMAND" =~ check_ssh_agent ]]; then
+	export PROMPT_COMMAND="check_ssh_agent;$PROMPT_COMMAND"
 fi
 
 # Notify if more than one agent is running
