@@ -553,7 +553,7 @@ function set_ps1_line1 {
 function set_ps1_line2 {
 	echo
 	echo -n "│ \[\033[01;32m\]\u\[\033[1;0m\]@"
-	echo -n "\[\033[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
+	echo -n "\[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
 	echo -n "\[\033[01;34m\]\w"
 }
 function set_ps1_line3 {
@@ -563,7 +563,7 @@ function set_ps1_line3 {
 
 SUDO_PS1="\[\033[0m\]\n"
 SUDO_PS1+="\[\033[01;31m\]\u\[\033[1;0m\]@"
-SUDO_PS1+="\[\033[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
+SUDO_PS1+="\[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
 SUDO_PS1+="\[\033[01;34m\]\w"
 SUDO_PS1+="\[\033[0m\]# "
 export SUDO_PS1
