@@ -398,6 +398,12 @@ fi
 function check_ssh_agent {
 	if [ -n "$SSH_AUTH_SOCK" ]; then
 		if [ -e "$SSH_AUTH_SOCK" ]; then
+			if ! ssh-add -l &> /dev/null; then
+				echo
+				echo -e "\033[01;33mcheck_ssh_agent(): No identity in agent\033[0m"
+				echo -e "\033[01;33m Running \033[01;31mssh-add\033[0m"
+				ssh-add
+			fi
 			return
 		fi
 	fi
@@ -420,8 +426,10 @@ function check_ssh_agent {
 		fi
 	else
 		eval "$(ssh-agent -s -t 12h)" > /dev/null
+		echo
 		echo -e "\033[01;33mcheck_ssh_agent(): new ssh-agent started\033[0m"
-		echo -e "\033[01;33m You can now run \033[01;31mssh-add\033[0m"
+		echo -e "\033[01;33m Running \033[01;31mssh-add\033[0m"
+		ssh-add
 	fi
 }
 
