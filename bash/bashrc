@@ -202,7 +202,8 @@ if [ "$PS1" ]; then
 	HISTCONTROL=ignoreboth:erasedups
 	HISTSIZE=10000
 	HISTFILESIZE=10000
-	unset HISTTIMEFORMAT
+	HISTTIMEFORMAT='%F %T '
+	HISTIGNORE='history*'
 
 	if [[ ! "$PROMPT_COMMAND" =~ refresh_history ]]; then
 		export PROMPT_COMMAND="refresh_history;$PROMPT_COMMAND"
