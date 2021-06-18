@@ -269,7 +269,10 @@ function background_check_update {
 			fi
 			;;
 		*'Debian'*)
-			pkg_cmd=$($cmd_head aptitude search '~U' 2> /dev/null)
+			#pkg_cmd=$($cmd_head aptitude search '~U' 2> /dev/null)
+			pkg_cmd=$($cmd_head apt-get -q -y --ignore-hold \
+				--allow-change-held-packages --allow-unauthenticated -s dist-upgrade |
+				grep ^Inst | cut -d\  -f2 | sort)
 			pkg_rc="$?"
 			;;
 	esac
