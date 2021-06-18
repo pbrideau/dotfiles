@@ -420,7 +420,7 @@ function check_ssh_agent {
 				fi
 				return
 			elif [ "$ssh_rc" -eq 2 ]; then
-			# ssh_rc == 2: Error connecting to agent: Connection refused
+				# ssh_rc == 2: Error connecting to agent: Connection refused
 				echo
 				echo -e "\033[01;33mcheck_ssh_agent(): Agent appear to be stale\033[0m"
 				echo -e "\033[01;33m Deleting \033[0;31m${SSH_AUTH_SOCK%/*}\033[0m"
