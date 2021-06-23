@@ -564,6 +564,27 @@ function set_ps1_line3 {
 	echo -n "\[\033[0m\]╰ \$ "
 }
 
+function toggle_prompt {
+	if [ "${CUSTOM_PROMPT:-true}" = false ]; then
+		export CUSTOM_PROMPT=true
+		export GIT_PROMPT_DISABLE=0
+		export GIT_PROMPT_ONLY_IN_REPO=0
+		PS1=$(set_ps1_line1)
+		PS1+=$(set_ps1_line2)
+		PS1+=$(set_ps1_line3)
+	else
+		export CUSTOM_PROMPT=false
+		export GIT_PROMPT_DISABLE=1
+		export GIT_PROMPT_ONLY_IN_REPO=1
+		PS1="\[\033[01;32m\]\u\[\033[1;0m\]@"
+		PS1+="\[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
+		PS1+="\[\033[01;34m\]\w"
+		PS1+="\[\033[0m\]# "
+		export PS1
+	fi
+
+}
+
 SUDO_PS1="\[\033[0m\]\n"
 SUDO_PS1+="\[\033[01;31m\]\u\[\033[1;0m\]@"
 SUDO_PS1+="\[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
