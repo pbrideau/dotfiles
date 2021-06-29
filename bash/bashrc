@@ -515,15 +515,22 @@ function prompt_last_rc {
 	fi
 }
 function prompt_loadavg {
-	#loadavg15=$(awk '{print $3}' /proc/loadavg)
 	loadavg15=$(uptime | awk '{print $NF}' | tr "," " ")
-
-	if [[ "$loadavg15" > "$(nproc)" ]]; then
-		local uptime
-		uptime=$(uptime | awk '{print $(NF-2)" "$(NF-1)" "$(NF-0)}')
-		echo -n "┤ "
-		echo -ne "\033[1;31m load: ${uptime}\033[0m "
-		echo -ne "\033[0m├─"
+	if command -v nproc &> /dev/null; then
+		nproc=$(nproc)
+	elif [ -f /proc/cpuinfo ]; then
+		nproc=$(grep -c 'processor' /proc/cpuinfo)
+	elif command -v kstat &> /dev/null; then
+		nproc=$(kstat -p cpu_info 2> /dev/null | grep -c 'device_ID')
+	fi
+	if [ -n "$nproc" ]; then
+		if (($(echo "if ($loadavg15 > $nproc) 1" | bc -l))); then
+			local uptime
+			uptime=$(uptime | awk '{print $(NF-2)" "$(NF-1)" "$(NF-0)}')
+			echo -n "┤ "
+			echo -ne "\033[1;31m load: ${uptime}\033[0m "
+			echo -ne "\033[0m├─"
+		fi
 	fi
 }
 function prompt_box {
