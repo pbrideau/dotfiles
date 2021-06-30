@@ -594,14 +594,23 @@ function toggle_prompt {
 		PS1+=$(set_ps1_line2)
 		PS1+=$(set_ps1_line3)
 	else
-		export CUSTOM_PROMPT=false
-		export GIT_PROMPT_DISABLE=1
-		export GIT_PROMPT_ONLY_IN_REPO=1
-		PS1="\[\033[01;32m\]\u\[\033[1;0m\]@"
-		PS1+="\[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
-		PS1+="\[\033[01;34m\]\w"
-		PS1+="\[\033[0m\]# "
-		export PS1
+		if [[ -e "$(git rev-parse --git-dir 2> /dev/null)" ]]; then
+			# TODO: Why the toggle does not work within a git repository?
+			#       The function from bash-git-prompt itself (git_prompt_toggle)
+			#       does not work either
+			echo "toggle_prompt(): cannot switch prompt from within git repo"
+			echo "                 move outside of git repo before toggling"
+			return
+		else
+			export CUSTOM_PROMPT=false
+			export GIT_PROMPT_DISABLE=1
+			export GIT_PROMPT_ONLY_IN_REPO=1
+			PS1="\[\033[01;32m\]\u\[\033[1;0m\]@"
+			PS1+="\[${HOSTNAME_COLOR}\]\h\[\033[0m\]:"
+			PS1+="\[\033[01;34m\]\w"
+			PS1+="\[\033[0m\]\$ "
+			export PS1
+		fi
 	fi
 
 }
