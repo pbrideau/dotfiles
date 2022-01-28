@@ -84,7 +84,7 @@ fi
 
 if ! command -v shellcheck &> /dev/null; then
 	url="https://github.com/koalaman/shellcheck/releases/download/stable/"
-	url+="/shellcheck-stable.linux.x87_64.tar.xz"
+	url+="/shellcheck-stable.linux.x86_64.tar.xz"
 	echo -e "$err shellcheck is not installed, to do so:"
 	echo " $ wget $url"
 fi
@@ -119,8 +119,8 @@ if ! command -v markdownlint &> /dev/null; then
 	echo " $ echo '#!/bin/bash' > ~/.local/bin/markdownlint"
 	echo -n " $ echo 'source \$HOME/.local/lib/markdownlint/bin/activate'"
 	echo " >> ~/.local/bin/markdownlint"
-	echo -n " $ echo '$HOME/.local/lib/markdownlint/node_module/markdownlint-cli/"
-	echo "mardownlint.js' \$@ >> ~/.local/bin/markdownlint"
+	echo -n " $ echo '\$HOME/.local/lib/markdownlint/node_modules/markdownlint-cli/"
+	echo "markdownlint.js' \$@ >> ~/.local/bin/markdownlint"
 	echo " $ chmod +x ~/.local/bin/markdownlint"
 fi
 
