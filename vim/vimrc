@@ -11,7 +11,7 @@ Plug 'preservim/nerdtree'
 Plug 'majutsushi/tagbar'
 Plug 'edkolev/tmuxline.vim'
 Plug 'vim-airline/vim-airline'
-Plug 'xolox/vim-easytags'
+"Plug 'xolox/vim-easytags' Not maintained since 2015
 Plug 'xolox/vim-misc'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
