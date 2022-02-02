@@ -119,8 +119,8 @@ if ! command -v markdownlint &> /dev/null; then
 	echo " $ echo '#!/bin/bash' > ~/.local/bin/markdownlint"
 	echo -n " $ echo 'source \$HOME/.local/lib/markdownlint/bin/activate'"
 	echo " >> ~/.local/bin/markdownlint"
-	echo -n " $ echo '\$HOME/.local/lib/markdownlint/node_modules/markdownlint-cli/"
-	echo "markdownlint.js \$@' >> ~/.local/bin/markdownlint"
+	echo -n " $ echo '\$HOME/.local/lib/markdownlint/node_modules/"
+	echo "markdownlint-cli/markdownlint.js \$@' >> ~/.local/bin/markdownlint"
 	echo " $ chmod +x ~/.local/bin/markdownlint"
 fi
 
