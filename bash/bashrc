@@ -432,7 +432,7 @@ function check_ssh_agent {
 
 	# Try to use an existing ssh_agent
 	declare -a agents
-	if [ "$(find /tmp -type d -name 'ssh-*' | wc -l)" -gt 0 ]; then
+	if [ "$(find /tmp -type d -name 'ssh-*' 2> /dev/null | wc -l)" -gt 0 ]; then
 		while IFS= read -r -d $'\0'; do
 			agents+=("$REPLY")
 		done < <(find /tmp/* -name 'agent.*' -user "$USER" -print0 2> /dev/null)
