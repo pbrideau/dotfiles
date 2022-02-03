@@ -1,0 +1,9 @@
+# Install keyboard
+cp <keyboard-file> /usr/share/X11/xkb/symbols/
+setxkbmap <keyboard-file> -variant <keyboard-variant>
+
+# Permanently
+/etc/default/keyboard
+XKBLAYOUT="<keyboard-file>"
+XKBVARIANT="<keyboard-variant>"
+
