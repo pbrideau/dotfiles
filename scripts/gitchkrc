@@ -11,6 +11,8 @@ GIT_PACKAGE_TO_CHECK=(
 #	['git']='git/git'
 	['glow']='charmbracelet/glow'
 	['markdownlint']='igorshubovych/markdownlint-cli'
+	['shfmt']='mvdan/sh'
+	['cheat']='cheat/cheat'
 )
 
 GIT_PACKAGE_VERSION=(
