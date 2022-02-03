@@ -642,8 +642,8 @@ if [ -f "$HOME/git/bash-git-prompt/gitprompt.sh" ]; then
 	export GIT_PROMPT_SHOW_UNTRACKED_FILES=all # can be no, normal or all;
 	export GIT_PROMPT_LEADING_SPACE=0
 
-	export GIT_PROMPT_PREFIX="┤ "
-	export GIT_PROMPT_SUFFIX=" ├"
+	export GIT_PROMPT_PREFIX="${PROMPTBOX_COLOR}┤ "
+	export GIT_PROMPT_SUFFIX=" ${PROMPTBOX_COLOR}├"
 
 	GIT_PROMPT_START=$(set_ps1_line1)
 	GIT_PROMPT_END=$(set_ps1_line2)
