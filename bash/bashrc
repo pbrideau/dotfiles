@@ -577,10 +577,12 @@ function set_ps1_line1 {
 
 	### Display current time on right hand side (is already at EOL)
 	echo -n "\[\033[17D\]" #go back 17 char
-	echo -n "\[${PROMPTBOX_COLOR}\]┤ \[\033[1;33m\]\D{%b %d %R}\[${PROMPTBOX_COLOR}\] ├┄"
+	echo -n "\[${PROMPTBOX_COLOR}\]┤ \[\033[1;33m\]\D{%b %d %R}"
+	echo -n "\[${PROMPTBOX_COLOR}\] ├┄"
 	echo -n "\[\033[u\]" # restore cursor position
 
-	echo -n "\[${PROMPTBOX_COLOR}\]┌\$(prompt_last_rc)\$(prompt_loadavg)\$(prompt_box)"
+	echo -n "\[${PROMPTBOX_COLOR}\]┌\$(prompt_last_rc)"
+	echo -n "\$(prompt_loadavg)\$(prompt_box)"
 }
 function set_ps1_line2 {
 	echo
