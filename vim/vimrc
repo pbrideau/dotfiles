@@ -61,8 +61,8 @@ au FileType xml,xsd set foldmethod=syntax foldclose=all foldlevel=1 foldopen=qui
 syntax enable
 
 " TODO: Pick a leader key
-let mapleader = ";"
-let maplocalleader = ","
+let mapleader = ","
+let maplocalleader = ";"
 
 " Security
 set modelines=0
