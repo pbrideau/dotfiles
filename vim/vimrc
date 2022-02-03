@@ -265,7 +265,15 @@ nmap <silent> tg :TestVisit<CR>
 """"""""
 " vim-grammalecte
 let g:grammalecte_cli_py='$HOME/.local/bin/grammalecte-cli.py'
-let g:grammalecte_win_height=-1
+"let g:grammalecte_win_height=-1
+let g:grammalecte_disable_rules=
+  \ 'nbsp_ajout_avant_double_ponctuation '
+  \ . 'nbsp_après_tiret1 '
+  \ . 'nbsp_avant_deux_points '
+  \ . 'nbsp_après_chevrons_ouvrants '
+  \ . 'nbsp_avant_chevrons_fermants '
+  \ . 'nbsp_avant_chevrons_fermants1 '
+  \ . 'nbsp_avant_chevrons_fermants2'
 
 """"""""
 " syntastic
