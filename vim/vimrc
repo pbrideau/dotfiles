@@ -120,7 +120,7 @@ set showmatch
 map <leader><space> :let @/=''<cr> " clear search
 
 " Visualize tabs and newlines
-set listchars=tab:~-,eol:¶,trail:-,nbsp:%
+set listchars=tab:~-,eol:Â¶,trail:-,nbsp:%
 set list
 set number
 set virtualedit=all
