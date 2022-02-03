@@ -28,12 +28,19 @@ GIT_PACKAGE_VERSION=(
 #	['git']=$(git --version 2> /dev/null | awk '{print $3}')
 	['glow']=$(glow --version 2> /dev/null | awk '{print $3}')
 	['markdownlint']=$(markdownlint --version 2> /dev/null)
+	['shfmt']=$(shfmt --version 2> /dev/null | grep -E -o '[0-9.]+')
+	['cheat']=$(cheat --version 2> /dev/null)
 )
 
 GIT_PACKAGE_TO_IGNORE=(
 	['pyenv']='2.0.0rc1'
 )
 
+GIT_PACKAGE_PRE_RELEASE=(
+	['semantic-release']='--pre'
+)
+
 export GIT_PACKAGE_TO_CHECK
 export GIT_PACKAGE_VERSION
 export GIT_PACKAGE_TO_IGNORE
+export GIT_PACKAGE_PRE_RELEASE

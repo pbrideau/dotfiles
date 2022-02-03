@@ -10,6 +10,7 @@ function gitchk {
 	declare -A GIT_PACKAGE_TO_CHECK
 	declare -A GIT_PACKAGE_TO_IGNORE
 	declare -A GIT_PACKAGE_VERSION
+	declare -A GIT_PACKAGE_PRE_RELEASE
 
 	# shellcheck disable=SC1090
 	source "$HOME/.gitchkrc"
@@ -26,7 +27,8 @@ function gitchk {
 			version="(not currently installed)"
 		else
 			latest_version=$(
-				lastversion --pre "${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
+				lastversion "${GIT_PACKAGE_PRE_RELEASE[$p]}" \
+					"${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
 			)
 			current_version="${GIT_PACKAGE_VERSION[$p]}"
 			if [ "$latest_version" = "${GIT_PACKAGE_TO_IGNORE[$p]}" ]; then
