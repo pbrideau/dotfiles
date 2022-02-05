@@ -819,5 +819,18 @@ if command -v go &> /dev/null; then
 	export GOPATH="${HOME}/.local"
 fi
 
+################################################################################
+# Moonlander Keyboard auto-compile
+if command -v wally-cli &> /dev/null; then
+	function auto-wally {
+		LAYOUT_ID='5yYL6'
+		ORYX_URL="https://oryx.zsa.io/${LAYOUT_ID}/latest/binary"
+		MOONLANDER_FIRMWARE=/tmp/latest-moonlander-layout.bin
+		wget --quiet "$ORYX_URL" -O "$MOONLANDER_FIRMWARE"
+		wally-cli "$MOONLANDER_FIRMWARE" 2> /dev/null
+		rm -f "$MOONLANDER_FIRMWARE"
+	}
+fi
+
 unset add_path
 # vim: ff=sh ts=2 sw=2
