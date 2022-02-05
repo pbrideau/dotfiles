@@ -42,7 +42,7 @@ GIT_PACKAGE_TO_IGNORE=(
 )
 
 GIT_PACKAGE_PRE_RELEASE=(
-	['semantic-release']='--pre'
+	#['semantic-release']='--pre'
 )
 
 export GIT_PACKAGE_TO_CHECK
