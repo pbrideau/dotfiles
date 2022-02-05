@@ -13,6 +13,7 @@ GIT_PACKAGE_TO_CHECK=(
 	['markdownlint']='igorshubovych/markdownlint-cli'
 	['shfmt']='mvdan/sh'
 	['cheat']='cheat/cheat'
+	['wally-cli']='zsa/wally-cli'
 )
 
 GIT_PACKAGE_VERSION=(
@@ -32,6 +33,8 @@ GIT_PACKAGE_VERSION=(
 	['markdownlint']=$(markdownlint --version 2> /dev/null)
 	['shfmt']=$(shfmt --version 2> /dev/null | grep -E -o '[0-9.]+')
 	['cheat']=$(cheat --version 2> /dev/null)
+	['wally-cli']=$(wally-cli --version 2> /dev/null |
+		awk '{ sub(/v/,"",$2); print $2; exit }')
 )
 
 GIT_PACKAGE_TO_IGNORE=(
