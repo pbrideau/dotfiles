@@ -14,7 +14,8 @@ function pipchk {
 	declare -i pip_to_update=0
 	echo "Checking latest versions from ${pypi_url}"
 	for p in "${PIP_PACKAGE_TO_CHECK[@]}"; do
-		current_version=$(pip3 show "$p" | grep Version | awk '{print $2}')
+		current_version=$(pip3 show "$p" 2> /dev/null |
+			grep Version | awk '{print $2}')
 		latest_version=$(
 			curl -s "${pypi_url}/${p}/" |
 				sed -n -e '/package-header__name/{n;p;q}' |
