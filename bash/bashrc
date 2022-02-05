@@ -506,7 +506,6 @@ if [ -z "$PROMPTBOX_COLOR" ]; then
 	PROMPTBOX_COLOR="\033[0m"
 fi
 
-
 function prompt_line {
 	printf "%${COLUMNS:-$(tput cols)}s" | sed "s/ /─/g" 2> /dev/null
 }
@@ -812,6 +811,12 @@ if [ -d "$HOME/git/pyenv" ]; then
 			eval "$(pyenv init --path)"
 		fi
 	fi
+fi
+
+################################################################################
+# GO
+if command -v go &> /dev/null; then
+	export GOPATH="${HOME}/.local"
 fi
 
 unset add_path
