@@ -45,6 +45,8 @@ Plug 'WolfgangMehner/bash-support'
 Plug 'pearofducks/ansible-vim'
 "Plug 'chase/vim-ansible-yaml'
 Plug 'dpelle/vim-Grammalecte'
+Plug 'mzlogin/vim-markdown-toc'
+Plug 'rodjek/vim-puppet'
 call plug#end()
 
 " For plugins to load correctly
@@ -55,7 +57,7 @@ set foldmethod=marker
 au FileType sh let g:sh_fold_enabled=1
 au FileType sh let g:is_bash=1
 au FileType sh set foldmethod=syntax foldclose=all foldlevel=0 foldopen=quickfix,search,tag,undo,mark,hor,block
-au FileType puppet set foldmethod=syntax foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
+au FileType puppet set nofoldenable foldmethod=syntax foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
 au FileType xml,xsd set foldmethod=syntax foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
 au FileType ruby set foldmethod=syntax foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
 
