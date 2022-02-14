@@ -57,6 +57,8 @@ au FileType sh let g:is_bash=1
 au FileType sh set foldmethod=syntax foldclose=all foldlevel=0 foldopen=quickfix,search,tag,undo,mark,hor,block
 au FileType puppet set foldmethod=syntax foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
 au FileType xml,xsd set foldmethod=syntax foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
+au FileType ruby set foldmethod=syntax foldclose=all foldlevel=1 foldopen=quickfix,search,tag,undo,mark,hor,block
+
 
 syntax enable
 
@@ -182,6 +184,7 @@ au BufRead *.zsh-theme set filetype=sh
 au BufRead *.pp set filetype=puppet
 au BufRead *.bats set filetype=sh
 au BufRead *.md set filetype=markdown
+au BufRead Vagrantfile set filetype=ruby
 
 " editorconfig does not recognize bash scripts without extension.
 " https://github.com/editorconfig/editorconfig/issues/239
