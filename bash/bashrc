@@ -834,3 +834,8 @@ fi
 
 unset add_path
 # vim: ff=sh ts=2 sw=2
+
+if [ -d "/opt/vagrant/" ]; then
+	VAGRANT_COMPLETION=$(find /opt/vagrant -name completion.sh)
+	source "$VAGRANT_COMPLETION"
+fi
