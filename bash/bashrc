@@ -838,4 +838,11 @@ unset add_path
 if [ -d "/opt/vagrant/" ]; then
 	VAGRANT_COMPLETION=$(find /opt/vagrant -name completion.sh)
 	source "$VAGRANT_COMPLETION"
+
+	function v {
+		local saved_pwd="$PWD"
+		cd ~/git/vagrant || return
+		vagrant "$@"
+		cd "$saved_pwd" || return
+	}
 fi
