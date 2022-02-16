@@ -16,6 +16,14 @@ AGENT_HOSTS+=(
 )
 
 ################################################################################
+# SSH_TUN
+SSH_TUN_LIST+=(
+	'1:patrick@132.214.19.24:8888'
+)
+
+
+
+################################################################################
 # HOSTNAME_COLOR
 
 case "$HOSTNAME" in
@@ -26,4 +34,4 @@ esac
 
 PROMPTBOX_COLOR="\033[0;35m"
 
-export HOSTNAME_COLOR PROMPTBOX_COLOR
+export HOSTNAME_COLOR PROMPTBOX_COLOR SSH_TUN_LIST

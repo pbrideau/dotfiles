@@ -49,6 +49,7 @@ declare -a TMUX_HOSTS
 declare -a AGENT_HOSTS
 declare -a PIPCHK_HOSTS
 declare -a GITCHK_HOSTS
+declare -a SSH_TUN_LIST
 if [ -d "$HOME/.bashrc_dir" ]; then
 	for f in "${HOME}"/.bashrc_dir/*; do
 		source "$f"
@@ -496,6 +497,80 @@ function prompt_ssh_agent {
 # You can add this to ~/.ssh/config:
 #      Host SERVERNAME
 #      ForwardAgent yes
+function prompt_ssh_tun {
+	declare -a tun_list
+	local tun_port
+	if [ "${#SSH_TUN_LIST[@]}" -ne 0 ]; then
+		for tun in "${SSH_TUN_LIST[@]}"; do
+			if [[ "$tun" == *":"* ]]; then
+				IFS=":" read -r -a tmp_tun_array <<< "$tun"
+				tun_port="${tmp_tun_array[2]}"
+
+				if netstat -lnt | grep -q "127.0.0.1:${tun_port}"; then
+					tun_list+=("$tun_port")
+				fi
+			fi
+		done
+	fi
+	if [ "${#tun_list[@]}" -gt 0 ]; then
+		echo -ne "\033[0;31mtun: ${tun_list[*]}"
+	fi
+}
+
+# shellcheck disable=SC2120 # validated in the function if there is argument
+function ssh_tun {
+	local tmp_tun_array
+	local tun_num tun_host tun_port tun_running
+	if [ "$#" -eq 0 ]; then
+		echo "available tunnels:"
+	fi
+
+	for tun in "${SSH_TUN_LIST[@]}"; do
+		if [[ "$tun" == *":"* ]]; then
+			IFS=":" read -r -a tmp_tun_array <<< "$tun"
+			tun_num="${tmp_tun_array[0]}"
+			tun_host="${tmp_tun_array[1]}"
+			tun_port="${tmp_tun_array[2]}"
+
+			if [ "$#" -eq 0 ]; then
+				if netstat -lnt | grep -q "127.0.0.1:${tun_port}"; then
+					tun_running="(running)"
+				else
+					tun_running=""
+				fi
+
+				echo " $tun_num $tun_host:$tun_port $tun_running"
+			elif [ "$1" = "close" ]; then
+				if [ "$#" -ne 2 ]; then
+					echo -e "\033[0;31merror\033[0m:please provide tunnel number to close"
+					# shellcheck disable=SC2119 # I don’t want args here
+					ssh_tun
+					return
+				fi
+				if [ "$2" -eq "$tun_num" ]; then
+					local tun_pid
+					tun_pid=$(
+						netstat -lnpt 2>&1 | awk -v tun_port="$tun_port" \
+							'{ if (match($4,"127.0.0.1:"tun_port)) {
+							sub("/.*","",$7);
+							print $7;
+					}}'
+					)
+					echo "killing tunnel on ${tun_host}:${tun_port} on pid $tun_pid"
+					kill "$tun_pid"
+				fi
+			elif [ "$tun_num" -eq "$1" ]; then
+
+				if ! netstat -lnt | grep -q "127.0.0.1:${tun_port}"; then
+					echo "starting new tunnel on ${tun_host}:${tun_port}"
+					ssh -D "$tun_port" -q -C -N -f "$tun_host"
+				else
+					echo "tunnel $tun_num on $tun_host is already running"
+				fi
+			fi
+		fi
+	done
+}
 
 ################################################################################
 # PROMPT
@@ -545,6 +620,7 @@ function prompt_loadavg {
 function prompt_box {
 	local s
 	s="$(prompt_ssh_agent)"
+	s+="$(prompt_ssh_tun)"
 	s+="$(prompt_reboot)"
 	if [ -e "$HOME/.update_count_dir/${HOSTNAME%%.*}" ]; then
 		s+="$(update_count)"
