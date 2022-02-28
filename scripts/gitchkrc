@@ -14,6 +14,7 @@ GIT_PACKAGE_TO_CHECK=(
 	['shfmt']='mvdan/sh'
 	['cheat']='cheat/cheat'
 	['wally-cli']='zsa/wally-cli'
+	['docker-compose']='docker/compose'
 )
 
 GIT_PACKAGE_VERSION=(
@@ -35,6 +36,8 @@ GIT_PACKAGE_VERSION=(
 	['cheat']=$(cheat --version 2> /dev/null)
 	['wally-cli']=$(wally-cli --version 2> /dev/null |
 		awk '{ sub(/v/,"",$2); print $2; exit }')
+	['docker-compose']=$(docker-compose --version 2> /dev/null |
+		awk '{ sub(/v/,"",$4); print $4; exit }')
 )
 
 GIT_PACKAGE_TO_IGNORE=(
