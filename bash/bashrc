@@ -800,7 +800,7 @@ export TLDR_PARAM='blue'
 alias genpass="tr -cd '[:alnum:]' < /dev/urandom | fold -w43 | head -n1"
 
 if [ -x /usr/bin/gvim ]; then
-	alias vi="vim --servername VIM --remote-tab-silent"
+	alias vi="gvim --servername VIM --remote"
 else
 	alias vi='vim'
 fi
