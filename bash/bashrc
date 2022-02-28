@@ -142,6 +142,10 @@ else
 	OS="$(uname)"
 fi
 
+if [[ "$OS" =~ .*CentOS.* ]]; then
+	OS='Red Hat'
+fi
+
 case "$OS" in
 	*'Red Hat'*)
 		# needs-restarting differ from version to version
