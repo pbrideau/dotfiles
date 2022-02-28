@@ -1,0 +1,14 @@
+[user]
+  name = Patrick Brideau
+  email = patrick.brideau@teluq.ca
+[color]
+  ui = true
+[push]
+  default = simple
+[core]
+  excludesfile = ~/.gitignore
+  editor = vim
+[init]
+  templateDir = ~/.dotfiles/git/template
+[pull]
+  rebase = true
