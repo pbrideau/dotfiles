@@ -3,12 +3,12 @@
 GIT_PACKAGE_TO_CHECK=(
 	['fzf']='junegunn/fzf'
 	['shellcheck']='koalaman/shellcheck'
-#	['ctags']='universal-ctags/ctags'
+	#['ctags']='universal-ctags/ctags'
 	['docopts']='docopt/docopts'
 	['cheat']='cheat/cheat'
 	['semantic-release']='go-semantic-release/semantic-release'
 	['pyenv']='pyenv/pyenv'
-#	['git']='git/git'
+	#['git']='git/git'
 	['glow']='charmbracelet/glow'
 	['markdownlint']='igorshubovych/markdownlint-cli'
 	['shfmt']='mvdan/sh'
@@ -21,15 +21,15 @@ GIT_PACKAGE_VERSION=(
 	['fzf']=$(fzf --version 2> /dev/null | awk '{print $1}')
 	['shellcheck']=$(shellcheck --version 2> /dev/null |
 		grep version: | awk '{print $2}')
-#	['ctags']=$(ctags --version 2> /dev/null |
-#		grep -P -o '(?<=\(p)[^)]+(?=\),)')
+	#['ctags']=$(ctags --version 2> /dev/null |
+	#	grep -P -o '(?<=\(p)[^)]+(?=\),)')
 	['docopts']=$(docopts --version 2> /dev/null |
 		awk '{ sub(/v/,"",$2); sub(/-.*/,"",$2); print $2; exit }')
 	['cheat']=$(cheat --version 2> /dev/null)
 	['semantic-release']=$(semantic-release --version 2> /dev/null |
 		awk '{print $3}')
 	['pyenv']=$(pyenv --version 2> /dev/null | awk '{print $2}')
-#	['git']=$(git --version 2> /dev/null | awk '{print $3}')
+	#['git']=$(git --version 2> /dev/null | awk '{print $3}')
 	['glow']=$(glow --version 2> /dev/null | awk '{print $3}')
 	['markdownlint']=$(markdownlint --version 2> /dev/null)
 	['shfmt']=$(shfmt --version 2> /dev/null | grep -E -o '[0-9.]+')
