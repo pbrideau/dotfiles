@@ -143,8 +143,8 @@ let g:rehash256 = 1
 set t_Co=256
 
 " My maps
-map ZA :NERDTreeToggle<CR>
-map ZX :TagbarToggle<CR>
+map àb :NERDTreeToggle<CR>
+map àB :TagbarToggle<CR>
 nmap > >>
 nmap < <<
 vmap > >gv
