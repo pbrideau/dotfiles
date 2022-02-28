@@ -4,15 +4,18 @@
 # UPDATES
 PIPCHK_HOSTS+=(
 	'odin'
+	'linux-patrick'
 )
 GITCHK_HOSTS+=(
 	'odin'
+	'linux-patrick'
 )
 
 ################################################################################
 # SSH-AGENT
 AGENT_HOSTS+=(
 	'odin'
+	'linux-patrick'
 )
 
 ################################################################################
@@ -29,6 +32,9 @@ SSH_TUN_LIST+=(
 case "$HOSTNAME" in
 	"odin")
 		HOSTNAME_COLOR="\033[01;36m"
+		;;
+	'linux-patrick')
+		HOSTNAME_COLOR="\033[01;31m"
 		;;
 esac
 
