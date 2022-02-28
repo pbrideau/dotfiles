@@ -40,4 +40,15 @@ esac
 
 PROMPTBOX_COLOR="\033[0;35m"
 
+################################################################################
+# PROXY HTTP
+case "$HOSTNAME" in
+	'linux-patrick')
+		http_proxy='http://nenuphare2.teluq.uquebec.ca:3128'
+		https_proxy='http://nenuphare2.teluq.uquebec.ca:3128'
+		ftp_proxy='http://nenuphare2.teluq.uquebec.ca:3128'
+		;;
+esac
+
 export HOSTNAME_COLOR PROMPTBOX_COLOR SSH_TUN_LIST
+export http_proxy https_proxy ftp_proxy
