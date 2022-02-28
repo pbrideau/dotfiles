@@ -513,7 +513,7 @@ function prompt_ssh_tun {
 		done
 	fi
 	if [ "${#tun_list[@]}" -gt 0 ]; then
-		echo -ne "\033[0;31mtun: ${tun_list[*]}"
+		echo -ne "\033[0;31mtun: ${tun_list[*]} "
 	fi
 }
 
