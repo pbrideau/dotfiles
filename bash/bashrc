@@ -254,18 +254,10 @@ UPD_CACHE_TMOUT="43200"
 
 function background_check_update {
 	cache="$1"
+	OS="$2"
 	tmp_file=$(mktemp)
 	cmd_head='timeout 30s nice -n 19'
 
-	if [ -e /etc/redhat-release ]; then
-		OS=$(cat /etc/redhat-release)
-	elif [ -e /etc/debian-release ]; then
-		OS=$(cat /etc/debian-release)
-	elif [ -e /etc/os-release ]; then
-		OS="$(awk -F= '/^NAME/{print $2}' /etc/os-release)"
-	else
-		OS="$(uname)"
-	fi
 	case "$OS" in
 		*'Red Hat'*)
 			pkg_cmd=$($cmd_head yum check-update --quiet 2> /dev/null)
@@ -322,7 +314,7 @@ function update_count {
 		# Do not attempt to update if there was an error previously
 	elif [ "$cache_time" -gt "$UPD_CACHE_TMOUT" ] || [ "$force" = "force" ]; then
 		echo '-1' > "$cache"
-		nohup bash -c "background_check_update '$cache'" &> /dev/null &
+		nohup bash -c "background_check_update '$cache' '$OS'" &> /dev/null &
 		disown
 	fi
 
