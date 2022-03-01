@@ -29,7 +29,7 @@ SSH_TUN_LIST+=(
 ################################################################################
 # HOSTNAME_COLOR
 
-case "$HOSTNAME" in
+case "${HOSTNAME%%.*}" in
 	"odin")
 		HOSTNAME_COLOR="\033[01;36m"
 		;;
@@ -42,7 +42,7 @@ PROMPTBOX_COLOR="\033[0;35m"
 
 ################################################################################
 # PROXY HTTP
-case "$HOSTNAME" in
+case "${HOSTNAME%%.*}" in
 	'linux-patrick')
 		http_proxy='http://nenuphare2.teluq.uquebec.ca:3128'
 		https_proxy='http://nenuphare2.teluq.uquebec.ca:3128'
