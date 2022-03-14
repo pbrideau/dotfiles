@@ -4,6 +4,8 @@ repos:
   hooks:
     - id: forbid-binary
       stages: [commit]
+      exclude_types:
+        - png
     - id: script-must-have-extension
       stages: [commit]
     - id: script-must-not-have-extension

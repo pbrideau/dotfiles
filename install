@@ -154,3 +154,13 @@ create_link ".dotfiles/digrc" "$HOME/.digrc"
 
 # PROSELINT
 create_link ".dotfiles/proselintrc" "$HOME/.proselintrc"
+
+################################################################################
+# AWESOME WINDOW MANAGER
+create_link "../.dotfiles/awesome" "$HOME/.config/awesome"
+
+if [ ! -d "$HOME/git/awesome-bling" ]; then
+	git clone https://github.com/BlingCorp/bling.git "$HOME/git/awesome-bling"
+fi
+
+create_link "$HOME/git/awesome-bling" "$HOME/.config/awesome/bling"
