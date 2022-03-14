@@ -1,0 +1,10 @@
+######
+# Disable proselint temporarily in vim:
+
+# BEFORE (:SyntasticInfo)
+# Currently enabled checker: mdl proselint
+
+:let syntastic_markdown_checkers = [ 'mdl' ]
+
+# AFTER (:SyntasticInfo)
+# Currently enabled checker: mdl
