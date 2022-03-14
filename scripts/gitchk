@@ -18,13 +18,20 @@ function gitchk {
 	local latest_version current_version
 	local chk version
 	local git_url='https://github.com'
+	local asset_url=''
 
 	declare -i git_to_update=0
 	echo "Checking latest versions from ${git_url}"
 	for p in "${!GIT_PACKAGE_TO_CHECK[@]}"; do
+		asset_url=''
 		if ! command -v "$p" &> /dev/null; then
 			chk="[$(tput setaf 3)-$(tput sgr0)]"
 			version="(not currently installed)"
+			asset_url=$(
+				lastversion --asset "${GIT_PACKAGE_PRE_RELEASE[$p]}" \
+					"${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}" | grep -E "(x86_64|amd64)" |
+					grep -Ev '\.(sha256|deb)'
+			)
 		else
 			latest_version=$(
 				lastversion "${GIT_PACKAGE_PRE_RELEASE[$p]}" \
@@ -38,13 +45,22 @@ function gitchk {
 				chk="[$(tput setaf 1)✘$(tput sgr0)]"
 				version="$current_version (latest: $latest_version)"
 				git_to_update+=1
+				asset_url=$(
+					lastversion --asset "${GIT_PACKAGE_PRE_RELEASE[$p]}" \
+						"${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}" | grep -E "(x86_64|amd64)" |
+						grep -Ev '\.(sha256|deb)'
+				)
 			else
 				chk="[$(tput setaf 2)✔$(tput sgr0)]"
 				version="$current_version"
 			fi
 		fi
 		url="${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
-		printf "%s %-20s %-50s %s\n" "$chk" "$p" "$url" "$version"
+		if [ "$asset_url" != '' ]; then
+			printf "%s %-20s %-50s %s\n    %s\n" "$chk" "$p" "$url" "$version" "$asset_url"
+		else
+			printf "%s %-20s %-50s %s\n" "$chk" "$p" "$url" "$version"
+		fi
 	done
 
 	echo "$git_to_update" > "$HOME/.gitchk_count"
