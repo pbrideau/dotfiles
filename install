@@ -159,8 +159,8 @@ create_link ".dotfiles/proselintrc" "$HOME/.proselintrc"
 # AWESOME WINDOW MANAGER
 create_link "../.dotfiles/awesome" "$HOME/.config/awesome"
 
-if [ ! -d "$HOME/git/awesome-bling" ]; then
-	git clone https://github.com/BlingCorp/bling.git "$HOME/git/awesome-bling"
+if [ ! -d "$HOME/git/awesome-lain" ]; then
+	git clone https://github.com/lcpz/lain.git "$HOME/git/awesome-lain"
 fi
 
-create_link "$HOME/git/awesome-bling" "$HOME/.config/awesome/bling"
+create_link "$HOME/git/awesome-lain" "$HOME/.config/awesome/lain"

@@ -1,5 +1,6 @@
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_configuration_dir().."mytheme/"
+local lain_path = gfs.get_configuration_dir().."lain/"
 
 theme = {}
 
@@ -90,6 +91,10 @@ theme.layout_tile = themes_path.."layouts/tilew.png"
 theme.layout_tiletop = themes_path.."layouts/tiletopw.png"
 theme.layout_spiral  = themes_path.."layouts/spiralw.png"
 theme.layout_dwindle = themes_path.."layouts/dwindlew.png"
+
+theme.layout_centerwork = lain_path.."icons/layout/default/centerworkw.png"
+theme.layout_termfair = lain_path.."icons/layout/default/termfairw.png"
+theme.layout_cascade = lain_path.."icons/layout/default/cascadew.png"
 
 theme.awesome_icon = "/usr/share/awesome/icons/awesome16.png"
 
