@@ -297,6 +297,10 @@ globalkeys = awful.util.table.join(
     awful.key({ alt,           }, "Down",  function () awful.util.spawn_with_shell("pactl set-sink-volume 0 -5%") end),
     awful.key({ meta,          }, ".",  function () awful.util.spawn_with_shell("pactl set-source-mute $(pactl info | grep 'Default Source' | awk '{print $3;}') 1") end), -- mute
     awful.key({ meta,          }, ",",  function () awful.util.spawn_with_shell("pactl set-source-mute $(pactl info | grep 'Default Source' | awk '{print $3;}') 0") end), -- unmute
+    awful.key({ meta,          }, "/",
+      function () awful.util.spawn_with_shell("pactl set-source-mute $(pactl info | grep 'Default Source' | awk '{print $3;}') 0") end, --unmute on press
+      function () awful.util.spawn_with_shell("pactl set-source-mute $(pactl info | grep 'Default Source' | awk '{print $3;}') 1") end --mute on release
+    ),
 
 
     -- Prompt
