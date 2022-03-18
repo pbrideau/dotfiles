@@ -4,6 +4,7 @@ set -o nounset
 
 err="[$(tput setaf 1)✘$(tput sgr0)]"
 ok="[$(tput setaf 2)✔$(tput sgr0)]"
+warn="[$(tput setaf 3)=$(tput sgr0)]"
 
 function create_link {
 	local target=$1
@@ -153,3 +154,20 @@ if [ ! -d "$HOME/git/awesome-lain" ]; then
 fi
 
 create_link "$HOME/git/awesome-lain" "$HOME/.config/awesome/lain"
+
+################################################################################
+# KEYBOARD
+if [ ! -e /usr/share/X11/xkb/symbols/ca_pbrideau ]; then
+	echo -e "$warn keyboard: install of ca_pbrideau require sudoers"
+	sudo ln -s "$HOME/.dotfiles/keyboard_layout/ca_pbrideau" \
+		"/usr/share/X11/xkb/symbols/ca_pbrideau" &&
+		echo "$ok keyboard: install succeed" ||
+		echo "$err keyboard: something went wrong"
+fi
+
+if ! grep -F 'XKBLAYOUT="ca_pbrideau"' /etc/default/keyboard &> /dev/null; then
+	echo -e "$err keyboard: layout not set in /etc/default/keyboard"
+	echo "              Make sure this is present:"
+	echo "              ### /etc/default/keyboard ###"
+	echo "              $(tput setaf 1)XKBLAYOUT=\"ca_pbrideau\"$(tput sgr0)"
+fi

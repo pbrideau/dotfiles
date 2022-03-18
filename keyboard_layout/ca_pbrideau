@@ -1,0 +1,83 @@
+// This is a modified French Canada layout.
+// The purpose is to keep the original ca layout for laptop keyboard usage
+// but add new map for special character (like "œ") to be available.
+// Some keys of the keypad (which are not used on a laptop) are modified
+// to be new letters (like "à")
+//
+// Then all required keys are available to have a custom fr-godox layout on my
+// Moonlander keyboard:
+//   https://configure.zsa.io/moonlander/layouts/5yYL6/latest/0
+
+
+default  partial
+xkb_symbols "ca_pbrideau" {
+    name[Group1] = "French (Canada), custom changes";
+
+    key <TLDE>	{ [ numbersign,       bar,     backslash ]	};
+    key <AE01>	{ [         1,     exclam,     plusminus ]	};
+    key <AE02>	{ [         2,   quotedbl,            at ]	};
+    key <AE03>	{ [         3,      slash,      sterling ]	};
+    key <AE04>	{ [         4,     dollar,          cent ]	};
+    key <AE05>	{ [         5,    percent,      currency ] 	};
+    key <AE06>	{ [         6,   question,       notsign ]	};
+    key <AE07>	{ [         7,  ampersand,     brokenbar ]	};
+    key <AE08>	{ [         8,   asterisk,   twosuperior ]	};
+    key <AE09>	{ [         9,  parenleft, threesuperior ]	};
+    key <AE10>	{ [         0, parenright,    onequarter ]	};
+    key <AE11>	{ [     minus, underscore,       onehalf ]	};
+    key <AE12>	{ [     equal,       plus, threequarters ]	};
+
+    key <AD01>	{ [         q,          Q,            oe,     OE ]	};
+    key <AD02>	{ [         w,          W,            ae,     AE ]	};
+    key <AD03>	{ [         e,          E,        egrave, Egrave ]	};
+    key <AD04>	{ [         r,          R,        endash ]	};
+    key <AD05>	{ [         t,          T,        emdash ]	};
+    key <AD06>	{ [         y,          Y,      ellipsis ]	};
+    key <AD07>	{ [         u,          U,        ugrave, Ugrave ]	};
+    key <AD08>	{ [         i,          I,      EuroSign ]	};
+    key <AD09>	{ [         o,          O,   section ]	};
+    key <AD10>	{ [         p,          P, paragraph ]	};
+    key <AD11>	{ [dead_circumflex, dead_circumflex, bracketleft  ]	};
+    key <AD12>	{ [   dead_cedilla,  dead_diaeresis, bracketright ]	};
+
+    key <AC01>	{ [         a,          A,        agrave, Agrave ]	};
+    key <AC02>	{ [         s,          S, leftdoublequotemark ]	};
+    key <AC03>	{ [         d,          D, rightdoublequotemark ]	};
+    key <AC04>	{ [         f,          F, leftsinglequotemark ]	};
+    key <AC05>	{ [         g,          G ]	};
+    key <AC06>	{ [         h,          H ]	};
+    key <AC07>	{ [         j,          J ]	};
+    key <AC08>	{ [         k,          K ]	};
+    key <AC09>	{ [         l,          L ]	};
+    key <AC10>	{ [ semicolon,      colon, asciitilde ]	};
+    key <AC11>	{ [dead_grave, dead_grave,  braceleft ]	};
+    key <BKSL>	{ [      less,    greater, braceright ]	};
+
+    key <LSGT>	{ [guillemotleft, guillemotright, degree]	};
+    key <AB01>	{ [         z,          Z ]	};
+    key <AB02>	{ [         x,          X ]	};
+    key <AB03>	{ [         c,          C,     ccedilla, Ccedilla  ]	};
+    key <AB04>	{ [         v,          V ]	};
+    key <AB05>	{ [         b,          B ]	};
+    key <AB06>	{ [         n,          N ]	};
+    key <AB07>	{ [         m,          M,           mu ]	};
+    key <AB08>	{ [     comma, apostrophe  ]	};
+    key <AB09>	{ [    period,     period,       hyphen ]	};
+    key <AB10>	{ [    eacute,     Eacute,   dead_acute ]	};
+
+    key <SPCE>	{ [     space,      space, nobreakspace ]	};
+
+    include "level3(ralt_switch)"
+    include "keypad(oss)"
+
+    //add custom keypad keys
+    key <KPMU> { [ egrave, Egrave ] };
+    key <KPSU> { [ agrave, Agrave ] };
+    key <KPDV> { [ rightsinglequotemark ] };
+    key <KPAD> { [ grave ] };
+};
+
+partial alphanumeric_keys
+	xkb_symbols "sun_type6" {
+	include "sun_vndr/ca(sun_type6)"
+};
