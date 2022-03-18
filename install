@@ -130,11 +130,6 @@ if ! command -v proselint &> /dev/null; then
 	echo " $ pip3 install --user proselint"
 fi
 
-if ! command -v ansible-lint &> /dev/null; then
-	echo -e "$err ansible-lint is not installed, to do so:"
-	echo " $ pip3 install --user ansible-lint"
-fi
-
 ################################################################################
 # PACKAGE CHECKER
 create_link "../../.dotfiles/scripts/pipchk" "$HOME/.local/bin/pipchk"
