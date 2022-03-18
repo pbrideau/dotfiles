@@ -158,6 +158,9 @@ vmap < <gv
 "nnoremap <C-L> <C-W><C-L>
 "nnoremap <C-H> <C-W><C-H>
 
+inoremap <C-BS> <C-W>
+inoremap <C-H> <C-W>
+
 let g:loclist_is_open = 1
 function! LocListToggle()
   if g:loclist_is_open == 1
