@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ "$(pgrep -f "$0" -c)" -gt 1 ]; then
+	echo "already running: $0"
+	exit 0
+fi
+
+function set_usb_sound {
+	local pid user userid sink
+	pid=$(pgrep pulseaudio)
+	user=$(strings "/proc/$pid/environ" | grep USER= | sed 's/.*=//')
+	userid=$(id -u "$user")
+
+	sleep 5
+	sink='alsa_output.usb-C-Media_Electronics_Inc.'
+	sink+='_USB_Advanced_Audio_Device-00.analog-stereo'
+	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
+		sh -c "pactl set-default-sink $sink"
+}
+
+set_usb_sound &
