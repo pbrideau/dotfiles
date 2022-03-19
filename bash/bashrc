@@ -919,17 +919,3 @@ if [ -d "/opt/vagrant/" ]; then
 		cd "$saved_pwd" || return
 	}
 fi
-
-################################################################################
-# DOCK CAMERA "AUTOCONFIG"
-function dock_cam {
-	if ! pactl list modules | grep "Name: module-loopback" &> /dev/null; then
-		pactl load-module module-loopback latency_msec=1 \
-			source=alsa_input.usb-046d_HD_Pro_Webcam_C920_A797B9AF-02.analog-stereo
-	fi
-	pactl set-default-source \
-		alsa_input.usb-046d_HD_Pro_Webcam_C920_A797B9AF-02.analog-stereo
-	SINK='alsa_output.usb-C-Media_Electronics_Inc.'
-	SINK+='_USB_Advanced_Audio_Device-00.analog-stereo'
-	pactl set-default-sink "$SINK"
-}
