@@ -26,6 +26,9 @@ function set_usb_mic_webcam {
 	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
 		sh -c "pactl set-default-source $source"
 
+	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
+		sh -c "pactl set-source-mute $source 1"
+
 }
 
 set_usb_mic_webcam &
