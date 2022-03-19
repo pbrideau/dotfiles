@@ -126,10 +126,16 @@ fi
 
 ################################################################################
 # PACKAGE CHECKER
+mkdir -p "$HOME/.local"
 create_link "../../.dotfiles/scripts/pipchk" "$HOME/.local/bin/pipchk"
 create_link "../../.dotfiles/scripts/gitchk" "$HOME/.local/bin/gitchk"
 create_link ".dotfiles/scripts/pipchkrc" "$HOME/.pipchkrc"
 create_link ".dotfiles/scripts/gitchkrc" "$HOME/.gitchkrc"
+
+################################################################################
+# FONTS
+mkdir -p "$HOME/.local/share"
+create_link "../../.dotfiles/fonts" "$HOME/.local/share"
 
 ################################################################################
 # TMUX
