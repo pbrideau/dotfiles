@@ -511,10 +511,10 @@ awful.rules.rules = {
         properties = { screen = 1, tag = "7"  }
     },{
         rule = { class = "xfce4-panel" },
-        properties = { floating = true, ontop = true  } 
+        properties = { floating = true, ontop = true  }
     },{
         rule = { class = "Chromium" },
-        properties = { maximized = false } 
+        properties = { maximized = false }
     },{
         rule = { class = "libreoffice-writer" },
         properties = { maximized = false } 
