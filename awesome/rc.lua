@@ -523,7 +523,7 @@ awful.rules.rules = {
         properties = { maximized = false } 
     },{
         rule = { class = "Microsoft Teams - Preview" },
-        properties = { screen = 1, tag = "2"  }
+        properties = { screen = 1, tag = "2", maximized = false}
     },{
         rule = { name = "Microsoft Teams Notification" },
         properties = {
