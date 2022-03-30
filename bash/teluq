@@ -5,22 +5,21 @@ TMUX_HOSTS+=(
 	'linux-patrick'
 )
 
-
 ################################################################################
 # UPDATES
 PIPCHK_HOSTS+=(
-	'odin'
+	'teluq-100251'
 	'linux-patrick'
 )
 GITCHK_HOSTS+=(
-	'odin'
+	'teluq-100251'
 	'linux-patrick'
 )
 
 ################################################################################
 # SSH-AGENT
 AGENT_HOSTS+=(
-	'odin'
+	'teluq-100251'
 	'linux-patrick'
 )
 
@@ -30,13 +29,11 @@ SSH_TUN_LIST+=(
 	'1:patrick@132.214.19.24:8888'
 )
 
-
-
 ################################################################################
 # HOSTNAME_COLOR
 
 case "${HOSTNAME%%.*}" in
-	"odin")
+	"teluq-100251")
 		HOSTNAME_COLOR="\033[01;36m"
 		;;
 	'linux-patrick')
