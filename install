@@ -45,7 +45,6 @@ fi
 # BASH
 mkdir -p "$HOME/.bash_history_dir"
 mkdir -p "$HOME/.bashrc_dir"
-mkdir -p "$HOME/scripts"
 
 create_link ".dotfiles/bash/bashrc" "$HOME/.bashrc"
 create_link "../.dotfiles/bash/lslast" "$HOME/.bashrc_dir/lslast"
@@ -126,7 +125,7 @@ fi
 
 ################################################################################
 # PACKAGE CHECKER
-mkdir -p "$HOME/.local"
+mkdir -p "$HOME/.local/bin"
 create_link "../../.dotfiles/scripts/pipchk" "$HOME/.local/bin/pipchk"
 create_link "../../.dotfiles/scripts/gitchk" "$HOME/.local/bin/gitchk"
 create_link ".dotfiles/scripts/pipchkrc" "$HOME/.pipchkrc"
@@ -135,7 +134,7 @@ create_link ".dotfiles/scripts/gitchkrc" "$HOME/.gitchkrc"
 ################################################################################
 # FONTS
 mkdir -p "$HOME/.local/share"
-create_link "../../.dotfiles/fonts" "$HOME/.local/share"
+create_link "../../.dotfiles/fonts" "$HOME/.local/share/fonts"
 
 ################################################################################
 # TMUX
