@@ -73,8 +73,13 @@ xkb_symbols "ca_pbrideau" {
     //add custom keypad keys
     key <KPMU> { [ egrave, Egrave ] };
     key <KPSU> { [ agrave, Agrave ] };
-    key <KPDV> { [ rightsinglequotemark ] };
+    key <KPDV> { [ rightsinglequotemark, question ] };
     key <KPAD> { [ grave ] };
+
+    key <KP1>  { [ period, colon ] };
+    key <KP2>  { [ dead_circumflex, exclam ] };
+    key <KP3>  { [ comma, semicolon ] };
+
 };
 
 partial alphanumeric_keys
