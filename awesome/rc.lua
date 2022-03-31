@@ -536,6 +536,12 @@ awful.rules.rules = {
            ontop = true,
            sticky = true
         }
+    },{
+        rule = { class = "amphetype" },
+        properties = { screen = 1, tag = "9"  }
+    },{
+        rule = { class = "keepassx" },
+        properties = { screen = 1, tag = "8"  }
     }
 }
 -- }}}
