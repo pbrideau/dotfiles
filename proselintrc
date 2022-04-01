@@ -1,5 +1,6 @@
 {
   "checks": {
     "typography.symbols" : false
+    "garner.preferred_forms" : false
   }
 }
