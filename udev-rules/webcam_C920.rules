@@ -1,1 +1,0 @@
-ACTION=="add", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="082d", RUN+="/usr/local/bin/activate_webcam_C920"

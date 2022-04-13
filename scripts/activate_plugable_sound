@@ -14,8 +14,26 @@ function set_usb_sound {
 	sleep 5
 	sink='alsa_output.usb-C-Media_Electronics_Inc.'
 	sink+='_USB_Advanced_Audio_Device-00.analog-stereo'
+	module_loopback=$(
+		sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
+			sh -c "pactl list modules | grep 'Name: module-loopback'"
+	)
+	source='alsa_input.usb-C-Media_Electronics_Inc.'
+	source+='_USB_Advanced_Audio_Device-00.mono-fallback'
+
 	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
 		sh -c "pactl set-default-sink $sink"
+
+	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
+		sh -c "pactl set-default-source $source"
+
+	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
+		sh -c "pactl set-source-mute $source 1"
+
+	if [ -z "$module_loopback" ]; then
+		sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
+			sh -c "pactl load-module module-loopback latency_msec=1 $source"
+	fi
 }
 
 set_usb_sound &

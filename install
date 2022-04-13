@@ -189,10 +189,9 @@ if [ ! -e "$target_file" ]; then
 fi
 
 target_file='/etc/udev/rules.d/50-webcam_C920.rules'
-source_file="$HOME/.dotfiles/udev-rules/webcam_C920.rules"
-if [ ! -e "$target_file" ]; then
-	echo -e "$warn sound: install of webcam_C920.rules require sudoers"
-	sudo ln -s "$source_file" "$target_file" &&
+if [ -L "$target_file" ]; then
+	echo -e "$warn sound: uninstall of webcam_C920.rules require sudoers"
+	sudo rm $target_file &&
 		echo "$ok sound: install succeed of $target_file" ||
 		echo "$err sound: something went wrong with $target_file"
 fi
@@ -207,10 +206,9 @@ if [ ! -e "$target_file" ]; then
 fi
 
 target_file='/usr/local/bin/activate_webcam_C920'
-source_file="$HOME/.dotfiles/scripts/activate_webcam_C920"
-if [ ! -e "$target_file" ]; then
-	echo -e "$warn sound: install of activate_webcam_C920 require sudoers"
-	sudo ln -s "$source_file" "$target_file" &&
-		echo "$ok sound: install succeed of $target_file" ||
+if [ -L "$target_file" ]; then
+	echo -e "$warn sound: uninstall of activate_webcam_C920 require sudoers"
+	sudo rm $target_file &&
+		echo "$ok sound: uninstall succeed of $target_file" ||
 		echo "$err sound: something went wrong with $target_file"
 fi
