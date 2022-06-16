@@ -25,8 +25,8 @@ function set_usb_sound {
 	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
 		sh -c "pactl set-default-source $source"
 
-	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
-		sh -c "pactl set-source-mute $source 1"
+	#sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
+	#	sh -c "pactl set-source-mute $source 1"
 
 	module_loopback=$(
 		sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
