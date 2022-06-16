@@ -147,7 +147,7 @@ if [[ "$OS" =~ .*CentOS.* ]]; then
 fi
 
 case "$OS" in
-	*'Red Hat'*)
+	*'Red Hat'*|*'Rocky'*)
 		# needs-restarting differ from version to version
 		(needs-restarting -r &> /dev/null)
 		restart_rc=$?
@@ -294,7 +294,7 @@ function update_count {
 		*'Solaris'* | *'SunOS'* | *'CYGWIN'*)
 			exit
 			;;
-		*'Red Hat'* | *'Debian'*) ;;
+		*'Red Hat'* | *'Debian'* | *'Rocky'*) ;;
 		*)
 			echo -ne "\033[1;33m(os:\033[0;31munknown\033[1;33m) "
 			exit
