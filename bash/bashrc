@@ -566,6 +566,11 @@ function ssh_tun {
 			fi
 		fi
 	done
+
+	if [ "$#" -eq 0 ]; then
+		echo
+		echo "To close a tunnel, use 'ssh_tun close #'"
+	fi
 }
 
 ################################################################################
