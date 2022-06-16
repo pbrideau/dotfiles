@@ -47,6 +47,7 @@ Plug 'pearofducks/ansible-vim'
 Plug 'dpelle/vim-Grammalecte'
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'rodjek/vim-puppet'
+Plug 'davewongillies/vim-eyaml'
 call plug#end()
 
 " For plugins to load correctly
