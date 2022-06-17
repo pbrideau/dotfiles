@@ -259,7 +259,7 @@ function background_check_update {
 	cmd_head='timeout 30s nice -n 19'
 
 	case "$OS" in
-		*'Red Hat'*)
+		*'Red Hat'* | *'Rocky'*)
 			pkg_cmd=$($cmd_head yum check-update --quiet 2> /dev/null)
 			pkg_rc="$?"
 			if [ "$pkg_rc" = 100 ]; then
