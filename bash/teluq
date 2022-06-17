@@ -9,6 +9,8 @@ alias vv='cd ~/git/vagrant'
 # TMUX
 TMUX_HOSTS+=(
 	'linux-patrick'
+	'aigl-admin-a01'
+	'apgl-admin-a01'
 )
 
 ################################################################################
@@ -27,12 +29,15 @@ GITCHK_HOSTS+=(
 AGENT_HOSTS+=(
 	'teluq-100251'
 	'linux-patrick'
+	'aigl-admin-a01'
+	'apgl-admin-a01'
 )
 
 ################################################################################
 # SSH_TUN
 SSH_TUN_LIST+=(
 	'1:patrick@132.214.19.24:8888'
+	'2:pb@132.214.118.135:8889'
 )
 
 ################################################################################
@@ -40,24 +45,51 @@ SSH_TUN_LIST+=(
 
 case "${HOSTNAME%%.*}" in
 	"teluq-100251")
+		PROMPTBOX_COLOR="\033[0;35m"
 		HOSTNAME_COLOR="\033[01;36m"
 		;;
 	'linux-patrick')
 		HOSTNAME_COLOR="\033[01;31m"
+		PROMPTBOX_COLOR="\033[0;35m"
+		;;
+	'aigl-admin-a01')
+		HOSTNAME_COLOR="\033[01;36m"
+		PROMPTBOX_COLOR="\033[0;33m"
+		;;
+	'apgl-admin-a01')
+		HOSTNAME_COLOR="\033[01;36m"
+		PROMPTBOX_COLOR="\033[0;31m"
+		;;
+	'aigl-*')
+		HOSTNAME_COLOR="\033[01;33m"
+		;;
+	'apgl-*')
+		HOSTNAME_COLOR="\033[01;31m"
 		;;
 esac
 
-PROMPTBOX_COLOR="\033[0;35m"
 
 ################################################################################
 # PROXY HTTP
 case "${HOSTNAME%%.*}" in
-	'linux-patrick')
+	'linux-patrick'  | \
+	'aigl-admin-a01' | \
+	'apgl-admin-a01' )
 		http_proxy='http://nenuphare2.teluq.uquebec.ca:3128'
 		https_proxy='http://nenuphare2.teluq.uquebec.ca:3128'
 		ftp_proxy='http://nenuphare2.teluq.uquebec.ca:3128'
 		;;
 esac
 
-export HOSTNAME_COLOR PROMPTBOX_COLOR SSH_TUN_LIST
+################################################################################
+# Disable PS1
+DISABLE_PS1=true
+PS1_ENABLED_HOSTS+=(
+	'teluq-100251'
+	'linux-patrick'
+	'aigl-admin-a01'
+	'apgl-admin-a01'
+)
+
+export HOSTNAME_COLOR PROMPTBOX_COLOR SSH_TUN_LIST DISABLE_PS1
 export http_proxy https_proxy ftp_proxy
