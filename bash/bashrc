@@ -810,7 +810,7 @@ alias genpass="tr -cd '[:alnum:]' < /dev/urandom | fold -w43 | head -n1"
 
 if [ -x /usr/bin/gvim ]; then
 	alias vi="gvim --servername VIM --remote"
-else
+elif [ -x /usr/bin/vim ]; then
 	alias vi='vim'
 fi
 
