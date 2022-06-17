@@ -50,6 +50,7 @@ declare -a AGENT_HOSTS
 declare -a PIPCHK_HOSTS
 declare -a GITCHK_HOSTS
 declare -a SSH_TUN_LIST
+declare -a PS1_ENABLED_HOSTS
 if [ -d "$HOME/.bashrc_dir" ]; then
 	for f in "${HOME}"/.bashrc_dir/*; do
 		source "$f"
@@ -750,6 +751,13 @@ else
 	PS1=$(set_ps1_line1)
 	PS1+=$(set_ps1_line2)
 	PS1+=$(set_ps1_line3)
+fi
+
+if [ -n "$DISABLE_PS1" ]; then
+	# Run toggle_prompt() on these servers unless it is in the list
+	if [[ ! "${PS1_ENABLED_HOSTS[*]}" =~ ${HOSTNAME%%.*} ]]; then
+		toggle_prompt
+	fi
 fi
 
 alias ga="git add"
