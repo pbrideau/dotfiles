@@ -74,11 +74,11 @@ xkb_symbols "ca_pbrideau" {
     key <KPMU> { [ egrave, Egrave ] };
     key <KPSU> { [ agrave, Agrave ] };
     key <KPDV> { [ rightsinglequotemark, apostrophe ] };
-    key <KPAD> { [ grave ] };
+    key <KPAD> { [ comma, semicolon ] };
 
-    key <KP1>  { [ period, colon ] };
-    key <KP2>  { [ dead_circumflex, exclam ] };
-    key <KP3>  { [ comma, semicolon ] };
+    key <KP1>  { [ period ] };
+    key <KP2>  { [ dead_circumflex ] };
+    key <KP3>  { [ grave ] };
 
 };
 
