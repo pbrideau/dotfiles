@@ -11,7 +11,7 @@
 [init]
   templateDir = ~/.dotfiles/git/template
 [pull]
-  rebase = true
+  rebase = false
 [filter "lfs"]
   process = git-lfs filter-process
   required = true
