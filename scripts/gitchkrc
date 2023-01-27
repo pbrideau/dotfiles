@@ -31,7 +31,8 @@ GIT_PACKAGE_VERSION=(
 		awk '{print $3}')
 	['pyenv']=$(pyenv --version 2> /dev/null | awk '{print $2}')
 	#['git']=$(git --version 2> /dev/null | awk '{print $3}')
-	['glow']=$(glow --version 2> /dev/null | awk '{print $3}')
+	['glow']=$(glow --version 2> /dev/null |
+		awk '{ sub(/v/,"",$3); print $3; exit }')
 	['markdownlint']=$(markdownlint --version 2> /dev/null)
 	['shfmt']=$(shfmt --version 2> /dev/null | grep -E -o '[0-9.]+')
 	['cheat']=$(cheat --version 2> /dev/null)
