@@ -27,16 +27,33 @@ function gitchk {
 		if ! command -v "$p" &> /dev/null; then
 			chk="[$(tput setaf 3)-$(tput sgr0)]"
 			version="(not currently installed)"
-			asset_url=$(
-				lastversion --asset "${GIT_PACKAGE_PRE_RELEASE[$p]}" \
-					"${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}" | grep -E "(x86_64|amd64)" |
-					grep -Ev '\.(sha256|deb)'
-			)
+			if [ -n "${GIT_PACKAGE_PRE_RELEASE[$p]}" ]; then
+				asset_url=$(
+					lastversion --asset \
+						"${GIT_PACKAGE_PRE_RELEASE[$p]}" \
+						"${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}" |
+						grep -E "(x86_64|amd64)" |
+						grep -Ev '\.(sha256|deb)'
+				)
+			else
+				asset_url=$(
+					lastversion --asset \
+						"${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}" |
+						grep -E "(x86_64|amd64)" |
+						grep -Ev '\.(sha256|deb)'
+				)
+			fi
 		else
-			latest_version=$(
-				lastversion "${GIT_PACKAGE_PRE_RELEASE[$p]}" \
-					"${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
-			)
+			if [ -n "${GIT_PACKAGE_PRE_RELEASE[$p]}" ]; then
+				latest_version=$(
+					lastversion "${GIT_PACKAGE_PRE_RELEASE[$p]}" \
+						"${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
+				)
+			else
+				latest_version=$(
+					lastversion "${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}"
+				)
+			fi
 			current_version="${GIT_PACKAGE_VERSION[$p]}"
 			if [ "$latest_version" = "${GIT_PACKAGE_TO_IGNORE[$p]}" ]; then
 				chk="[$(tput setaf 2)✔$(tput sgr0)]"
@@ -45,11 +62,22 @@ function gitchk {
 				chk="[$(tput setaf 1)✘$(tput sgr0)]"
 				version="$current_version (latest: $latest_version)"
 				git_to_update+=1
-				asset_url=$(
-					lastversion --asset "${GIT_PACKAGE_PRE_RELEASE[$p]}" \
-						"${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}" | grep -E "(x86_64|amd64)" |
-						grep -Ev '\.(sha256|deb)'
-				)
+				if [ -n "${GIT_PACKAGE_PRE_RELEASE[$p]}" ]; then
+					asset_url=$(
+						lastversion --asset \
+							"${GIT_PACKAGE_PRE_RELEASE[$p]}" \
+							"${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}" |
+							grep -E "(x86_64|amd64)" |
+							grep -Ev '\.(sha256|deb)'
+					)
+				else
+					asset_url=$(
+						lastversion --asset \
+							"${git_url}/${GIT_PACKAGE_TO_CHECK[$p]}" |
+							grep -E "(x86_64|amd64)" |
+							grep -Ev '\.(sha256|deb)'
+					)
+				fi
 			else
 				chk="[$(tput setaf 2)✔$(tput sgr0)]"
 				version="$current_version"
