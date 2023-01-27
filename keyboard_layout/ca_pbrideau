@@ -71,15 +71,10 @@ xkb_symbols "ca_pbrideau" {
     include "keypad(oss)"
 
     //add custom keypad keys
-    key <KPMU> { [ egrave, Egrave ] };
+    key <KPMU> { [ egrave, Egrave, grave ] };
     key <KPSU> { [ agrave, Agrave ] };
     key <KPDV> { [ rightsinglequotemark, apostrophe ] };
     key <KPAD> { [ comma, semicolon ] };
-
-    key <KP1>  { [ period ] };
-    key <KP2>  { [ dead_circumflex ] };
-    key <KP3>  { [ grave ] };
-
 };
 
 partial alphanumeric_keys
