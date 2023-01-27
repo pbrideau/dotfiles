@@ -44,7 +44,7 @@ xkb_symbols "ca_pbrideau" {
     key <AC02>	{ [         s,          S, leftdoublequotemark ]	};
     key <AC03>	{ [         d,          D, rightdoublequotemark ]	};
     key <AC04>	{ [         f,          F, leftsinglequotemark ]	};
-    key <AC05>	{ [         g,          G ]	};
+    key <AC05>	{ [         g,          G, periodcentered ]	};
     key <AC06>	{ [         h,          H ]	};
     key <AC07>	{ [         j,          J ]	};
     key <AC08>	{ [         k,          K ]	};
