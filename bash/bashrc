@@ -932,3 +932,74 @@ if [ -d "/opt/vagrant/" ]; then
 		cd "$saved_pwd" || return
 	}
 fi
+
+################################################################################
+# Monitor management
+function mm {
+	if [ $# -ne 1 ]; then
+		echo 'Usage: mm (zero|one|two|three)'
+		exit 1
+	fi
+
+	local LAPTOP_SCREEN='eDP-1'
+	local LEFT_SCREEN='DVI-I-2-2'
+	local CENTER_SCREEN='DP-1'
+	local RIGHT_SCREEN='DVI-I-1-1'
+	local RATE=60
+
+	case "$1" in
+		'zero')
+			xrandr --setprovideroutputsource 3
+			xrandr --setprovideroutputsource 4
+			xrandr --output "$LAPTOP_SCREEN" --auto
+			xrandr --output "$LEFT_SCREEN" --off
+			xrandr --output "$CENTER_SCREEN" --off
+			xrandr --output "$RIGHT_SCREEN" --off
+			;;
+		'one')
+			xrandr --setprovideroutputsource 3
+			xrandr --setprovideroutputsource 4
+			xrandr --output "$LAPTOP_SCREEN" --off
+			xrandr --output "$LEFT_SCREEN" --off
+			xrandr --output "$CENTER_SCREEN" \
+				--mode 2560x1440 \
+				--rate "$RATE"
+			xrandr --output "$RIGHT_SCREEN" --off
+			;;
+		'two')
+			xrandr --setprovideroutputsource 3 0
+			xrandr --setprovideroutputsource 4 0
+			xrandr --output "$LAPTOP_SCREEN" --off
+			xrandr --output "$LEFT_SCREEN" --off
+			xrandr --output "$CENTER_SCREEN" \
+				--mode 2560x1440 \
+				--rate "$RATE"
+			xrandr --output "$RIGHT_SCREEN" \
+				--mode 2560x1440 \
+				--rate "$RATE"\
+				--right-of "$CENTER_SCREEN"
+			;;
+		'three')
+			xrandr --setprovideroutputsource 3 0
+			xrandr --setprovideroutputsource 4 0
+
+			xrandr --output "$LAPTOP_SCREEN" --off
+			xrandr --output "$LEFT_SCREEN" \
+				--mode 2560x1440 \
+				--rate "$RATE"
+			xrandr --output "$CENTER_SCREEN" \
+				--mode 2560x1440 \
+				--rate "$RATE" \
+				--right-of "$LEFT_SCREEN"
+			xrandr --output "$RIGHT_SCREEN" \
+				--mode 2560x1440 \
+				--rate "$RATE" \
+				--right-of "$CENTER_SCREEN"
+			;;
+		default)
+			echo "args '$1' not valid"
+			echo "try 'one' or 'two' or 'three'"
+			;;
+	esac
+
+}
