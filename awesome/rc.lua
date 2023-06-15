@@ -328,6 +328,14 @@ clientkeys = awful.util.table.join(
             c:raise()
         end,
         {description = "toggle fullscreen", group = "client"}),
+    awful.key({ meta, "Shift"   }, "f",
+        function (c)
+            -- awful.client.floating.toggle
+            c.floating = not c.floating
+            c:geometry( { x = 0, y = 0, width = 5120, height = 1440 } )
+            c:raise()
+        end,
+        {description = "toggle dual screen", group = "client"}),
     awful.key({ meta, "Control" }, "c",      function (c) c:kill()                         end),
     -- duplicate for "P" key on fr-godox layout
     awful.key({ meta, "Control" }, "e",      function (c) c:kill()                         end),
