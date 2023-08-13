@@ -944,67 +944,88 @@ fi
 function mm {
 	if [ $# -ne 1 ]; then
 		echo 'Usage: mm (zero|one|two|three)'
-		exit 1
+		echo
+		echo "Variables:"
+		echo "  MM_LAPTOP_SCREEN = $MM_LAPTOP_SCREEN"
+		echo "  MM_LEFT_SCREEN = $MM_LEFT_SCREEN"
+		echo "  MM_CENTER_SCREEN = $MM_CENTER_SCREEN"
+		echo "  MM_RIGHT_SCREEN = $MM_RIGHT_SCREEN"
+		echo "  MM_RATE = $MM_RATE"
+		return
 	fi
 
-	local LAPTOP_SCREEN='eDP-1'
-	local LEFT_SCREEN='DVI-I-2-2'
-	local CENTER_SCREEN='DP-1'
-	local RIGHT_SCREEN='DVI-I-1-1'
-	local RATE=60
+	if [ -z "$MM_LAPTOP_SCREEN" ]; then
+			echo 'MM_LAPTOP_SCREEN variable required, not set'
+			return
+	fi
+
+	if [ -z "$MM_LEFT_SCREEN" ]; then
+			echo 'MM_LEFT_SCREEN variable required, not set'
+			return
+	fi
+
+	if [ -z "$MM_CENTER_SCREEN" ]; then
+			echo 'MM_CENTER_SCREEN variable required, not set'
+			return
+	fi
+
+	if [ -z "$MM_RIGHT_SCREEN" ]; then
+			echo 'MM_RIGHT_SCREEN variable required, not set'
+			return
+	fi
 
 	case "$1" in
-		'zero')
+		'zero' | '0')
 			xrandr --setprovideroutputsource 3
 			xrandr --setprovideroutputsource 4
-			xrandr --output "$LAPTOP_SCREEN" --auto
-			xrandr --output "$LEFT_SCREEN" --off
-			xrandr --output "$CENTER_SCREEN" --off
-			xrandr --output "$RIGHT_SCREEN" --off
+			xrandr --output "$MM_LAPTOP_SCREEN" --auto
+			xrandr --output "$MM_LEFT_SCREEN" --off
+			xrandr --output "$MM_CENTER_SCREEN" --off
+			xrandr --output "$MM_RIGHT_SCREEN" --off
 			;;
-		'one')
+		'one' | '1')
 			xrandr --setprovideroutputsource 3
 			xrandr --setprovideroutputsource 4
-			xrandr --output "$LAPTOP_SCREEN" --off
-			xrandr --output "$LEFT_SCREEN" --off
-			xrandr --output "$CENTER_SCREEN" \
+			xrandr --output "$MM_LAPTOP_SCREEN" --off
+			xrandr --output "$MM_LEFT_SCREEN" --off
+			xrandr --output "$MM_CENTER_SCREEN" \
 				--mode 2560x1440 \
-				--rate "$RATE"
-			xrandr --output "$RIGHT_SCREEN" --off
+				--rate "$MM_RATE"
+			xrandr --output "$MM_RIGHT_SCREEN" --off
 			;;
-		'two')
+		'two' | '2')
 			xrandr --setprovideroutputsource 3 0
 			xrandr --setprovideroutputsource 4 0
-			xrandr --output "$LAPTOP_SCREEN" --off
-			xrandr --output "$LEFT_SCREEN" --off
-			xrandr --output "$CENTER_SCREEN" \
+			xrandr --output "$MM_LAPTOP_SCREEN" --off
+			xrandr --output "$MM_LEFT_SCREEN" --off
+			xrandr --output "$MM_CENTER_SCREEN" \
 				--mode 2560x1440 \
-				--rate "$RATE"
-			xrandr --output "$RIGHT_SCREEN" \
+				--rate "$MM_RATE"
+			xrandr --output "$MM_RIGHT_SCREEN" \
 				--mode 2560x1440 \
-				--rate "$RATE"\
-				--right-of "$CENTER_SCREEN"
+				--rate "$MM_RATE"\
+				--right-of "$MM_CENTER_SCREEN"
 			;;
-		'three')
+		'three' | '3')
 			xrandr --setprovideroutputsource 3 0
 			xrandr --setprovideroutputsource 4 0
 
-			xrandr --output "$LAPTOP_SCREEN" --off
-			xrandr --output "$LEFT_SCREEN" \
+			xrandr --output "$MM_LAPTOP_SCREEN" --off
+			xrandr --output "$MM_LEFT_SCREEN" \
 				--mode 2560x1440 \
-				--rate "$RATE"
-			xrandr --output "$CENTER_SCREEN" \
+				--rate "$MM_RATE"
+			xrandr --output "$MM_CENTER_SCREEN" \
 				--mode 2560x1440 \
-				--rate "$RATE" \
-				--right-of "$LEFT_SCREEN"
-			xrandr --output "$RIGHT_SCREEN" \
+				--rate "$MM_RATE" \
+				--right-of "$MM_LEFT_SCREEN"
+			xrandr --output "$MM_RIGHT_SCREEN" \
 				--mode 2560x1440 \
-				--rate "$RATE" \
-				--right-of "$CENTER_SCREEN"
+				--rate "$MM_RATE" \
+				--right-of "$MM_CENTER_SCREEN"
 			;;
-		default)
+		*)
 			echo "args '$1' not valid"
-			echo "try 'one' or 'two' or 'three'"
+			echo "try 'zero', 'one', 'two' or 'three'"
 			;;
 	esac
 
