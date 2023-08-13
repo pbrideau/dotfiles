@@ -8,6 +8,8 @@ PIP_PACKAGE_TO_CHECK=(
 	'yamllint'
 	'lastversion'
 	'nodeenv'
+	'flake8'
+	'black'
 )
 
 PIP_PACKAGE_TO_IGNORE=(
