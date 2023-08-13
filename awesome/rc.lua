@@ -420,7 +420,8 @@ awful.rules.rules = {
                      buttons = clientbuttons,
                      screen = awful.screen.preferred,
                      placement = awful.placement.no_overlap+awful.placement.no_offscreen,
-                     size_hints_honor = false
+                     size_hints_honor = false,
+                     maximized = false
       }
     },
 
@@ -429,8 +430,15 @@ awful.rules.rules = {
         instance = {
           "DTA",  -- Firefox addon DownThemAll.
           "copyq",  -- Includes session name in class.
+          "xfce4-panel",
         },
         class = {
+          "PictureInPicture", -- Firexox PIP
+          "MPlayer",
+          "gimp",
+          "Wrapper", -- Calendar in xfce4
+          "Calendar",
+          "xfce4-panel",
           "Arandr",
           "Gpick",
           "Kruler",
@@ -454,39 +462,19 @@ awful.rules.rules = {
     { rule_any = {type = { "normal", "dialog" }
       }, properties = { titlebars_enabled = true }
     },{
-        -- Firefox pip
-        rule = { role = "PictureInPicture" },
-        properties = { floating = false }
-    },
-
-    -- Set Firefox to always map on the tag named "2" on screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { screen = 1, tag = "2" } },
-
-    {
-        rule = { class = "MPlayer" },
-        properties = { floating = true }
-    },{
-        rule = { class = "pinentry" },
-        properties = { floating = true }
-    },{
-        rule = { class = "gimp" },
-        properties = { floating = true }
+        rule_any = { class = {
+          "Chromium",
+          "browser",
+          "libreoffice-writer",
+          "libreoffice"
+        }},
+        properties = {
+          maximized = false
+        }
     },{
         rule = { class = "Xfce4-terminal" },
         properties = { },
         callback = awful.client.setslave
-    },{
-        -- rule fot the calendar in xfce4
-        rule = { class = "Wrapper" },
-        properties = { floating = true }
-    },{
-      -- rule for fullscreen of flash window
-      rule = { class = "Plugin-container" },
-      properties = {
-          maximized_horizontal = true,
-          maximized_vertical = true
-      }
     },{
         rule = {
             instance = "Navigator",
@@ -495,43 +483,94 @@ awful.rules.rules = {
         properties = { floating = true },
         callback = function(c) client.focus:move_to_tag(tags[awful.screen.focused()][awful.tag.getidx()], c) end
     },{
-    --    rule = { instance = "Navigator", instance = "Dialog" },
-    --    callback = function(c) client.focus:move_to_tag(tags[awful.screen.focused()][awful.tag.getidx()], c) end
-    --},{
+        --------------------------------------------------------------------------------
+        -- Firefox
         rule = { instance = "Navigator" },
         properties = { screen = 1, tag = "1", maximized = false  }
     },{
-        rule = { instance = "Download", role = "Manager" },
-        properties = { screen = 1, tag = "1"  },
-        callback = awful.client.setslave
+        -- Spotify in Firefox Browser
+        rule = { name = "^.*Spotify.*— Mozilla Firefox" },
+        properties = { screen = 1, tag = "6", maximized = false  }
     },{
-        -- Icedove
+        --------------------------------------------------------------------------------
+        -- Icedove / Thunderbird
         rule = { instance = "Mail" },
         properties = { screen = 1, tag = "3" }
     },{
-        rule = { instance = "Calendar" },
-        properties = { floating = true }
-    },{
-        rule = { class = "VirtualBox" },
-        properties = { screen = 1, tag = "8", floating= true }
-    },{
-        rule = { class = "rdesktop" },
+        --------------------------------------------------------------------------------
+        -- VM managers
+        rule_any = {
+          class = {
+          "VirtualBox",
+          "rdesktop",
+          "Vmware",
+          }
+        },
         properties = { screen = 1, tag = "7"  }
     },{
-        rule = { class = "xfce4-panel" },
-        properties = { floating = true, ontop = true  }
+        rule = { class = "VirtualBox" },
+        properties = { floating = true }
     },{
-        rule = { class = "Chromium" },
-        properties = { maximized = false }
+        --------------------------------------------------------------------------------
+        -- Thinlinc - INTEGRATION
+        rule = { 
+          instance = "thinlinc-client",
+          name = "pb@aibl0-pbrideau-a01.linux.teluqtest.net - ThinLinc Client"
+        },
+        properties = {
+          -- Screen 2 Tag 2, when Multi-Monitors, Screen 1 Tag 5 otherwise
+          screen = function() return screen.count() >=3 and screen[2] or screen[1] end,
+          tag = function() return screen.count() >=3 and "2" or "5" end
+        }
     },{
-        rule = { class = "libreoffice-writer" },
-        properties = { maximized = false } 
+        --------------------------------------------------------------------------------
+        -- Thinlinc - PRODUCTION Tier0
+        rule = { 
+          instance = "thinlinc-client",
+          name = "a0pbrideau@teluq.ca@apbl0-pbrideau-a01.linux.teluq.ca - ThinLinc Client"
+        },
+        properties = {
+          -- Screen 2 Tag 3, when Multi-Monitors, Screen 1 Tag 5 otherwise
+          screen = function() return screen.count() >=3 and screen[2] or screen[1] end,
+          tag = function() return screen.count() >=3 and "3" or "5" end
+        }
     },{
-        rule = { class = "libreoffice" },
-        properties = { maximized = false } 
+        --------------------------------------------------------------------------------
+        -- Thinlinc - PRODUCTION Tier1
+        rule = { 
+          instance = "thinlinc-client",
+          name = "a1pbrideau@teluq.ca@apbl1-pbrideau-a01.linux.teluq.ca - ThinLinc Client"
+        },
+        properties = {
+          -- Screen 2 Tag 4, when Multi-Monitors, Screen 1 Tag 5 otherwise
+          screen = function() return screen.count() >=3 and screen[2] or screen[1] end,
+          tag = function() return screen.count() >=3 and "4" or "5" end
+        }
     },{
-        rule = { class = "Microsoft Teams - Preview" },
-        properties = { screen = 1, tag = "2", maximized = false}
+        --------------------------------------------------------------------------------
+        -- Thinlinc - PRODUCTION Tier3
+        rule = { 
+          instance = "thinlinc-client",
+          name = "a3pbrideau@teluq.ca@apbl3-pbrideau-a01.linux.teluq.ca - ThinLinc Client"
+        },
+        properties = {
+          -- Screen 2 Tag 5, when Multi-Monitors, Screen 1 Tag 5 otherwise
+          screen = function() return screen.count() >=3 and screen[2] or screen[1] end,
+          tag = function() return screen.count() >=3 and "5" or "5" end
+        }
+    },{
+        --------------------------------------------------------------------------------
+        -- Microsoft temms PWA
+        rule = { 
+          instance = "crx_cifhbcnohmdccbgoicgdjpfamggdegmo",
+          class = "Google-chrome"
+        },
+        properties = {
+          screen = function() return screen.count() >=3 and screen[3] or screen[1] end,
+          tag = function() return screen.count() >=3 and "1" or "9" end,
+          floating = false,
+          maximized = false,
+        }
     },{
         rule = { name = "Microsoft Teams Notification" },
         properties = {
@@ -548,8 +587,19 @@ awful.rules.rules = {
         rule = { class = "amphetype" },
         properties = { screen = 1, tag = "9"  }
     },{
-        rule = { class = "keepassx" },
+        rule_any = {
+          class = {
+          "keepassx",
+          "KeePassXC",
+          }
+        },
         properties = { screen = 1, tag = "8"  }
+    },{
+        rule = { class = "Code" },
+        properties = {
+          screen = 1,
+          tag = "2"
+        }
     }
 }
 -- }}}
