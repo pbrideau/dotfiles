@@ -926,12 +926,14 @@ unset add_path
 ################################################################################
 # VAGRANT
 if [ -d "/opt/vagrant/" ]; then
+	VAGRANT_FOLDER="${HOME}/git/vagrant"
 	VAGRANT_COMPLETION=$(find /opt/vagrant -name completion.sh)
 	source "$VAGRANT_COMPLETION"
+	complete -F _vagrant v
 
 	function v {
 		local saved_pwd="$PWD"
-		cd ~/git/vagrant || return
+		cd "$VAGRANT_FOLDER" || return
 		vagrant "$@"
 		cd "$saved_pwd" || return
 	}
