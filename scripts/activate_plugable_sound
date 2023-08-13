@@ -1,42 +1,47 @@
 #!/bin/bash
 
-if [ "$(pgrep -f "$0" -c)" -gt 1 ]; then
+run_file='/tmp/activate_plugable_sound.run'
+
+if [[ -f "${run_file}" ]]; then
 	echo "already running: $0"
 	exit 0
+else
+	touch "${run_file}"
+	trap 'rm -rf ${run_file}' EXIT
 fi
 
 function set_usb_sound {
-	local pid user userid sink
-	pid=$(pgrep pulseaudio)
+	local pid user userid pactl_sink pactl_source
+	pid=$(pgrep pipewire-pulse)
 	user=$(strings "/proc/$pid/environ" | grep USER= | sed 's/.*=//')
 	userid=$(id -u "$user")
 
 	sleep 5
 
-	sink='alsa_output.usb-C-Media_Electronics_Inc.'
-	sink+='_USB_Advanced_Audio_Device-00.analog-stereo'
+	pactl_sink='alsa_output.usb-DisplayLink_'
+	pactl_sink+='Plugable_UD-6950PDZ_3367A01091-02.3.analog-stereo'
 
-	source='alsa_input.usb-C-Media_Electronics_Inc.'
-	source+='_USB_Advanced_Audio_Device-00.mono-fallback'
-
-	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
-		sh -c "pactl set-default-sink $sink"
+	pactl_source='alsa_input.usb-DisplayLink_'
+	pactl_source+='Plugable_UD-6950PDZ_3367A01091-02.3.analog-stereo'
 
 	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
-		sh -c "pactl set-default-source $source"
+		sh -c "pactl set-default-sink $pactl_sink"
 
-	#sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
-	#	sh -c "pactl set-source-mute $source 1"
+	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
+		sh -c "pactl set-default-source $pactl_source"
 
-	module_loopback=$(
-		sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
-			sh -c "pactl list short modules | grep 'module-loopback.*source=${source}'"
-	)
+	# sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
+	# 	sh -c "pactl set-source-mute $pactl_source 1"
 
-	if [ -z "$module_loopback" ]; then
-		sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
-			sh -c "pactl load-module module-loopback latency_msec=1 source=${source}"
-	fi
+	# module_loopback=$(
+	# 	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
+	# 		sh -c "pactl list short modules | grep 'module-loopback.*source=${pactl_source}'"
+	# )
+
+	# if [ -z "$module_loopback" ]; then
+	# 	sudo -u "$user" env XDG_RUNTIME_DIR="/run/user/$userid" \
+	# 		sh -c "pactl load-module module-loopback latency_msec=1 source=${pactl_source}"
+	# fi
 }
 
 set_usb_sound &
