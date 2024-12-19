@@ -4,12 +4,12 @@ function pipchk {
 	declare -a PIP_PACKAGE_TO_CHECK
 	declare -A PIP_PACKAGE_TO_IGNORE
 
-	# shellcheck disable=SC1090
+	# shellcheck disable=SC1091
 	source "$HOME/.pipchkrc"
 
 	local latest_version current_version
 	local chk version
-	local pypi_url='https://pypi.org/project'
+	local pypi_url='https://pypi.org/pypi'
 
 	declare -i pip_to_update=0
 	echo "Checking latest versions from ${pypi_url}"
@@ -22,9 +22,8 @@ function pipchk {
 		fi
 
 		latest_version=$(
-			curl -s "${pypi_url}/${p}/" |
-				sed -n -e '/package-header__name/{n;p;q}' |
-				awk '{print $2}'
+			curl -L -s "${pypi_url}/${p}/json" |
+				jq --raw-output '.info.version'
 		)
 
 		if [[ -z "$current_version" ]]; then
